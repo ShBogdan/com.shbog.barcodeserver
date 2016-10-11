@@ -104,80 +104,98 @@
       </column>
       <column id="31" parent="9" name="comp_name">
         <mandatory>1</mandatory>
-        <data-type>varchar(50)|0</data-type>
+        <data-type>varchar(150)|0</data-type>
       </column>
-      <index id="32" parent="9" name="component_comp_id_uindex">
+      <column id="32" parent="9" name="comp_type">
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="33" parent="9" name="comp_e_code">
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="34" parent="9" name="comp_info">
+        <data-type>text|0</data-type>
+      </column>
+      <column id="35" parent="9" name="comp_perm">
+        <data-type>varchar(150)|0</data-type>
+      </column>
+      <column id="36" parent="9" name="comp_color">
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="37" parent="9" name="comp_cbox">
+        <data-type>varchar(25)|0</data-type>
+      </column>
+      <index id="38" parent="9" name="component_comp_id_uindex">
         <columns>comp_id</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <index id="33" parent="9" name="component_comp_name_uindex">
+      <index id="39" parent="9" name="component_comp_name_uindex">
         <columns>comp_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="34" parent="9" name="PRIMARY">
+      <key id="40" parent="9" name="PRIMARY">
         <columns>comp_id</columns>
         <primary>1</primary>
       </key>
-      <key id="35" parent="9" name="component_comp_id_uindex">
+      <key id="41" parent="9" name="component_comp_id_uindex">
         <columns>comp_id</columns>
         <underlying-index>component_comp_id_uindex</underlying-index>
       </key>
-      <key id="36" parent="9" name="component_comp_name_uindex">
+      <key id="42" parent="9" name="component_comp_name_uindex">
         <columns>comp_name</columns>
         <underlying-index>component_comp_name_uindex</underlying-index>
       </key>
-      <column id="37" parent="10" name="section_id">
+      <column id="43" parent="10" name="section_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="38" parent="10" name="section_name">
+      <column id="44" parent="10" name="section_name">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <index id="39" parent="10" name="catalog_catalog_name_uindex">
+      <index id="45" parent="10" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="40" parent="10" name="PRIMARY">
+      <key id="46" parent="10" name="PRIMARY">
         <columns>section_id</columns>
         <primary>1</primary>
       </key>
-      <key id="41" parent="10" name="catalog_catalog_name_uindex">
+      <key id="47" parent="10" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <underlying-index>catalog_catalog_name_uindex</underlying-index>
       </key>
-      <column id="42" parent="11" name="additive_id">
+      <column id="48" parent="11" name="additive_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="43" parent="11" name="additive_name">
+      <column id="49" parent="11" name="additive_name">
         <mandatory>1</mandatory>
         <data-type>varchar(150)|0</data-type>
       </column>
-      <column id="44" parent="11" name="additive_code">
+      <column id="50" parent="11" name="additive_code">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="45" parent="11" name="additive_info">
+      <column id="51" parent="11" name="additive_info">
         <data-type>text|0</data-type>
       </column>
-      <column id="46" parent="11" name="additive_permission">
+      <column id="52" parent="11" name="additive_permission">
         <data-type>varchar(255)|0</data-type>
       </column>
-      <column id="47" parent="11" name="additive_color">
+      <column id="53" parent="11" name="additive_color">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="48" parent="11" name="additive_cbox">
+      <column id="54" parent="11" name="additive_cbox">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <key id="49" parent="11" name="PRIMARY">
+      <key id="55" parent="11" name="PRIMARY">
         <columns>additive_id</columns>
         <primary>1</primary>
       </key>

@@ -38,11 +38,21 @@ public class DbInterface extends HttpServlet {
             }
             if (null != req.getParameter("createAdditive")) {
                 db.createAdditive(req.getParameter("additiveNamber"),
-                                 req.getParameter("additiveName"),
-                                 req.getParameter("additiveColor"),
-                                 req.getParameter("additiveInfo"),
-                                 req.getParameter("additivePermission"),
-                                 req.getParameter("additiveCBox")
+                                  req.getParameter("additiveName"),
+                                  req.getParameter("additiveColor"),
+                                  req.getParameter("additiveInfo"),
+                                  req.getParameter("additivePermission"),
+                                  req.getParameter("additiveCBox")
+                );
+            }
+            if (null != req.getParameter("changeAdditive")) {
+                db.changeAdditive(req.getParameter("additiveId"),
+                                  req.getParameter("additiveNamber"),
+                                  req.getParameter("additiveName"),
+                                  req.getParameter("additiveColor"),
+                                  req.getParameter("additiveInfo"),
+                                  req.getParameter("additivePermission"),
+                                  req.getParameter("additiveCBox")
                 );
             }
             if (null != req.getParameter("changeProduct")) {

@@ -456,24 +456,27 @@
                         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                         "deferRender": true,
                         "columnDefs": [
-                            {"targets": 0, "visible": false},
-//                            {"targets": 3, "wodht": "20%"},
+                            {"targets": 0, "visible": true},
+                            {"targets": 4, "visible": true},
+                            {"targets": 5, "visible": true},
+                            {"targets": 6, "visible": true},
                             {
-                                "targets": 5,
+                                "targets": 7,
+                                "orderable": false,
+                                "searchable": false,
+                                "width": "1%",
+                                "data": null,
+                                "defaultContent": "<button id = 'edit_component'>&#8601;</button>"
+                            },
+                            {
+                                "targets": 8,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
                                 "data": null,
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
-                            },
-                            {
-                                "targets": 4,
-                                "orderable": false,
-                                "searchable": false,
-                                "width": "1%",
-                                "data": null,
-                                "defaultContent": "<button id = 'edit'>&#8601;</button>"
-                            }]
+                            }
+                        ]
 
                     });
 //                  Поиск по колонкам
@@ -538,7 +541,7 @@
                 }
             }
             function closeAdditiveDialog() {
-                   $(".e_namber").val('');
+                $(".e_namber").val('');
                 $(".e_name").val('');
                 $(".e_color").val('0');
                 $(".info").val('');
@@ -605,17 +608,16 @@
             });
 
             $(document).on('click', "#button_create_additive", function () {
+                $('.dialog_create_additive').prop('title', 'Создать добавку');
                 create_additive();
 
             })
-//            $(document).on('click', '#edit', function () {
-//                edit_e_tableRow = e_table.row($(this).parents('tr')).data();
-//                dell_edit_e_tableRow = e_table.row($(this).parents('tr'));
-//                alert('редактировать добавку')
-//
-//            });
-
-
+            $(document).on('click', '#edit_component', function () {
+                edit_e_tableRow = e_table.row($(this).parents('tr')).data();
+                dell_edit_e_tableRow = e_table.row($(this).parents('tr'));
+                $('.dialog_create_additive').prop('title', 'Редактировать');
+                edit_additive();
+            });
 
             var create_product = function () {
                 isEdit = false;
@@ -815,8 +817,6 @@
                                     additiveInfo: $(".info").val(),
                                     additivePermission: $(".permission").val(),
                                     additiveCBox: cBoxToArray().toString(),
-//                                    componets_array_ID: componets_array_ID.toString(),
-//                                    varButton: varButton.toString()
                                 },
                                 type: 'POST',
                                 dataType: 'text',
@@ -831,6 +831,9 @@
                                                     $(".e_name").val(),
                                                     $(".e_namber").val(),
                                                     $(".info").val(),
+                                                    $(".permission").val(),
+                                                    $(".e_color").val(),
+                                                    cBoxToArray().toString(),
                                                 ]).draw(false);
                                                 $(".dialog_create_additive").dialog("close")
                                             }
@@ -850,7 +853,67 @@
                     }
                 });
             };
+            var edit_additive = function () {
+                isEdit = false;
+                $(".dialog_create_additive").dialog({
+                    autoOpen: true,
+                    width: 850,
+                    modal: true,
+                    buttons: {
+                        OK: function () {
+                            $.ajax({
+                                url: "/DbInterface",
+                                data: {
+                                    changeAdditive: "changeAdditive",
+                                    additiveId: edit_e_tableRow[0],
+                                    additiveNamber: $(".e_namber").val(),
+                                    additiveName: $(".e_name").val(),
+                                    additiveColor: $(".e_color").val(),
+                                    additiveInfo: $(".info").val(),
+                                    additivePermission: $(".permission").val(),
+                                    additiveCBox: cBoxToArray().toString(),
+                                },
+                                type: 'POST',
+                                dataType: 'text',
+                                success: function (data) {
+                                    e_table.row.add([
+                                        edit_e_tableRow[0],
+                                        $(".e_name").val(),
+                                        $(".e_namber").val(),
+                                        $(".info").val(),
+                                        $(".permission").val(),
+                                        $(".e_color").val(),
+                                        cBoxToArray().toString(),
+                                    ]).draw(false);
+                                    e_table.row(dell_edit_e_tableRow).remove().draw(false);
 
+                                    $(".dialog_create_additive").dialog("close")
+                                },
+                                error: function (request, status, error) {
+                                    alert("Error: Could not back");
+                                }
+                            });
+                        },
+                        CANSEL: function () {$(".dialog_create_additive").dialog("close")}
+                    },
+                    open: function (event, ui) {
+                        edit_e_tableRow[5] == 0 ? $('.e_color option:contains("Зеленый")').prop('selected', true): null;
+                        edit_e_tableRow[5] == 1 ? $('.e_color option:contains("Желтый")').prop('selected', true): null;
+                        edit_e_tableRow[5] == 2 ? $('.e_color option:contains("Крассный")').prop('selected', true): null;
+
+                        $(".e_name").val(edit_e_tableRow[1]);
+                        $(".e_namber").val(edit_e_tableRow[2]);
+                        $(".info").val(edit_e_tableRow[3]);
+                        $(".permission").val(edit_e_tableRow[4]);
+//                        var boxArray = edit_e_tableRow[5].split(",");
+//                        alert("array "+ edit_e_tableRow[6] );
+                        fillCBox(edit_e_tableRow[6].split(","))
+
+                    },
+                    close: function (event, ui) { $(".dialog_create_additive").dialog("close")},
+                    beforeClose: function (event, ui) {closeAdditiveDialog()}
+                });
+            };
 
             function fillCompound(_compoundID) {
                 varButton = [];
@@ -912,6 +975,17 @@
                 $('#c6:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
                 $('#c7:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
                 return cBoxs;
+            }
+
+            function fillCBox(cBoxArray) {
+                cBoxArray[0] == 1 ? $("#c0").prop("checked", true):null;
+                cBoxArray[1] == 1 ? $("#c1").prop("checked", true):null;
+                cBoxArray[2] == 1 ? $("#c2").prop("checked", true):null;
+                cBoxArray[3] == 1 ? $("#c3").prop("checked", true):null;
+                cBoxArray[4] == 1 ? $("#c4").prop("checked", true):null;
+                cBoxArray[5] == 1 ? $("#c5").prop("checked", true):null;
+                cBoxArray[6] == 1 ? $("#c6").prop("checked", true):null;
+                cBoxArray[7] == 1 ? $("#c7").prop("checked", true):null;
             }
 
             function fillProductNames(_compoundProductID) {

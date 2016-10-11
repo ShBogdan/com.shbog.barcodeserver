@@ -198,6 +198,9 @@
         <th>Название</th>
         <th>Номер</th>
         <th>Описание</th>
+        <th>Запрет</th>
+        <th>Цвет</th>
+        <th>cbox</th>
         <th></th>
         <th></th>
     </tr>
@@ -208,6 +211,9 @@
         <th class="searchable">Тип добавки</th>
         <th class="searchable">Номер</th>
         <th class="searchable">Описание</th>
+        <th></th>
+        <th></th>
+        <th></th>
         <th></th>
         <th></th>
     </tr>
@@ -260,7 +266,7 @@
                 <p><input type="checkbox" id="c3"/>Не рекомендуется беременным</p>
                 <p><input type="checkbox" id="c4"/>Не рекомендуется с заболеваниями ЖКТ</p>
                 <p><input type="checkbox" id="c5"/>Не рекомендуется с астмой</p>
-                <p><input type="checkbox" id="c6"/>Не рекомендуется с сердечно-сосудистыми заболеваниями</p>
+                <p><input type="checkbox" id="c6"/>Не рекомендуется с ССЗ</p>
                 <p><input type="checkbox" id="c7"/>Не рекомендуется с сахарным диабетом</p></td>
         </tr>
         </tbody>
@@ -269,42 +275,6 @@
         <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50"><button class="addComponentEdit" >Добавить компонент</button>
     </div>
 
-</div>
-<div class="dialog_edit_additive" title="Изменить добавку" hidden>
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
-        <tbody>
-        <tr>
-            <td>
-                <select class="edit_selectCategory" style="width: 100%">
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td><input class="edit_prodName" placeholder="Название" type="text" style="width:  100%" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><input class="edit_prodProvider" placeholder="Производитель" type="text" style="width:  100%" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><input class="edit_prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="50"></td>
-        </tr>
-        </tbody>
-    </table>
-    <table class="edit_sostav" align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
-        <tbody>
-        <tr>
-            <td width="50%" align="center"><b>Компоненты</b><hr></td>
-            <td width="50%" align="center"><b>Состав</b><hr></td>
-        </tr>
-        <tr>
-            <td class = "components"  height="200px" valign="top"></td>
-            <td class = "compound"  height="200px" valign="top"></td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="divInputEdit"align="center">
-        <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50"><button class="addComponentEdit" >Добавить компонент</button>
-    </div>
 </div>
 </body>
 </html>
