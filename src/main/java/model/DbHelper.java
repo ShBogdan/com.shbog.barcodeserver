@@ -20,32 +20,38 @@ public class DbHelper {
 
     public static void main(String[] args) throws SQLException {
 //        new DbHelper().createCategory("Ежик");
-//        new DbHelper().removeComponent("Жиры");
-//        new DbHelper().removeForeigners(7,1,4);
-//        new DbHelper().getCategory();
+        String s = "[1,2,3,4,4,5,6,6]";
+        ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(s.substring(1, s.length()-1).split(",")));
+        ArrayList<Integer> intID = new ArrayList<>();
+        for (String tempString : stringID) {
+            int i = Integer.valueOf(tempString);
+            if(!intID.contains(i)){
+                intID.add(Integer.valueOf(i));
+            }
+        }
+        System.out.println(intID);
+
+
     }
 
     public DbHelper() {
-        System.out.println("Конструктор");
         try{
             Class.forName("com.mysql.jdbc.Driver");
             Driver driver = new FabricMySQLDriver();
             DriverManager.registerDriver(driver);
             connection = DriverManager.getConnection(URL, NAME, PASSWORD);
         } catch (SQLException e) {
-            System.out.println("Connection Failed! Check output console");
+//            System.out.println("Connection Failed! Check output console");
             e.printStackTrace();
             return;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         if (connection != null) {
-            System.out.println("You made it, take model your database now!");
+//            System.out.println("You made it, take model your database now!");
         } else {
             System.out.println("Failed to make connection!");
         }
-        System.out.println("Конструктор END");
-
     }
 
     public void createCategory(String cat, String sectionId) throws SQLException {
@@ -80,9 +86,9 @@ public class DbHelper {
         ResultSet resultSet;
         Statement stmt;
         Set<String> input_components_ID = new HashSet<String>(new ArrayList<String>(Arrays.asList(componets_array_ID.split(","))));
-        Set<String> input_components_name = input_components_name = new HashSet<String>();
+        Set<String> input_components_name = new HashSet<String>();
         if(varButton != null && !varButton.isEmpty()){
-           input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
+            input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
         }
         input_components_ID.remove("");
 
@@ -140,7 +146,7 @@ public class DbHelper {
             connection.close();
 //        }
     }
-    public void createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox) throws SQLException {
+    public void createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup) throws SQLException {
         String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_type) VALUE (?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, additiveName);
@@ -151,6 +157,60 @@ public class DbHelper {
         preparedStatement.setString(6, additiveCBox);
         preparedStatement.setString(7, "1");
         preparedStatement.execute();
+        //additiveGroup - все елементы для связи + новый елемент
+        ArrayList<Integer> groupComponentsId = new ArrayList<>();
+        ArrayList<Integer> groupComponentsId2 = new ArrayList<>();
+        Set<String> groupComponentsName = new HashSet<String>();
+        if(additiveGroup != null && !additiveGroup.isEmpty()){
+            groupComponentsName = new HashSet<String>(new ArrayList<String>(Arrays.asList(additiveGroup.split(","))));
+            groupComponentsName.add(additiveName);
+        }
+        //получаем id всех схожих компонентов
+        for (String component : groupComponentsName) {
+            String query = "SELECT comp_id FROM component WHERE comp_name = "+"\""+component+"\"";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            groupComponentsId.add(resultSet.getInt("comp_id"));
+        }
+        //собраем из всех схожих компонентов уникальные ссылки на другие компоненты
+        ArrayList<Integer> groupComponentsIdToBase = new ArrayList<>();
+        System.out.println("Id изменяемых продуктов"+groupComponentsId);
+
+        for (Integer i : groupComponentsId){
+            groupComponentsIdToBase.add(i);
+            System.out.println("На входе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
+
+            String query = "SELECT comp_group FROM component WHERE comp_id = "+"\""+i+"\"";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            System.out.println("Группа компонента " +i+">>>"+ resultSet.getString("comp_group"));
+            if(null != resultSet.getString("comp_group")) {
+                if(!resultSet.getString("comp_group").trim().equals("")) {
+                    ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(resultSet.getString("comp_group").substring(1, resultSet.getString("comp_group").length() - 1).split(",")));
+                    System.out.println("Правратили строку в массив" + stringID.toString());
+                    for (String tempString : stringID) {
+                        int tempInt = Integer.parseInt(tempString.trim());
+                        System.out.println("Добавляем " +tempInt + "в groupComponentsIdToBase");
+                        if (!groupComponentsIdToBase.contains(tempInt)) {
+                            System.out.println("добавили");
+                            groupComponentsIdToBase.add(Integer.valueOf(tempInt));
+                        }
+                    }
+                }
+            }
+            System.out.println("На выходе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
+        }
+
+        for (Integer componentID : groupComponentsIdToBase) {
+            String query = "UPDATE component SET comp_group = "+"'"+groupComponentsIdToBase+"'"+"WHERE comp_id = "+"'"+componentID+"'";
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate(query);
+        }
+        System.out.println(groupComponentsName.toString());
+        System.out.println(groupComponentsId.toString());
+        System.out.println(groupComponentsIdToBase.toString());
         if(connection!=null)
             connection.close();
     }
@@ -180,7 +240,7 @@ public class DbHelper {
         Set<String> input_components_ID = new HashSet<String>(new ArrayList<String>(Arrays.asList(componets_array_ID.split(","))));
         Set<String> input_components_name = input_components_name = new HashSet<String>();
         if(varButton != null && !varButton.isEmpty()){
-           input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
+            input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
         }
         input_components_ID.remove("");
 
@@ -316,7 +376,6 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
-
     public PrintWriter getCategory(PrintWriter out) throws SQLException {
         String query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
         Statement stmt = connection.createStatement();
@@ -447,7 +506,7 @@ public class DbHelper {
         return out;
     }
     public PrintWriter getAdditive(PrintWriter out) throws SQLException{
-        String query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox FROM component WHERE comp_type = 1";
+        String query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox FROM component"; // WHERE comp_type = 1
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
         JSONObject result = new JSONObject();

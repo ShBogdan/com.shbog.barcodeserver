@@ -48,8 +48,6 @@ public class LoginFilter implements javax.servlet.Filter {
 //
 //        }
         filterChain.doFilter(servletRequest,servletResponse);
-        System.out.println("конец");
-
     }
 
     public void destroy() {

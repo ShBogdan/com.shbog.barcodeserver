@@ -43,10 +43,10 @@
     </style>
     <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js">
     </script>
-    <script type="text/javascript" language="javascript"
-            src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
     </script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script>
         $(document).ready(function () {
@@ -61,12 +61,11 @@
             var varButton = [];
             var comp_index;
             var varBtn_index;
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            $('#btn1').click(function () {
-                $('#menu').load("info.jsp");
-            });
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            $('#btn2').click(function () {
+            var autocompleteInpComponents = [];
+            var componentGroup = [];
+            $(document).on('click','#btn1', function (){
+                $('#menu').load("info.jsp");});
+            $(document).on('click','#btn2', function (){
                 $('#menu').load("catalog.jsp", function () {
                     //добавить катгорию
                     fill_main_section()
@@ -254,50 +253,9 @@
                             })
                         }
                     }));
-
-//                    var category_table = $('#category_table').DataTable({
-//                        processing : true,
-//                        ajax : {
-//                            url : "/DbInterface",
-//                            data: {getCategory : "getCategory"},
-//                            dataSrc : "category",
-//                            type : "POST"
-//                        },
-//                        "aaSorting": [[1,'asc']],
-//                        "pageLength" : 25,
-//                        "lengthMenu" : [ [ 10, 25, -1 ], [ 10, 25, "All" ] ],
-//                        "deferRender": true,
-//                        columns: [
-//                            { title: "id" },
-//                            { title: "Каталог" },
-//                            { title: "Edit" },
-//                            { title: "Select" }
-//                        ],
-//                        "columnDefs": [
-//                            { "visible": false, "targets": 0 },
-//                            { "targets": 1, "wodht":"30%" },
-//                            {
-//                                "targets": 3,
-//                                "orderable": false,
-//                                "searchable": false,
-//                                "width": "1%",
-//                                "data": null,
-//                                "defaultContent": "<button id = 'select'>S</button>"
-//                            },
-//                            {
-//                                "targets": 2,
-//                                "orderable": false,
-//                                "searchable": false,
-//                                "width": "1%",
-//                                "data": null,
-//                                "defaultContent": "<button id = 'edit'>E</button>"
-//                            } ]
-//
-//                    });
-                });
-            });
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            $('#btn3').click(function () {
+                });});
+            $(document).on('click','#btn3', function (){
+                console.log("'click','#btn3'");
                 $('#menu').load("products.jsp", function () {
                     table = $('#products_table').DataTable({
                         processing: true,
@@ -347,22 +305,6 @@
                             }
                         });
                     });
-
-//                  Скрыть елементы
-//                    $('a.toggle-vis').on( 'click', function (e) {
-//                        e.preventDefault();
-//
-//                        // Get the column API object
-//                        var column = table.column( $(this).attr('data-column') );
-//
-//                        // Toggle the visibility
-//                        column.visible( ! column.visible() );
-//                    } );
-
-//                  поиск в смоем диве
-//                    $('#search-inp').on('keyup',function(){
-//                        table.search($(this).val()).draw() ;
-//                    });
 
 //                  удаляем выделенные елементы 100 штук
                     $('#button').click(function () {
@@ -414,8 +356,10 @@
                         $(this).remove();
                         varBtn_index = varButton.indexOf($(this).text());
                         if(!isEdit){
-                            if (comp_index > -1) {
+                            console.log("In")
+                            if (varBtn_index > -1) {
                                 varButton.splice(varBtn_index, 1);
+                                console.log(varButton)
                             }
                         }
                         if (isEdit) {
@@ -426,7 +370,7 @@
                         }
                     });
                     $(".divInput").on("click", ".addComponent", function () {
-                        if ($(".getInputComponent").val() != "") {
+                        if ($(".getInputComponent").val().trim() != "") {
                             $(".components").append("<button class=\"varButton\">" + $(".getInputComponent").val() + "</button>");
                             varButton.push($(".getInputComponent").val());
                             $(".getInputComponent").val('');
@@ -441,8 +385,7 @@
                     })
                 });
             });
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            $('#btn4').click(function () {
+            $(document).on('click','#btn4', function (){
                 $('#menu').load("additive.jsp", function () {
                     e_table = $('#additive_table').DataTable({
                         processing: true,
@@ -477,7 +420,6 @@
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
                             }
                         ]
-
                     });
 //                  Поиск по колонкам
                     $('#additive_table .searchable').each(function () {
@@ -488,13 +430,10 @@
                         var that = this;
                         $('input', this.footer()).on('keyup change', function () {
                             if (that.search() !== this.value) {
-                                that
-                                        .search(this.value)
-                                        .draw();
+                                that.search(this.value).draw();
                             }
                         });
                     });
-
 //                  нажатие кнопки выделить row
                     $('#additive_table tbody').on('click', '#select', function () {
                         $($(this).parents('tr')).toggleClass('selected');
@@ -521,75 +460,39 @@
                             e_table.row('.selected').remove().draw(false);
                         }
                     });
+
+                    $(".divInput").on("click", ".addComponent", function () {
+                        console.log(autocompleteInpComponents)
+//                        if($(".getInputComponent").val()!="")
+                        if($.inArray($(".getInputComponent").val(), autocompleteInpComponents)!=-1){
+                            $(".components").append("<button class=\"varButton\">" + $(".getInputComponent").val() + "</button>");
+                            componentGroup.push($(".getInputComponent").val());
+                            $(".getInputComponent").val('');
+                            console.log(componentGroup)
+                        } else {alert("Нет такого компонента")}
+                    });
+
+                    $(".components").on("click", ".varButton", function () {
+                        $(this).remove();
+                        comp_index = componentGroup.indexOf($(this).text());
+                        if (comp_index > -1) {
+                            componentGroup.splice(comp_index, 1);
+                        }
+                    });
+
                 })
             });
-            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            $('#btn5').click(function () {
+            $(document).on('click','#btn5', function (){
                 $('#menu').load("limitations.jsp");
             });
-            function closeDialog() {
-                componets_array_ID = [];
-                varButton = [];
-                $.ajaxSetup({cache: false});
-                $(".getInputComponent").val('');
-                $(".prodName").val('');
-                $(".prodProvider").val('');
-                $(".prodCode").val('');
-                $(".selectCategory").find('option').remove();
-                if ($(".dialog_create_product").dialog("isOpen")) {
-                    $(".dialog_create_product").dialog("destroy");
-                }
-            }
-            function closeAdditiveDialog() {
-                $(".e_namber").val('');
-                $(".e_name").val('');
-                $(".e_color").val('0');
-                $(".info").val('');
-                $(".permission").val('');
-                $(".getInputComponentEdit").val('');
-                $('#c0:checked').prop('checked', false);
-                $('#c1:checked').prop('checked', false);
-                $('#c2:checked').prop('checked', false);
-                $('#c3:checked').prop('checked', false);
-                $('#c4:checked').prop('checked', false);
-                $('#c5:checked').prop('checked', false);
-                $('#c6:checked').prop('checked', false);
-                $('#c7:checked').prop('checked', false);
-                if ($(".dialog_create_additive").dialog("isOpen")) {
-                    $(".dialog_create_additive").dialog("destroy");
-                }
-            }
-
-            function closeEditDialog() {
-                componets_array_ID = [];
-                varButton = [];
-                $.ajaxSetup({cache: false});
-                $(".getInputComponent1").val('');
-                $(".edit_prodName").val('');
-                $(".edit_prodProvider").val('');
-                $(".edit_prodCode").val('');
-                $(".edit_selectCategory").find('option').remove();
-                if ($(".dialog_edit_product").dialog("isOpen")) {
-                    $(".dialog_edit_product").dialog("destroy");
-                }
-                ;
-            }
 
             $(document).on('click', "#button_create_product", function () {
                 create_product();
-            })
+            });
             $(document).on('click', '#edit', function () {
                 edit_tableRow = table.row($(this).parents('tr')).data();
                 dell_edit_tableRow = table.row($(this).parents('tr'));
-
                 edit_product();
-//                $('.dialog_change_product').data('openFor', 'change');
-//                $('.dialog_change_product').data('prodId', data[0]);
-//                $('.dialog_change_product').data('prodCategory', data[1]);
-//                $('.dialog_change_product').data('prodProvider', data[2]);
-//                $('.dialog_change_product').data('prodName', data[3]);
-//                $('.dialog_change_product').data('prodCode', data[4]);
-//                $('.dialog_change_product').dialog('option', 'title', 'Редактировать это');
             });
             $(document).on('change', '.selectCategory', function () {
                 alert("run")
@@ -606,12 +509,11 @@
                 });
                 fillCompound(selId)
             });
-
             $(document).on('click', "#button_create_additive", function () {
                 $('.dialog_create_additive').prop('title', 'Создать добавку');
                 create_additive();
 
-            })
+            });
             $(document).on('click', '#edit_component', function () {
                 edit_e_tableRow = e_table.row($(this).parents('tr')).data();
                 dell_edit_e_tableRow = e_table.row($(this).parents('tr'));
@@ -667,13 +569,7 @@
                         }
                     },
                     open: function (event, ui) {
-                        var openFor = $(this).data("openFor");
-                        var prodId = $(this).data("prodId");
-                        var prodCategory = $(this).data("prodCategory");
-                        var prodProvider = $(this).data("prodProvider");
-                        var prodName = $(this).data("prodName");
-                        var prodCode = $(this).data("prodCode");
-
+                        console.log("open");
                         //формируем select
                         $.ajax({
                             url: "/DbInterface",
@@ -687,13 +583,28 @@
                                     $('.selectCategory').append($("<option></option>")
                                             .attr("value", element[0])
                                             .text(element[1]));
-//                                    $('.selectCategory option:contains(temp)').prop('selected',true);
-
                                 })
                                 fillCompound($(".selectCategory").val())
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
+                            }
+                        });
+                        $. ajax({
+                            url: "/DbInterface",
+                            data: {getAdditive: "getAdditive"},
+                            dataSrc: "additive",
+                            type: "POST",
+                            success: function (data){
+                                var obj = JSON.parse(data);
+                                obj.additive.forEach(function(item, i, obj){
+                                    autocompleteInpComponents.push(item[1]);
+                                    autocompleteInpComponents.sort();
+                                });
+                                var options = '';
+                                for(var i = 0; i < autocompleteInpComponents.length; i++){
+                                    options += '<option value="'+autocompleteInpComponents[i]+'" />'};
+                                document.getElementById('components').innerHTML = options;
                             }
                         });
                     },
@@ -705,6 +616,7 @@
                     }
                 });
             };
+
             var edit_product = function () {
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
@@ -713,20 +625,6 @@
                     modal: true,
                     buttons: {
                         OK: function () {
-//                            $.ajax({
-//                                url: "/DbInterface",
-//                                data: {
-//                                    removeProduct: "removeProduct",
-//                                    prod_id: edit_tableRow[0]
-//                                },
-//                                type: 'POST',
-//                                dataType: 'text',
-//                                success: function (output) {
-//                                },
-//                                error: function (request, status, error) {
-//                                    alert("Error: Could not back");
-//                                }
-//                            });
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
@@ -790,6 +688,23 @@
                                 alert("Error: Could not back");
                             }
                         });
+                        $. ajax({
+                            url: "/DbInterface",
+                            data: {getAdditive: "getAdditive"},
+                            dataSrc: "additive",
+                            type: "POST",
+                            success: function (data){
+                                var obj = JSON.parse(data);
+                                obj.additive.forEach(function(item, i, obj){
+                                    autocompleteInpComponents.push(item[1]);
+                                    autocompleteInpComponents.sort();
+                                });
+                                var edit_options = '';
+                                for(var i = 0; i < autocompleteInpComponents.length; i++){
+                                    edit_options  += '<option value="'+autocompleteInpComponents[i]+'" />'};
+                                document.getElementById('edit_components').innerHTML = edit_options ;
+                            }
+                        });
                     },
                     close: function (event, ui) {
                         $(".dialog_edit_product").dialog("close");
@@ -799,6 +714,7 @@
                     }
                 });
             };
+
             var create_additive = function () {
                 isEdit = false;
                 $(".dialog_create_additive").dialog({
@@ -807,16 +723,21 @@
                     modal: true,
                     buttons: {
                         OK: function () {
+                            if($.inArray($(".e_name").val(), autocompleteInpComponents)!=-1){
+                                alert("Уже есть компонент с таким именем")
+                                return;
+                            }
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
                                     createAdditive: "createAdditive",
-                                    additiveNamber: $(".e_namber").val(),
+                                    additiveNamber: $(".e_namber").val()=="" ? 0 : $(".e_namber").val(),
                                     additiveName: $(".e_name").val(),
                                     additiveColor: $(".e_color").val(),
                                     additiveInfo: $(".info").val(),
                                     additivePermission: $(".permission").val(),
                                     additiveCBox: cBoxToArray().toString(),
+                                    additiveGroup: componentGroup.toString()
                                 },
                                 type: 'POST',
                                 dataType: 'text',
@@ -835,24 +756,43 @@
                                                     $(".e_color").val(),
                                                     cBoxToArray().toString(),
                                                 ]).draw(false);
-                                                $(".dialog_create_additive").dialog("close")
+                                                console.log(componentGroup),
+                                                        $(".dialog_create_additive").dialog("close")
                                             }
                                     );
                                 },
                                 error: function (request, status, error) {
+                                    console.log("somthing wrong");
                                     alert("Error: Could not back");
                                 }
                             });
                         },
-                        CANSEL: function () {
-                            $(".dialog_create_additive").dialog("close")
-                        }
+                        CANSEL: function () {$(".dialog_create_additive").dialog("close")}
                     },
-                    beforeClose: function (event, ui) {
-                        closeAdditiveDialog()
-                    }
+                    open: function (event, ui) {
+                        $. ajax({
+                            url: "/DbInterface",
+                            data: {getAdditive: "getAdditive"},
+                            dataSrc: "additive",
+                            type: "POST",
+                            success: function (data){
+                                var obj = JSON.parse(data);
+                                obj.additive.forEach(function(item, i, obj){
+                                    autocompleteInpComponents.push(item[1]);
+                                    autocompleteInpComponents.sort();
+                                });
+                                var options = '';
+                                for(var i = 0; i < autocompleteInpComponents.length; i++){
+                                    options += '<option value="'+autocompleteInpComponents[i]+'" />'};
+                                document.getElementById('components').innerHTML = options;
+                            }
+                        });
+                        fillGroupAdditive();
+                    },
+                    beforeClose: function (event, ui) {closeAdditiveDialog()}
                 });
             };
+
             var edit_additive = function () {
                 isEdit = false;
                 $(".dialog_create_additive").dialog({
@@ -905,10 +845,26 @@
                         $(".e_namber").val(edit_e_tableRow[2]);
                         $(".info").val(edit_e_tableRow[3]);
                         $(".permission").val(edit_e_tableRow[4]);
-//                        var boxArray = edit_e_tableRow[5].split(",");
-//                        alert("array "+ edit_e_tableRow[6] );
-                        fillCBox(edit_e_tableRow[6].split(","))
-
+                        if(edit_e_tableRow[6]!=null){;
+                            fillCBox(edit_e_tableRow[6].split(","));}
+                        $. ajax({
+                            url: "/DbInterface",
+                            data: {getAdditive: "getAdditive"},
+                            dataSrc: "additive",
+                            type: "POST",
+                            success: function (data){
+                                var obj = JSON.parse(data);
+                                obj.additive.forEach(function(item, i, obj){
+                                    autocompleteInpComponents.push(item[1]);
+                                    autocompleteInpComponents.sort();
+                                });
+                                var options = '';
+                                for(var i = 0; i < autocompleteInpComponents.length; i++){
+                                    options += '<option value="'+autocompleteInpComponents[i]+'" />'};
+                                document.getElementById('components').innerHTML = options;
+                            }
+                        });
+                        fillGroupAdditive();
                     },
                     close: function (event, ui) { $(".dialog_create_additive").dialog("close")},
                     beforeClose: function (event, ui) {closeAdditiveDialog()}
@@ -935,7 +891,7 @@
                         alert("Error: Could not back");
                     }
                 });
-            }
+            };
 
             function fillProductCompound(_compoundProductID) {
                 $.ajax({
@@ -962,7 +918,7 @@
                     }
                 });
 
-            }
+            };
 
             function cBoxToArray() {
                 var cBoxs=[];
@@ -975,7 +931,7 @@
                 $('#c6:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
                 $('#c7:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
                 return cBoxs;
-            }
+            };
 
             function fillCBox(cBoxArray) {
                 cBoxArray[0] == 1 ? $("#c0").prop("checked", true):null;
@@ -986,7 +942,84 @@
                 cBoxArray[5] == 1 ? $("#c5").prop("checked", true):null;
                 cBoxArray[6] == 1 ? $("#c6").prop("checked", true):null;
                 cBoxArray[7] == 1 ? $("#c7").prop("checked", true):null;
-            }
+            };
+
+            function closeDialog() {
+                componets_array_ID = [];
+                varButton = [];
+                autocompleteInpComponents = [];
+                $.ajaxSetup({cache: false});
+                $(".getInputComponent").val('');
+                $(".prodName").val('');
+                $(".prodProvider").val('');
+                $(".prodCode").val('');
+                $(".selectCategory").find('option').remove();
+                if ($(".dialog_create_product").dialog("isOpen")) {
+                    $(".dialog_create_product").dialog("destroy");
+                }
+            };
+
+            function closeEditDialog() {
+                componets_array_ID = [];
+                autocompleteInpComponents = [];
+                varButton = [];
+                $.ajaxSetup({cache: false});
+                $(".getInputComponent1").val('');
+                $(".edit_prodName").val('');
+                $(".edit_prodProvider").val('');
+                $(".edit_prodCode").val('');
+                $(".edit_selectCategory").find('option').remove();
+                if ($(".dialog_edit_product").dialog("isOpen")) {
+                    $(".dialog_edit_product").dialog("destroy");
+                }
+
+            };
+
+            function closeAdditiveDialog() {
+                autocompleteInpComponents = [];
+                $.ajaxSetup({cache: false});
+                $(".e_namber").val('');
+                $(".e_name").val('');
+                $(".e_color").val('0');
+                $(".info").val('');
+                $(".permission").val('');
+                $(".getInputComponent").val('');
+                $('#c0:checked').prop('checked', false);
+                $('#c1:checked').prop('checked', false);
+                $('#c2:checked').prop('checked', false);
+                $('#c3:checked').prop('checked', false);
+                $('#c4:checked').prop('checked', false);
+                $('#c5:checked').prop('checked', false);
+                $('#c6:checked').prop('checked', false);
+                $('#c7:checked').prop('checked', false);
+                if ($(".dialog_create_additive").dialog("isOpen")) {
+                    $(".dialog_create_additive").dialog("destroy");
+                }
+            };
+
+            function fillGroupAdditive() {
+                //в аргумент добавить id изменяемого компонента
+                console.log("group")
+//                varButton = [];
+//                componets_array_ID = [];
+                componentGroup = [];
+                $(".components button").remove();
+//                $.ajax({
+//                    url: "/DbInterface",
+//                    data: {
+//                        getCompound: "getCompound",
+//                        compoundID: _compoundID
+//                    },
+//                    type: 'POST',
+//                    dataType: 'text',
+//                    success: function (data) {
+//                        $(".compound").append(data)
+//                    },
+//                    error: function (request, status, error) {
+//                        alert("Error: Could not back");
+//                    }
+//                });
+            };
 
             function fillProductNames(_compoundProductID) {
                 $.ajax({
@@ -1005,8 +1038,30 @@
                         alert("Error: Could not back");
                     }
                 });
-            }
+            };
 
+            function fillInputComponent() {
+                $. ajax({
+                    url: "/DbInterface",
+                    data: {getAdditive: "getAdditive"},
+                    dataSrc: "additive",
+                    type: "POST",
+                    success: function (data){
+                        var obj = JSON.parse(data);
+                        obj.additive.forEach(function(item, i, obj){
+                            autocompleteInpComponents.push(item[1]);
+                            console.log(autocompleteInpComponents)
+                        });
+                        console.log("Success: " + autocompleteInpComponents);
+//                        $( ".getInputComponent" ).autocomplete({
+//                            source: autocompleteInpComponents,
+//                        });
+//                        $( ".getInputComponentEdit" ).autocomplete({
+//                            source: autocompleteInpComponents,
+//                        });
+                    }
+                })
+            };
         });
     </script>
 </head>

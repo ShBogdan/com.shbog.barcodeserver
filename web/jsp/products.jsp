@@ -19,6 +19,7 @@
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
 
     <style type="text/css">
+        .ui-autocomplete { position: absolute; cursor: default;z-index:30 !important; color: #1c94c4; background: #670d10;}
         tfoot input {
             width: 100%;
             padding: 3px;
@@ -221,7 +222,7 @@
     <tbody>
     </tbody>
 </table>
-
+<div class="test"></div>
 <div class="dialog_create_product" title="Создать продукт" hidden>
     <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
         <tbody>
@@ -254,8 +255,9 @@
         </tr>
         </tbody>
     </table>
-    <div class="divInput"align="center">
-        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50"><button class="addComponent" >Добавить компонент</button>
+    <div class="divInput" align="center">
+        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить компонент</button>
+        <datalist id="components"></datalist>
     </div>
 </div>
 <div class="dialog_edit_product" title="Изменить продукт" hidden>
@@ -291,7 +293,8 @@
         </tbody>
     </table>
     <div class="divInputEdit"align="center">
-        <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50"><button class="addComponentEdit" >Добавить компонент</button>
+        <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50" list="edit_components"><button class="addComponentEdit" >Добавить компонент</button>
+        <datalist id="edit_components"></datalist>
     </div>
 </div>
 </body>
