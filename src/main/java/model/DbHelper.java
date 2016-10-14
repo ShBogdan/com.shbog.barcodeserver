@@ -20,17 +20,17 @@ public class DbHelper {
 
     public static void main(String[] args) throws SQLException {
 //        new DbHelper().createCategory("Ежик");
-        String s = "[1,2,3,4,4,5,6,6]";
-        ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(s.substring(1, s.length()-1).split(",")));
-        ArrayList<Integer> intID = new ArrayList<>();
-        for (String tempString : stringID) {
-            int i = Integer.valueOf(tempString);
-            if(!intID.contains(i)){
-                intID.add(Integer.valueOf(i));
-            }
-        }
-        System.out.println(intID);
-
+//        String s = "[1,2,3,4,4,5,6,6]";
+//        ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(s.substring(1, s.length()-1).split(",")));
+//        ArrayList<Integer> intID = new ArrayList<>();
+//        for (String tempString : stringID) {
+//            int i = Integer.valueOf(tempString);
+//            if(!intID.contains(i)){
+//                intID.add(Integer.valueOf(i));
+//            }
+//        }
+//        System.out.println(intID);
+//
 
     }
 
@@ -92,7 +92,7 @@ public class DbHelper {
         }
         input_components_ID.remove("");
 
-        //создаем новый компонент
+        //создаем новый компонент или обновляем старый
         for (String s : input_components_name) {
             String statement_add_component = "INSERT INTO component(comp_name) VALUE (?) ON DUPLICATE KEY UPDATE comp_name = ?";
             prepSat = connection.prepareStatement(statement_add_component);
