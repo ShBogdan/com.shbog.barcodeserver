@@ -378,9 +378,9 @@
                         if (comp_index > -1) {
                             console.log("over in the array")
                         } else {
-                        $(".components").append("<button class=\"varButton\">" + $(".getInputComponent").val() + "</button>");
-                        varButton.push($(".getInputComponent").val());
-                        $(".getInputComponent").val('');
+                            $(".components").append("<button class=\"varButton\">" + $(".getInputComponent").val() + "</button>");
+                            varButton.push($(".getInputComponent").val());
+                            $(".getInputComponent").val('');
                         }
                     })
                     $(".divInputEdit").on("click", ".addComponentEdit", function () {
@@ -400,7 +400,6 @@
                 });
             });
             $(document).on('click','#btn3', function (){
-                console.log("'click','#btn3'");
                 $('#menu').load("products.jsp", function () {
                     table = $('#products_table').DataTable({
                         processing: true,
@@ -515,30 +514,40 @@
                         }
                     });
                     $(".divInput").on("click", ".addComponent", function () {
-                        comp_index = varButton.indexOf($(".getInputComponent").val());
-                        if ($(".getInputComponent").val().trim() == "") {
-                            console.log("Its empty")
+                        var input = $(".getInputComponent").val().trim();
+                        comp_index = varButton.indexOf(input);
+                        if (input == "") {
+                            console.log("Its empty divInput")
                             return;
+                        }
+                        if(input.search( /,/i) > -1){
+                            alert("Недопустимый символ ','")
+                            return
                         }
                         if (comp_index > -1) {
                             console.log("over in the array")
                         } else {
-                        $(".components").append("<button class=\"varButton\">" + $(".getInputComponent").val() + "</button>");
-                        varButton.push($(".getInputComponent").val());
-                        $(".getInputComponent").val('');
+                            $(".components").append("<button class=\"varButton\">" + input + "</button>");
+                            varButton.push(input);
+                            $(".getInputComponent").val('');
                         }
                     })
                     $(".divInputEdit").on("click", ".addComponentEdit", function () {
-                        comp_index = varButton.indexOf($(".getInputComponentEdit").val());
-                        if ($(".getInputComponentEdit").val().trim() == "") {
-                            console.log("Its empty")
+                        var input = $(".getInputComponentEdit").val().trim();
+                        comp_index = varButton.indexOf(input);
+                        if (input.trim() == "") {
+                            console.log("Its empty divInputEdit")
                             return;
+                        }
+                        if(input.search( /,/i) > -1){
+                            alert("Недопустимый символ ','")
+                            return
                         }
                         if (comp_index > -1) {
                             console.log("over in the array")
                         } else {
-                            $(".components").append("<button class=\"varButton\">" + $(".getInputComponentEdit").val() + "</button>");
-                            varButton.push($(".getInputComponentEdit").val());
+                            $(".components").append("<button class=\"varButton\">" + input + "</button>");
+                            varButton.push(input);
                             $(".getInputComponentEdit").val('');
                         }
                     })
@@ -763,9 +772,19 @@
                             success: function (data){
                                 var obj = JSON.parse(data);
                                 obj.additive.forEach(function(item, i, obj){
-                                    autocompleteInpComponents.push(item[1]);
-                                    autocompleteInpComponents.sort();
+                                    console.log(item[1])
+                                    if(item[1].search( /,/i) > -1){
+                                        var arr = item[1].split(',');
+                                        var index;
+                                        for (index = 0; index < arr.length; ++index) {
+                                            autocompleteInpComponents.push(arr[index])
+                                        }
+                                    }else{
+                                        autocompleteInpComponents.push(item[1]);
+                                    }
                                 });
+                                autocompleteInpComponents.sort();
+
                                 var options = '';
                                 for(var i = 0; i < autocompleteInpComponents.length; i++){
                                     options += '<option value="'+autocompleteInpComponents[i]+'" />'};
@@ -1058,7 +1077,6 @@
                         alert("Error: Could not back");
                     }
                 });
-
             };
 
             function cBoxToArray() {
@@ -1105,7 +1123,7 @@
                 autocompleteInpComponents = [];
                 varButton = [];
                 $.ajaxSetup({cache: false});
-                $(".getInputComponent1").val('');
+                $(".getInputComponentEdit").val('');
                 $(".edit_prodName").val('');
                 $(".edit_prodProvider").val('');
                 $(".edit_prodCode").val('');
