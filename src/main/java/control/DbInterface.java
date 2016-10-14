@@ -54,7 +54,8 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additiveColor"),
                                   req.getParameter("additiveInfo"),
                                   req.getParameter("additivePermission"),
-                                  req.getParameter("additiveCBox")
+                                  req.getParameter("additiveCBox"),
+                                  req.getParameter("additiveGroup")
                 );
             }
             if (null != req.getParameter("changeProduct")) {

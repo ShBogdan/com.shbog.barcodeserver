@@ -147,9 +147,19 @@ public class DbHelper {
 //        }
     }
     public void createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup) throws SQLException {
+        System.out.println("получено " +additiveGroup);
+//
+//        Set<String> groupComponentsName = new HashSet<String>();
+//        if(additiveGroup != null && !additiveGroup.isEmpty()){
+//            groupComponentsName = new HashSet<String>(new ArrayList<String>(Arrays.asList(additiveGroup.split(","))));
+//        }
+//        String s= groupComponentsName.toString();
+//        String name = s.substring(1, s.length() - 1);
+//        System.out.println("add " +name);
+
         String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_type) VALUE (?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setString(1, additiveName);
+        preparedStatement.setString(1, additiveGroup);
         preparedStatement.setString(2, additiveNamber);
         preparedStatement.setString(3, additiveInfo);
         preparedStatement.setString(4, additivePermission);
@@ -158,66 +168,68 @@ public class DbHelper {
         preparedStatement.setString(7, "1");
         preparedStatement.execute();
         //additiveGroup - все елементы для связи + новый елемент
-        ArrayList<Integer> groupComponentsId = new ArrayList<>();
-        ArrayList<Integer> groupComponentsId2 = new ArrayList<>();
-        Set<String> groupComponentsName = new HashSet<String>();
-        if(additiveGroup != null && !additiveGroup.isEmpty()){
-            groupComponentsName = new HashSet<String>(new ArrayList<String>(Arrays.asList(additiveGroup.split(","))));
-            groupComponentsName.add(additiveName);
-        }
+
         //получаем id всех схожих компонентов
-        for (String component : groupComponentsName) {
-            String query = "SELECT comp_id FROM component WHERE comp_name = "+"\""+component+"\"";
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(query);
-            resultSet.next();
-            groupComponentsId.add(resultSet.getInt("comp_id"));
-        }
+//        for (String component : groupComponentsName) {
+//            String query = "SELECT comp_id FROM component WHERE comp_name = "+"\""+component+"\"";
+//            Statement stmt = connection.createStatement();
+//            ResultSet resultSet = stmt.executeQuery(query);
+//            resultSet.next();
+//            groupComponentsId.add(resultSet.getInt("comp_id"));
+//        }
+//        System.out.println("ID group = " + groupComponentsId.toString());
+
         //собраем из всех схожих компонентов уникальные ссылки на другие компоненты
-        ArrayList<Integer> groupComponentsIdToBase = new ArrayList<>();
-        System.out.println("Id изменяемых продуктов"+groupComponentsId);
+//        ArrayList<Integer> groupComponentsIdToBase = new ArrayList<>();
+//        System.out.println("Id изменяемых продуктов"+groupComponentsId);
+//
+//        for (Integer i : groupComponentsId){
+//            groupComponentsIdToBase.add(i);
+//            System.out.println("На входе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
+//
+//            String query = "SELECT comp_group FROM component WHERE comp_id = "+"\""+i+"\"";
+//            Statement stmt = connection.createStatement();
+//            ResultSet resultSet = stmt.executeQuery(query);
+//            resultSet.next();
+//            System.out.println("Группа компонента " +i+">>>"+ resultSet.getString("comp_group"));
+//            if(null != resultSet.getString("comp_group")) {
+//                if(!resultSet.getString("comp_group").trim().equals("")) {
+//                    ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(resultSet.getString("comp_group").substring(1, resultSet.getString("comp_group").length() - 1).split(",")));
+//                    System.out.println("Правратили строку в массив" + stringID.toString());
+//                    for (String tempString : stringID) {
+//                        int tempInt = Integer.parseInt(tempString.trim());
+//                        System.out.println("Добавляем " +tempInt + "в groupComponentsIdToBase");
+//                        if (!groupComponentsIdToBase.contains(tempInt)) {
+//                            System.out.println("добавили");
+//                            groupComponentsIdToBase.add(Integer.valueOf(tempInt));
+//                        }
+//                    }
+//                }
+//            }
+//            System.out.println("На выходе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
+//        }
 
-        for (Integer i : groupComponentsId){
-            groupComponentsIdToBase.add(i);
-            System.out.println("На входе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
-
-            String query = "SELECT comp_group FROM component WHERE comp_id = "+"\""+i+"\"";
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(query);
-            resultSet.next();
-            System.out.println("Группа компонента " +i+">>>"+ resultSet.getString("comp_group"));
-            if(null != resultSet.getString("comp_group")) {
-                if(!resultSet.getString("comp_group").trim().equals("")) {
-                    ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(resultSet.getString("comp_group").substring(1, resultSet.getString("comp_group").length() - 1).split(",")));
-                    System.out.println("Правратили строку в массив" + stringID.toString());
-                    for (String tempString : stringID) {
-                        int tempInt = Integer.parseInt(tempString.trim());
-                        System.out.println("Добавляем " +tempInt + "в groupComponentsIdToBase");
-                        if (!groupComponentsIdToBase.contains(tempInt)) {
-                            System.out.println("добавили");
-                            groupComponentsIdToBase.add(Integer.valueOf(tempInt));
-                        }
-                    }
-                }
-            }
-            System.out.println("На выходе groupComponentsIdToBase "+ groupComponentsIdToBase.toString());
-        }
-
-        for (Integer componentID : groupComponentsIdToBase) {
-            String query = "UPDATE component SET comp_group = "+"'"+groupComponentsIdToBase+"'"+"WHERE comp_id = "+"'"+componentID+"'";
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate(query);
-        }
-        System.out.println(groupComponentsName.toString());
-        System.out.println(groupComponentsId.toString());
-        System.out.println(groupComponentsIdToBase.toString());
+//        for (Integer componentID : groupComponentsId) {
+//            String query = "UPDATE component SET comp_group = "+"'1'"+"WHERE comp_id = "+"'"+componentID+"'";
+//            Statement stmt = connection.createStatement();
+//            stmt.executeUpdate(query);
+//        }
+//        System.out.println(groupComponentsName.toString());
         if(connection!=null)
             connection.close();
     }
-    public void changeAdditive(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox) throws SQLException {
+    public void changeAdditive(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup) throws SQLException {
+//        Set<String> groupComponentsName = new HashSet<String>();
+//        if(additiveGroup != null && !additiveGroup.isEmpty()){
+//            groupComponentsName = new HashSet<String>(new ArrayList<String>(Arrays.asList(additiveGroup.split(","))));
+//        }
+//        String s= groupComponentsName.toString();
+//        String name = s.substring(1, s.length() - 1);
+        System.out.println("получено " +additiveGroup);
+
         String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_type = ? WHERE comp_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setString(1, additiveName);
+        preparedStatement.setString(1, additiveGroup);
         preparedStatement.setString(2, additiveNamber);
         preparedStatement.setString(3, additiveInfo);
         preparedStatement.setString(4, additivePermission);

@@ -272,7 +272,7 @@
         </tbody>
     </table>
     <div class="divInput" align="center">
-        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить компонент</button>
+        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить название</button>
         <datalist id="components"></datalist>
     </div>
 
