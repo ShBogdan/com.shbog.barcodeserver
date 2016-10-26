@@ -43,7 +43,8 @@
     </style>
     <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js">
     </script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
+    <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
     </script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -63,9 +64,12 @@
             var varBtn_index;
             var autocompleteInpComponents = [];
             var componentGroup = [];
-            $(document).on('click','#btn1', function (){
-                $('#menu').load("info.jsp");});
-            $(document).on('click','#btn2', function (){
+            var dictionaryAutoCompCompon = {};
+
+            $(document).on('click', '#btn1', function () {
+                $('#menu').load("info.jsp");
+            });
+            $(document).on('click', '#btn2', function () {
                 $('#menu').load("catalog.jsp", function () {
                     //добавить катгорию
                     fill_main_section()
@@ -114,7 +118,7 @@
                             $(".child-" + _id).toggle()
                         }
                         if (this.className === "remove-" + _id) {
-                            alert(this.className)
+//                            alert(this.className)
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
@@ -158,8 +162,8 @@
                                         $(".placeholder_rename").val('')
                                     },
                                     CANSEL: function () {
-                                        $(this).dialog("close"),
-                                                alert("Cansel")
+                                        $(this).dialog("close")
+//                                                alert("Cansel")
                                     }
                                 },
                                 width: 600
@@ -192,8 +196,8 @@
                                         $(".placeholder_addCategory").val('')
                                     },
                                     CANSEL: function () {
-                                        $(this).dialog("close"),
-                                                alert("Cansel")
+                                        $(this).dialog("close")
+//                                                alert("Cansel")
                                     }
                                 },
                                 width: 600
@@ -244,8 +248,8 @@
                                         $(".placeholder_renameCat").val('')
                                     },
                                     CANSEL: function () {
-                                        $(this).dialog("close"),
-                                                alert("Cansel")
+                                        $(this).dialog("close")
+//                                                alert("Cansel")
                                     }
                                 },
                                 width: 600
@@ -253,8 +257,9 @@
                             })
                         }
                     }));
-                });});
-            $(document).on('click','#btn3', function (){
+                });
+            });
+            $(document).on('click', '#btn3', function () {
                 $('#menu').load("products.jsp", function () {
                     table = $('#products_table').DataTable({
                         processing: true,
@@ -268,7 +273,7 @@
                         "lengthMenu": [[10, 25, 50, 100, 500, 1000, 5000, -1], [10, 25, 50, 100, 500, 1000, 5000, "All"]],
                         "deferRender": true,
                         "columnDefs": [
-                            {"targets": 0, "visible": true},
+                            {"targets": 0, "visible": false},
                             {"targets": 4, "wodht": "20%"},
                             {
                                 "targets": 6,
@@ -339,9 +344,10 @@
 
                     //обработка кнопок
                     $(".compound").on("click", ".btnCompound", function () {
-                        if(!componets_array_ID.includes($(this).attr("id"))){
+                        if (!componets_array_ID.includes($(this).attr("id"))) {
                             $(".components").append($(this));
                             componets_array_ID.push($(this).attr("id"));
+                            fillDobOgr()
                         }
                     });
                     $(".components").on("click", ".btnCompound", function () {
@@ -349,12 +355,14 @@
                         comp_index = componets_array_ID.indexOf($(this).attr("id"));
                         if (comp_index > -1) {
                             componets_array_ID.splice(comp_index, 1);
+                            console.log('btnCompound deleted')
+                            fillDobOgr()
                         }
                     });
                     $(".components").on("click", ".varButton", function () {
                         $(this).remove();
                         varBtn_index = varButton.indexOf($(this).text());
-                        if(!isEdit){
+                        if (!isEdit) {
                             console.log("In")
                             if (varBtn_index > -1) {
                                 varButton.splice(varBtn_index, 1);
@@ -365,7 +373,18 @@
                             comp_index = componets_array_ID.indexOf($(this).attr("id"));
                             if (comp_index > -1) {
                                 componets_array_ID.splice(comp_index, 1);
+                                fillDobOgr()
                             }
+                        }
+                        console.log('varButton deleted')
+                    });
+                    $(".components").on("click", ".varACCButton", function () {
+                        $(this).remove();
+                        comp_index = componets_array_ID.indexOf($(this).attr("id"));
+                        if (comp_index > -1) {
+                            componets_array_ID.splice(comp_index, 1);
+                            console.log('varACCButton deleted')
+                            fillDobOgr()
                         }
                     });
                     $(".divInput").on("click", ".addComponent", function () {
@@ -375,16 +394,36 @@
                             console.log("Its empty divInput")
                             return;
                         }
-                        if(input.search( /,/i) > -1){
+                        if (input.search(/,/i) > -1) {
                             alert("Недопустимый символ ','")
-                            return
+                            return;
                         }
                         if (comp_index > -1) {
                             console.log("over in the array")
-                        } else {
+                            return;
+                        }
+                        if (!(input in dictionaryAutoCompCompon)) {
                             $(".components").append("<button class=\"varButton\">" + input + "</button>");
                             varButton.push(input);
                             $(".getInputComponent").val('');
+                            return;
+                        }
+                        var compId;
+                        for (var name in dictionaryAutoCompCompon) {
+                            if (name == input) {
+                                compId = dictionaryAutoCompCompon[name];
+                                console.log('in dictionary')
+                                console.log('name ' + name)
+                                console.log('index ' + compId)
+                                if (!componets_array_ID.includes(compId)) {
+                                    console.log('not in the array')
+                                    componets_array_ID.push(compId);
+                                    $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + compId + "\"" + ">" + input + "</button>");
+                                    $(".getInputComponent").val('');
+                                    fillDobOgr();
+
+                                }
+                            }
                         }
                     })
                     $(".divInputEdit").on("click", ".addComponentEdit", function () {
@@ -394,21 +433,39 @@
                             console.log("Its empty divInputEdit")
                             return;
                         }
-                        if(input.search( /,/i) > -1){
+                        if (input.search(/,/i) > -1) {
                             alert("Недопустимый символ ','")
                             return
                         }
                         if (comp_index > -1) {
                             console.log("over in the array")
-                        } else {
+                            return;
+                        }
+                        if (!(input in dictionaryAutoCompCompon)) {
                             $(".components").append("<button class=\"varButton\">" + input + "</button>");
                             varButton.push(input);
                             $(".getInputComponentEdit").val('');
+                            return;
+                        }
+                        for (var name in dictionaryAutoCompCompon) {
+                            if (name == input) {
+                                var id = dictionaryAutoCompCompon[name];
+                                console.log('in dictionary')
+                                console.log('name ' + name)
+                                console.log('index ' + id)
+                                if (!componets_array_ID.includes(id)) {
+                                    console.log('not in the array')
+                                    componets_array_ID.push(id);
+                                    $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
+                                    $(".getInputComponentEdit").val('');
+                                    fillDobOgr()
+                                }
+                            }
                         }
                     })
                 });
             });
-            $(document).on('click','#btn4', function (){
+            $(document).on('click', '#btn4', function () {
                 $('#menu').load("additive.jsp", function () {
                     e_table = $('#additive_table').DataTable({
                         processing: true,
@@ -486,11 +543,11 @@
 
                     $(".divInput").on("click", ".addComponent", function () {
                         comp_index = componentGroup.indexOf($(".getInputComponent").val());
-                        if($(".getInputComponent").val().trim()==""){
+                        if ($(".getInputComponent").val().trim() == "") {
                             console.log("Its empty")
                             return;
                         }
-                        if($(".getInputComponent").val().trim()==$(".e_name").val()){
+                        if ($(".getInputComponent").val().trim() == $(".e_name").val()) {
                             console.log("Its repeat name")
                             return;
                         }
@@ -512,7 +569,7 @@
                     });
                 })
             });
-            $(document).on('click','#btn5', function (){
+            $(document).on('click', '#btn5', function () {
                 $('#menu').load("limitations.jsp");
             });
 
@@ -525,7 +582,7 @@
                 edit_product();
             });
             $(document).on('change', '.selectCategory', function () {
-                alert("run")
+//                alert("run")
                 var selId;
                 $("select option:selected").each(function () {
                     selId = $(this).val()
@@ -619,29 +676,43 @@
                                 alert("Error: Could not back");
                             }
                         });
-                        $. ajax({
+                        $.ajax({
                             url: "/DbInterface",
                             data: {getAdditive: "getAdditive"},
                             dataSrc: "additive",
                             type: "POST",
-                            success: function (data){
+                            success: function (data) {
                                 var obj = JSON.parse(data);
-                                obj.additive.forEach(function(item, i, obj){
+                                var compName;
+                                var compId;
+                                obj.additive.forEach(function (item, i, obj) {
                                     console.log(item[1])
-                                    if(item[1].search( /,/i) > -1){
+                                    if (item[1].search(/,/i) > -1) {
                                         var arr = item[1].split(',');
                                         var index;
                                         for (index = 0; index < arr.length; ++index) {
-                                            autocompleteInpComponents.push(item[0]+"<="+arr[index])
+                                            console.log("index is " + index + " name " + arr[index])
+                                            compName = arr[index];
+                                            compId = item[0]
+                                            dictionaryAutoCompCompon[compName] = compId;
+                                            autocompleteInpComponents.push(compName);
+
                                         }
-                                    }else{
-                                        autocompleteInpComponents.push(item[0]+"<="+item[1]);
+                                    } else {
+                                        compName = item[1];
+                                        compId = item[0]
+                                        dictionaryAutoCompCompon[compName] = compId;
+                                        autocompleteInpComponents.push(compName);
+
                                     }
                                 });
+
                                 autocompleteInpComponents.sort();
                                 var options = '';
-                                for(var i = 0; i < autocompleteInpComponents.length; i++){
-                                    options += '<option value="'+autocompleteInpComponents[i]+'" />'};
+                                for (var i = 0; i < autocompleteInpComponents.length; i++) {
+                                    options += '<option value="' + autocompleteInpComponents[i] + '" />'
+                                }
+                                ;
                                 document.getElementById('components').innerHTML = options;
                             }
                         });
@@ -726,29 +797,45 @@
                                 alert("Error: Could not back");
                             }
                         });
-                        $. ajax({
+                        $.ajax({
                             url: "/DbInterface",
                             data: {getAdditive: "getAdditive"},
                             dataSrc: "additive",
                             type: "POST",
-                            success: function (data){
+                            success: function (data) {
                                 var obj = JSON.parse(data);
-                                obj.additive.forEach(function(item, i, obj){
-                                    if(item[1].search( /,/i) > -1){
+                                var compName;
+                                var compId;
+                                obj.additive.forEach(function (item, i, obj) {
+                                    console.log(item[1])
+                                    if (item[1].search(/,/i) > -1) {
                                         var arr = item[1].split(',');
                                         var index;
                                         for (index = 0; index < arr.length; ++index) {
-                                            autocompleteInpComponents.push(arr[index])
+                                            console.log("index is " + index + " name " + arr[index])
+                                            compName = arr[index];
+                                            compId = item[0]
+                                            dictionaryAutoCompCompon[compName] = compId;
+                                            autocompleteInpComponents.push(compName);
+
                                         }
-                                    }else{
-                                        autocompleteInpComponents.push(item[1]);
+                                    } else {
+                                        compName = item[1];
+                                        compId = item[0]
+                                        dictionaryAutoCompCompon[compName] = compId;
+                                        autocompleteInpComponents.push(compName);
+
                                     }
                                 });
+
                                 autocompleteInpComponents.sort();
-                                var edit_options = '';
-                                for(var i = 0; i < autocompleteInpComponents.length; i++){
-                                    edit_options  += '<option value="'+autocompleteInpComponents[i]+'" />'};
-                                document.getElementById('edit_components').innerHTML = edit_options ;
+                                var options = '';
+                                for (var i = 0; i < autocompleteInpComponents.length; i++) {
+                                    options += '<option value="' + autocompleteInpComponents[i] + '" />'
+                                }
+
+                                document.getElementById('edit_components').innerHTML = options;
+
                             }
                         });
                     },
@@ -769,17 +856,17 @@
                     modal: true,
                     buttons: {
                         OK: function () {
-                            if($.inArray($(".e_name").val(), autocompleteInpComponents)!=-1){
+                            if ($.inArray($(".e_name").val(), autocompleteInpComponents) != -1) {
                                 alert("Уже есть компонент с таким именем")
                                 return;
                             }
                             componentGroup.unshift($(".e_name").val());
-                            console.log("arr = " +componentGroup.toString())
+                            console.log("arr = " + componentGroup.toString())
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
                                     createAdditive: "createAdditive",
-                                    additiveNamber: $(".e_namber").val()=="" ? 0 : $(".e_namber").val(),
+                                    additiveNamber: $(".e_namber").val() == "" ? 0 : $(".e_namber").val(),
                                     additiveName: $(".e_name").val(),
                                     additiveColor: $(".e_color").val(),
                                     additiveInfo: $(".info").val(),
@@ -790,23 +877,17 @@
                                 type: 'POST',
                                 dataType: 'text',
                                 success: function (data) {
-                                    $.post("/DbInterface",
-                                            {
-                                                getAdditiveID: "getAdditiveID",
-                                            },
-                                            function (data) {
-                                                e_table.row.add([
-                                                    parseInt(data, 10),
-                                                    componentGroup.toString(),
-                                                    $(".e_namber").val(),
-                                                    $(".info").val(),
-                                                    $(".permission").val(),
-                                                    $(".e_color").val(),
-                                                    cBoxToArray().toString(),
-                                                ]).draw(false);
-                                                $(".dialog_create_additive").dialog("close")
-                                            }
-                                    );
+                                    e_table.row.add([
+                                        parseInt(data, 10),
+                                        componentGroup.toString(),
+                                        $(".e_namber").val(),
+                                        $(".info").val(),
+                                        $(".permission").val(),
+                                        $(".e_color").val(),
+                                        cBoxToArray().toString(),
+                                    ]).draw(false);
+                                    $(".dialog_create_additive").dialog("close")
+
                                 },
                                 error: function (request, status, error) {
                                     console.log("somthing wrong");
@@ -814,12 +895,16 @@
                                 }
                             });
                         },
-                        CANSEL: function () {$(".dialog_create_additive").dialog("close")}
+                        CANSEL: function () {
+                            $(".dialog_create_additive").dialog("close")
+                        }
                     },
                     open: function (event, ui) {
                         fillGroupAdditive();
                     },
-                    beforeClose: function (event, ui) {closeAdditiveDialog()}
+                    beforeClose: function (event, ui) {
+                        closeAdditiveDialog()
+                    }
                 });
             };
 
@@ -867,29 +952,37 @@
                                 }
                             });
                         },
-                        CANSEL: function () {$(".dialog_create_additive").dialog("close")}
+                        CANSEL: function () {
+                            $(".dialog_create_additive").dialog("close")
+                        }
                     },
                     open: function (event, ui) {
-                        edit_e_tableRow[5] == 0 ? $('.e_color option:contains("Зеленый")').prop('selected', true): null;
-                        edit_e_tableRow[5] == 1 ? $('.e_color option:contains("Желтый")').prop('selected', true): null;
-                        edit_e_tableRow[5] == 2 ? $('.e_color option:contains("Крассный")').prop('selected', true): null;
+                        edit_e_tableRow[5] == 0 ? $('.e_color option:contains("Зеленый")').prop('selected', true) : null;
+                        edit_e_tableRow[5] == 1 ? $('.e_color option:contains("Желтый")').prop('selected', true) : null;
+                        edit_e_tableRow[5] == 2 ? $('.e_color option:contains("Крассный")').prop('selected', true) : null;
 
                         var arr = edit_e_tableRow[1].split(",");
                         $(".e_name").val(arr[0]);
                         $(".e_namber").val(edit_e_tableRow[2]);
                         $(".info").val(edit_e_tableRow[3]);
                         $(".permission").val(edit_e_tableRow[4]);
-                        if(edit_e_tableRow[6]!=null){fillCBox(edit_e_tableRow[6].split(","))}
+                        if (edit_e_tableRow[6] != null) {
+                            fillCBox(edit_e_tableRow[6].split(","))
+                        }
                         fillGroupAdditive();
                         arr.shift();
                         arr.sort();
-                        arr.forEach(function(item, i, arr) {
+                        arr.forEach(function (item, i, arr) {
                             $(".components").append("<button class=\"varButton\">" + item.trim() + "</button>");
                             componentGroup.push(item.trim())
                         });
                     },
-                    close: function (event, ui) { $(".dialog_create_additive").dialog("close")},
-                    beforeClose: function (event, ui) {closeAdditiveDialog()}
+                    close: function (event, ui) {
+                        $(".dialog_create_additive").dialog("close")
+                    },
+                    beforeClose: function (event, ui) {
+                        closeAdditiveDialog()
+                    }
                 });
             };
 
@@ -934,6 +1027,7 @@
                         for (var i = 0; i < elements.length; i++) {
                             componets_array_ID.push(elements[i].id);
                         }
+                        fillDobOgr();
                     },
                     error: function (request, status, error) {
                         alert("Error: Could not back");
@@ -942,33 +1036,35 @@
             };
 
             function cBoxToArray() {
-                var cBoxs=[];
-                $('#c0:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c1:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c2:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c3:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c4:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c5:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c6:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
-                $('#c7:checked').val() =="on" ? cBoxs.push(1) : cBoxs.push(0);
+                var cBoxs = [];
+                $('#c0:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c1:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c2:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c3:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c4:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c5:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c6:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
+                $('#c7:checked').val() == "on" ? cBoxs.push(1) : cBoxs.push(0);
                 return cBoxs;
             };
 
             function fillCBox(cBoxArray) {
-                cBoxArray[0] == 1 ? $("#c0").prop("checked", true):null;
-                cBoxArray[1] == 1 ? $("#c1").prop("checked", true):null;
-                cBoxArray[2] == 1 ? $("#c2").prop("checked", true):null;
-                cBoxArray[3] == 1 ? $("#c3").prop("checked", true):null;
-                cBoxArray[4] == 1 ? $("#c4").prop("checked", true):null;
-                cBoxArray[5] == 1 ? $("#c5").prop("checked", true):null;
-                cBoxArray[6] == 1 ? $("#c6").prop("checked", true):null;
-                cBoxArray[7] == 1 ? $("#c7").prop("checked", true):null;
+                cBoxArray[0] == 1 ? $("#c0").prop("checked", true) : null;
+                cBoxArray[1] == 1 ? $("#c1").prop("checked", true) : null;
+                cBoxArray[2] == 1 ? $("#c2").prop("checked", true) : null;
+                cBoxArray[3] == 1 ? $("#c3").prop("checked", true) : null;
+                cBoxArray[4] == 1 ? $("#c4").prop("checked", true) : null;
+                cBoxArray[5] == 1 ? $("#c5").prop("checked", true) : null;
+                cBoxArray[6] == 1 ? $("#c6").prop("checked", true) : null;
+                cBoxArray[7] == 1 ? $("#c7").prop("checked", true) : null;
             };
 
             function closeDialog() {
                 componets_array_ID = [];
                 varButton = [];
                 autocompleteInpComponents = [];
+                $(".dobavki p").remove();
+                $(".ogranicenija p").remove();
                 $.ajaxSetup({cache: false});
                 $(".getInputComponent").val('');
                 $(".prodName").val('');
@@ -984,6 +1080,8 @@
                 componets_array_ID = [];
                 autocompleteInpComponents = [];
                 varButton = [];
+                $(".dobavki p").remove();
+                $(".ogranicenija p").remove();
                 $.ajaxSetup({cache: false});
                 $(".getInputComponentEdit").val('');
                 $(".edit_prodName").val('');
@@ -1046,14 +1144,14 @@
             };
 
             function fillInputComponent() {
-                $. ajax({
+                $.ajax({
                     url: "/DbInterface",
                     data: {getAdditive: "getAdditive"},
                     dataSrc: "additive",
                     type: "POST",
-                    success: function (data){
+                    success: function (data) {
                         var obj = JSON.parse(data);
-                        obj.additive.forEach(function(item, i, obj){
+                        obj.additive.forEach(function (item, i, obj) {
                             autocompleteInpComponents.push(item[1]);
                             console.log(autocompleteInpComponents)
                         });
@@ -1067,6 +1165,31 @@
                     }
                 })
             };
+            function fillDobOgr() {
+                $(".dobavki p").remove();
+                $(".ogranicenija p").remove();
+                componets_array_ID.sort();
+                componets_array_ID.forEach(function (compId, i, componets_array_ID) {
+                    console.log(compId);
+                    $.ajax({
+                        url: "/DbInterface",
+                        data: {
+                            getAdditiveByID: "getAdditiveByID",
+                            additiveID: compId,
+                        },
+                        dataSrc: "component",
+                        type: "POST",
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            console.log(obj);
+                            console.log(obj.component[1] + "in obj");
+                            $(".dobavki").append("<p>" + obj.component[2] + "</p>");
+                            $(".ogranicenija").append("<p>" + obj.component[6] + "</p>");
+                        }
+                    })
+                });
+            }
+
         });
     </script>
 </head>
@@ -1084,7 +1207,9 @@
             </p>
         </td>
         <td style="text-align: right;">${username}&nbsp;</h5>
-            <a href="../LogoutServlet"><button class="button">Выход</button>​</a>
+            <a href="../LogoutServlet">
+                <button class="button">Выход</button>
+                ​</a>
         </td>
     </tr>
     </tbody>

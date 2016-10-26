@@ -101,26 +101,10 @@
 </div>
 <hr>
 <table id="main_section">
-    <%--<tbody id="1">--%>
-    <%--<tr class="par">--%>
-    <%--<td class="parent">1</td>--%>
-    <%--<td class="remove-1"><button>Удалить</button></td>--%>
-    <%--<td class="rename-1"><button >Пейменовать</button></td>--%>
-    <%--<td class="addCategory-1"><button >Добавить категорию</button></td>--%>
-    <%--</tr>--%>
-    <%--<tr class="child-1"  id = "234">--%>
-    <%--<td>1.1</td>--%>
-    <%--<td class="removeCat"><button>Удалить</button></td>--%>
-    <%--<td class="renameCat"><button >Пейменовать</button></td>--%>
-    <%--</tr>--%>
-    <%--<tr class="child-1"  id = "2344">--%>
-    <%--<td>1.2</td>--%>
-    <%--<td class="removeCat"><button>Удалить</button></td>--%>
-    <%--<td class="renameCat"><button >Пейменовать</button></td>--%>
-    <%--</tr>--%>
-    <%--</tbody>--%>
 </table>
 </body>
+<hr>
+<p>Нельзя удалить родительский элемент если есть дочерний</p>
 <div id="rename" title="Перейменовать" hidden><input class = "placeholder_rename" placeholder="название каталога" type="text"></div>
 <div id="addCategory" title="Добавить" hidden><input class = "placeholder_addCategory" placeholder="название категории" type="text"></div>
 <div id="renameCat" title="Перейменовать" hidden><input class = "placeholder_renameCat" placeholder="название категории" type="text"></div>

@@ -146,7 +146,7 @@ public class DbHelper {
             connection.close();
 //        }
     }
-    public void createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup) throws SQLException {
+    public PrintWriter createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup, PrintWriter out) throws SQLException {
         System.out.println("получено " +additiveGroup);
 //
 //        Set<String> groupComponentsName = new HashSet<String>();
@@ -167,6 +167,15 @@ public class DbHelper {
         preparedStatement.setString(6, additiveCBox);
         preparedStatement.setString(7, "1");
         preparedStatement.execute();
+
+        String query = "SELECT LAST_INSERT_ID() as last_id from component;";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        resultSet.next();
+        out.println(resultSet.getString("last_id"));
+        System.out.println(resultSet.getString("last_id"));
+        out.flush();
+
         //additiveGroup - все елементы для связи + новый елемент
 
         //получаем id всех схожих компонентов
@@ -217,6 +226,7 @@ public class DbHelper {
 //        System.out.println(groupComponentsName.toString());
         if(connection!=null)
             connection.close();
+        return out;
     }
     public void changeAdditive(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveGroup) throws SQLException {
 //        Set<String> groupComponentsName = new HashSet<String>();
@@ -563,12 +573,34 @@ public class DbHelper {
             connection.close();
         return out;
     }
-    public PrintWriter getAdditiveID(PrintWriter out) throws SQLException{
-        String query = "SELECT comp_id FROM component ORDER BY comp_id DESC LIMIT 1";
+    public PrintWriter getAdditiveByID(PrintWriter out, String compId) throws SQLException{
+        System.out.println("compId = " + compId);
+        String query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox FROM component WHERE comp_id="+compId;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
         resultSet.next();
-        out.println(resultSet.getString("comp_id"));
+        JSONObject result = new JSONObject();
+        JSONArray ja = new JSONArray();
+        String id = String.valueOf(resultSet.getInt("comp_id"));
+        String additive_name = resultSet.getString("comp_name");
+        Integer additive_code = resultSet.getInt("comp_e_code");
+        String additive_info = resultSet.getString("comp_info");
+        String additive_perm = resultSet.getString("comp_perm");
+        Integer additive_color = resultSet.getInt("comp_color");
+        String additive_cbox = resultSet.getString("comp_cbox");
+        ja.put(id);
+        ja.put(additive_name);
+        ja.put(additive_code);
+        ja.put(additive_info);
+        ja.put(additive_perm);
+        ja.put(additive_color);
+        ja.put(additive_cbox);
+        try {
+            result.put("component",ja);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
         out.flush();
         if(connection!=null)
             connection.close();

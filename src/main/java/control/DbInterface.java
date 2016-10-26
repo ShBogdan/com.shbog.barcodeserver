@@ -44,7 +44,8 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additiveInfo"),
                                   req.getParameter("additivePermission"),
                                   req.getParameter("additiveCBox"),
-                                  req.getParameter("additiveGroup")
+                                  req.getParameter("additiveGroup"),
+                                  out
                 );
             }
             if (null != req.getParameter("changeAdditive")) {
@@ -74,8 +75,8 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("getProductID")) {
                 db.getProductID(out);
             }
-            if (null != req.getParameter("getAdditiveID")) {
-                db.getAdditiveID(out);
+            if (null != req.getParameter("getAdditiveByID")) {
+                db.getAdditiveByID(out, req.getParameter("additiveID"));
             }
             if (null != req.getParameter("removeSection")) {
                 db.removeSection(req.getParameter("sectionId"));

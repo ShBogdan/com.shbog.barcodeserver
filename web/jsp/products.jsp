@@ -26,6 +26,13 @@
             box-sizing: border-box;
             font-weight: bold;
         }
+        tfoot {
+            display: table-header-group;
+        }
+        .margin{
+            margin-top: 10px;
+        }
+
         /*textarea {*/
         /*display: inline-block;*/
         /*width: 100%;*/
@@ -106,7 +113,7 @@
             /**/
         /*}*/
 
-        .varButton, .btnCompound  {
+        .varButton, .btnCompound, .varACCButton  {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
             background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
             background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
@@ -243,7 +250,7 @@
         </tr>
         </tbody>
     </table>
-    <table class="sostav" align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Компоненты</b><hr></td>
@@ -259,6 +266,19 @@
         <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить компонент</button>
         <datalist id="components"></datalist>
     </div>
+    <hr class= "margin">
+    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+        <tbody>
+        <tr>
+            <td width="50%" align="center"><b>Добавки</b></td>
+            <td width="50%" align="center"><b>Ограничения</b></td>
+        </tr>
+        <tr>
+            <td class = "dobavki" valign="top"></td>
+            <td class = "ogranicenija" valign="top"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <div class="dialog_edit_product" title="Изменить продукт" hidden>
     <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
@@ -296,6 +316,19 @@
         <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50" list="edit_components"><button class="addComponentEdit" >Добавить компонент</button>
         <datalist id="edit_components"></datalist>
     </div>
+    <hr class= "margin">
+    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+        <tbody>
+        <tr>
+            <td width="50%" align="center"><b>Добавки</b></td>
+            <td width="50%" align="center"><b>Ограничения</b></td>
+        </tr>
+        <tr>
+            <td class = "dobavki" valign="top"></td>
+            <td class = "ogranicenija" valign="top"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

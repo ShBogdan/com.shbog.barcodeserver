@@ -183,7 +183,9 @@
             top:1px;
             margin-left: 5px;
         }
-
+        tfoot {
+            display: table-header-group;
+        }
     </style>
 </head>
 
