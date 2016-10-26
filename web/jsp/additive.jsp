@@ -197,10 +197,12 @@
     <thead>
     <tr>
         <th>id</th>
-        <th>Название</th>
+        <th>Назначение</th>
         <th>Номер</th>
+        <th>Название</th>
         <th>Описание</th>
         <th>Запрет</th>
+        <th>Примечание</th>
         <th>Цвет</th>
         <th>cbox</th>
         <th></th>
@@ -210,10 +212,12 @@
     <tfoot>
     <tr>
         <th>id</th>
-        <th class="searchable">Тип добавки</th>
+        <th class="searchable">Назначени</th>
         <th class="searchable">Номер</th>
+        <th class="searchable">Название</th>
         <th class="searchable">Описание</th>
-        <th></th>
+        <th class="searchable">Запрет</th>
+        <th class="searchable">Примечание</th>
         <th></th>
         <th></th>
         <th></th>
@@ -238,6 +242,12 @@
                 </select>
             </td>
         </tr>
+        <tr>
+            <td align="center">
+                <input  class="e_for" placeholder="Назначение" type="text" style="width: 150px" maxlength="25" />
+                <input  class="e_notes" placeholder="Примечание" type="text" style="width: 555px" maxlength="150" />
+            </td>
+        </tr>
         </tbody>
     </table>
 
@@ -253,6 +263,9 @@
         </tr>
         </tbody>
     </table>
+    <%--<div align="center">--%>
+        <%--<input class="e_notes" placeholder="Примечание" type="text" style="width: 690px" maxlength="150" />--%>
+    <%--</div>--%>
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>
         <tr>
@@ -261,15 +274,7 @@
         </tr>
         <tr>
             <td class = "components"  height="300px" valign="top"></td>
-            <td class = "compound"  height="300px" valign="top">
-                <p><input type="checkbox" id="c0"/>Не рекомендуется вегетарианцам</p>
-                <p><input type="checkbox" id="c1"/>Может содержать ГМО</p>
-                <p><input type="checkbox" id="c2"/>Не рекомендуется детям</p>
-                <p><input type="checkbox" id="c3"/>Не рекомендуется беременным</p>
-                <p><input type="checkbox" id="c4"/>Не рекомендуется с заболеваниями ЖКТ</p>
-                <p><input type="checkbox" id="c5"/>Не рекомендуется с астмой</p>
-                <p><input type="checkbox" id="c6"/>Не рекомендуется с ССЗ</p>
-                <p><input type="checkbox" id="c7"/>Не рекомендуется с сахарным диабетом</p></td>
+            <td class = "exclude"  height="300px" valign="top">
         </tr>
         </tbody>
     </table>

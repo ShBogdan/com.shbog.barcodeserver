@@ -44,7 +44,8 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additiveInfo"),
                                   req.getParameter("additivePermission"),
                                   req.getParameter("additiveCBox"),
-                                  req.getParameter("additiveGroup"),
+                                  req.getParameter("additiveNotes"),
+                                  req.getParameter("additiveFor"),
                                   out
                 );
             }
@@ -56,8 +57,12 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additiveInfo"),
                                   req.getParameter("additivePermission"),
                                   req.getParameter("additiveCBox"),
-                                  req.getParameter("additiveGroup")
+                                  req.getParameter("additiveFor"),
+                                  req.getParameter("additiveNotes")
                 );
+            }
+            if (null != req.getParameter("getCBox")) {
+                db.getCBox(out);
             }
             if (null != req.getParameter("changeProduct")) {
                 db.changeProduct(req.getParameter("prod_id"),
@@ -92,6 +97,9 @@ public class DbInterface extends HttpServlet {
             }
             if (null != req.getParameter("getCategory")) {
                 db.getCategory(out);
+            }
+            if (null != req.getParameter("getExclude")) {
+                db.getExclude(out);
             }
             if (null != req.getParameter("getCompound")) {
                 db.getCompound(out, req.getParameter("compoundID"));
