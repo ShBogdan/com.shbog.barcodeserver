@@ -246,7 +246,7 @@
             <td><input class="prodProvider" placeholder="Производитель" type="text" style="width:  100%" maxlength="50"></td>
         </tr>
         <tr>
-            <td><input class="prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="50"></td>
+            <td><input class="prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="14"></td>
         </tr>
         </tbody>
     </table>
@@ -296,7 +296,7 @@
             <td><input class="edit_prodProvider" placeholder="Производитель" type="text" style="width:  100%" maxlength="50"></td>
         </tr>
         <tr>
-            <td><input class="edit_prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="50"></td>
+            <td><input class="edit_prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="14"></td>
         </tr>
         </tbody>
     </table>

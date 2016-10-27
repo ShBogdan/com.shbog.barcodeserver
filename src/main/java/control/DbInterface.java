@@ -49,6 +49,10 @@ public class DbInterface extends HttpServlet {
                                   out
                 );
             }
+            if (null != req.getParameter("addExclude")) {
+                System.out.println("addExclude");
+                db.createExclude(req.getParameter("excludeName"), out);
+            }
             if (null != req.getParameter("changeAdditive")) {
                 db.changeAdditive(req.getParameter("additiveId"),
                                   req.getParameter("additiveNamber"),
@@ -92,6 +96,9 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("renameCat")) {
                 db.renameCategory(req.getParameter("catId"), req.getParameter("newName"));
             }
+            if (null != req.getParameter("renameExclude")) {
+                db.renameExclude(req.getParameter("excludeId"), req.getParameter("excludeName"));
+            }
             if (null != req.getParameter("renameSection")) {
                 db.renameSection(req.getParameter("sectionId"), req.getParameter("newName"));
             }
@@ -121,6 +128,10 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("removeAdditive")) {
                 String additive_id = req.getParameter("additive_id");
                 db.removeAdditive(additive_id);
+            }
+            if (null != req.getParameter("removeExclude")) {
+                String exclude_id = req.getParameter("exclude_id");
+                db.removeExclude(exclude_id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

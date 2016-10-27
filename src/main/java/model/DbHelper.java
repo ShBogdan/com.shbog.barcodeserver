@@ -172,6 +172,25 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter createExclude(String excludeName, PrintWriter out) throws SQLException {
+
+        String statement = "INSERT INTO exclude(ogran_name) VALUE (?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, excludeName);
+        preparedStatement.execute();
+
+        String query = "SELECT LAST_INSERT_ID() as last_id from exclude;";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        resultSet.next();
+        out.println(resultSet.getString("last_id"));
+        System.out.println(resultSet.getString("last_id"));
+        out.flush();
+
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
     public void changeAdditive(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes) throws SQLException {
 
         String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ? WHERE comp_id = ?";
@@ -307,6 +326,15 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
+    public void removeExclude(String exclude_id) throws SQLException {
+        String statement = "DELETE FROM exclude WHERE ogran_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, exclude_id);
+        preparedStatement.execute();
+        System.out.println("Запись:" + exclude_id +" удалена");
+        if(connection!=null)
+            connection.close();
+    }
     public void removeComponent(String comp) throws SQLException {
         String statement = "DELETE FROM component WHERE comp_name = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -323,6 +351,16 @@ public class DbHelper {
         preparedStatement.setString(2, cat_id);
         preparedStatement.execute();
         System.out.println("Запись:" + catName +" переименована");
+        if(connection!=null)
+            connection.close();
+    }
+    public void renameExclude(String exclude_id, String excludeName) throws SQLException {
+        String statement = "UPDATE exclude SET ogran_name=? WHERE ogran_id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, excludeName);
+        preparedStatement.setString(2, exclude_id);
+        preparedStatement.execute();
+        System.out.println("Запись:" + excludeName +" переименована");
         if(connection!=null)
             connection.close();
     }

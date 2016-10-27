@@ -23,42 +23,14 @@
             box-sizing: border-box;
             font-weight: bold;
         }
-        /*textarea {*/
-        /*display: inline-block;*/
-        /*width: 100%;*/
-        /*margin-bottom: 10px;*/
-        /*}*/
-        /*.ui-widget {*/
-        /*font-family: Verdana,Arial,sans-serif;*/
-        /*font-size: .8em;*/
-        /*}*/
-
+        tfoot {
+            display: table-header-group;
+        }
         .ui-widget-content {
             background: #F9F9F9;
             /*border: 1px solid #90d93f;*/
             /*color: #222222;*/
         }
-
-        /*.ui-dialog {*/
-        /*left: 0;*/
-        /*outline: 0 none;*/
-        /*padding: 0 !important;*/
-        /*position: absolute;*/
-        /*top: 0;*/
-        /*}*/
-
-        /*#success {*/
-        /*padding: 0;*/
-        /*margin: 0;*/
-        /*}*/
-
-        /*.ui-dialog .ui-dialog-content {*/
-        /*background: none repeat scroll 0 0 transparent;*/
-        /*border: 0 none;*/
-        /*overflow: auto;*/
-        /*position: relative;*/
-        /*padding: 0 !important;*/
-        /*}*/
 
         .ui-widget-header {
             background:#e7e7e7;
@@ -67,84 +39,7 @@
             font-weight: bold;
         }
 
-        /*.ui-dialog .ui-dialog-titlebar {*/
-        /*padding: 0.1em .5em;*/
-        /*position: relative;*/
-        /*font-size: 1em;*/
-        /*}*/
-        /*.ui-dialog .ui-dialog-titlebar-close{*/
-        /*position: absolute;*/
-        /*right: .3em;*/
-        /*top: 50%;*/
-        /*width: 20px;*/
-        /*margin: -10px 0 0 0;*/
-        /*padding: 1px;*/
-        /*height: 20px;*/
-        /*}*/
-        .components, .compound {
-            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
-            white-space: -pre-wrap;      /* Opera 4-6 */
-            white-space: -o-pre-wrap;    /* Opera 7 */
-            white-space: pre-wrap;       /* css-3 */
-            word-wrap: break-word;       /* Internet Explorer 5.5+ */
-            word-break: break-all;
-            white-space: normal;
-        }
-        /*.varButton, .btnCompound{*/
-        /*!*border: 1px solid black;*!*/
-        /*!*background-color: lightblue;*!*/
-        /*margin-top: 5px;*/
-        /*margin-right: 5px;*/
-        /*margin-bottom: 5px;*/
-        /*margin-left: 5px;*/
-        /*}*/
-        /*.varButton{*/
-        /*background-color: lightblue;*/
-        /**/
-        /*}*/
-
-        .varButton, .btnCompound  {
-            background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
-            background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-            background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-            background:-o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-            background:-ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-            background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0);
-            background-color:#ffffff;
-            -moz-border-radius:42px;
-            -webkit-border-radius:42px;
-            border-radius:42px;
-            border:2px solid #dcdcdc;
-            display:inline-block;
-            cursor:pointer;
-            color:#666666;
-            font-family:Arial;
-            font-size:15px;
-            font-weight:bold;
-            padding:3px 7px;
-            text-decoration:none;
-            margin-top: 5px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-            margin-left: 5px;
-        }
-        .varButton:hover, .btnCompound:hover  {
-            background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
-            background:-moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-            background:-webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-            background:-o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-            background:-ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-            background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
-            filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff',GradientType=0);
-            background-color:#f6f6f6;
-        }
-        .varButton:active, .btnCompound:active {
-            position:relative;
-            top:1px;
-        }
-
-        .remove, .button_create_additive, .addComponent {
+        .remove, #button_create_exclude {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
             background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
             background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -167,7 +62,7 @@
             text-decoration:none;
             margin-left: 5px;
         }
-        .remove:hover , .button_create_additive:hover, .addComponent:hover {
+        .remove:hover , #button_create_exclude:hover {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
             background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
             background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -178,19 +73,22 @@
             background-color:#e9e9e9;
             margin-left: 5px;
         }
-        .remove:active, .button_create_additive:active, .addComponent:active {
+        .remove:active, #button_create_exclude:active {
             position:relative;
             top:1px;
             margin-left: 5px;
         }
-        tfoot {
-            display: table-header-group;
+
+        .placeholder_addExclude, .placeholder_renameExclude {
+            display: inline-block;
+            width: 100%;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 <button id = "button" class="remove">Удалить выделенное</button>
-<button id = "button_create_additive" class="button_create_additive">Добавить добавку</button>
+<button id = "button_create_exclude">Добавить ограничение</button>
 <hr>
 <table id="exclude_table" class="display" cellspacing="0" width="100%">
     <thead>
@@ -206,7 +104,7 @@
     <tr>
         <th>id</th>
         <th class="searchable">Название</th>
-        <th class="searchable">Иконка</th>
+        <th></th>
         <th></th>
         <th></th>
     </tr>
@@ -214,5 +112,7 @@
     <tbody>
     </tbody>
 </table>
+<div class="addExclude" title="Добавить" hidden><input class = "placeholder_addExclude" placeholder="название ограничение" type="text"></div>
+<div class="renameExclude" title="Перейменовать" hidden><input class = "placeholder_renameExclude" placeholder="название ограничение" type="text"></div>
 </body>
 </html>
