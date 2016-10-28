@@ -14,22 +14,24 @@ public class LoginServlet extends HttpServlet {
         String pass = req.getParameter("password");
 
         try {
-            if ((user.equals("1")) && (pass.equals("1"))) {
+            if ((user.equals("admin")) && (pass.equals("admin"))) {
 
                 req.getSession().setAttribute("username", user);
                 req.getSession().setAttribute("password", pass);
 //                req.setAttribute("username", user);
                 resp.sendRedirect("/jsp/success.jsp");
             } else {
-
-                RequestDispatcher rs = req.getRequestDispatcher("/index.jsp");
+                RequestDispatcher rs = req.getRequestDispatcher("/jsp/index.jsp");
                 req.setAttribute("message", "Не верный пароль");
                 rs.forward(req, resp);
+                System.out.println("Не верный пароль");
             }
         } catch (Exception e) {
-            RequestDispatcher rs = req.getRequestDispatcher("/index.jsp");
+            RequestDispatcher rs = req.getRequestDispatcher("/jsp/index.jsp");
             req.setAttribute("message", "Авторизируйтесь");
             rs.forward(req, resp);
+            System.out.println("Не верный пароль");
+
         }
 
     }

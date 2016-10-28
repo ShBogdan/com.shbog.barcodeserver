@@ -62,7 +62,6 @@ public class DbHelper {
             preparedStatement.setString(2, sectionId);
             preparedStatement.setString(3, "");
             preparedStatement.execute();
-            System.out.println("Запись:" + cat + " добавлена");
             if(connection!=null)
                 connection.close();
         }
@@ -73,14 +72,11 @@ public class DbHelper {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, section);
             preparedStatement.execute();
-            System.out.println("Запись:" + section +" добавлена");
             if(connection!=null)
                 connection.close();
         }
     }
-    public void createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton) throws SQLException {
-//        if(prod != null && !prod.trim().isEmpty()) {
-        System.out.println(varButton);
+    public  PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) throws SQLException {
 
         PreparedStatement prepSat;
         ResultSet resultSet;
@@ -141,10 +137,17 @@ public class DbHelper {
         prepSat.setString(2, prodCategory_id);
         prepSat.execute();
 
+        String query = "SELECT LAST_INSERT_ID() as last_id from product;";
+        stmt = connection.createStatement();
+        resultSet = stmt.executeQuery(query);
+        resultSet.next();
+        out.println(resultSet.getString("last_id"));
+        out.flush();
+
         System.out.println("Запись:" + prodName + " добавлен");
         if(connection!=null)
             connection.close();
-//        }
+        return out;
     }
     public PrintWriter createAdditive(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out) throws SQLException {
 
@@ -165,7 +168,6 @@ public class DbHelper {
         ResultSet resultSet = stmt.executeQuery(query);
         resultSet.next();
         out.println(resultSet.getString("last_id"));
-        System.out.println(resultSet.getString("last_id"));
         out.flush();
 
         if(connection!=null)
@@ -184,7 +186,6 @@ public class DbHelper {
         ResultSet resultSet = stmt.executeQuery(query);
         resultSet.next();
         out.println(resultSet.getString("last_id"));
-        System.out.println(resultSet.getString("last_id"));
         out.flush();
 
         if(connection!=null)
@@ -210,9 +211,6 @@ public class DbHelper {
             connection.close();
     }
     public void changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton) throws SQLException {
-//        if(prod != null && !prod.trim().isEmpty()) {
-        System.out.println(varButton);
-
         PreparedStatement prepSat;
         ResultSet resultSet;
         Statement stmt;
@@ -231,7 +229,6 @@ public class DbHelper {
             prepSat.setString(2, s);
             prepSat.execute();
         }
-//        System.out.println("Список компонентов продукта до: " +input_components_ID);
 
         //получаем id добавленных компонентов
         for (String s : input_components_name) {
@@ -241,11 +238,8 @@ public class DbHelper {
             resultSet.next();
             input_components_ID.add(resultSet.getString("comp_id"));
         }
-//        System.out.println("Список компонентов продукта после: " +input_components_ID);
-        System.out.println("создаем продукт с индексом: " +prod_id);
 
         //создаем продукт до обновления input_components_ID
-//        String statement = "INSERT INTO product(prod_id, cat_id_frk, prod_maker, prod_name, prod_code, components) VALUE (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE prod_id = ?";
         String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, components = ? WHERE prod_id = ?";
         prepSat = connection.prepareStatement(statement);
         prepSat.setString(6, prod_id);
@@ -267,7 +261,6 @@ public class DbHelper {
         }
         input_components_ID.remove("");
         String allComponentsId = input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+","");
-        System.out.println("Все компонентыЖ " + allComponentsId);
         //заменяем на новую группу компонентов
         String statement_add_cat_componentID = "UPDATE categories SET components =? WHERE cat_id=?";
         prepSat = connection.prepareStatement(statement_add_cat_componentID);
@@ -276,26 +269,15 @@ public class DbHelper {
         prepSat.execute();
 
 
-        System.out.println("Запись:" + prodName + " добавлен");
         if(connection!=null)
             connection.close();
 //        }
-    }
-    public void createComponent(String comp) throws SQLException {
-        String statement = "INSERT INTO component(comp_name) VALUE (?);";
-        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setString(1, comp);
-        preparedStatement.execute();
-        System.out.println("Запись:" + comp +" добавлен");
-        if(connection!=null)
-            connection.close();
     }
     public void removeCategory(String cat_id) throws SQLException {
         String statement = "DELETE FROM categories WHERE cat_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, cat_id);
         preparedStatement.execute();
-        System.out.println("Запись:" + cat_id +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -304,7 +286,6 @@ public class DbHelper {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, sectionId);
         preparedStatement.execute();
-        System.out.println("Запись:" + sectionId +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -313,7 +294,6 @@ public class DbHelper {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, prod_id);
         preparedStatement.execute();
-        System.out.println("Запись:" + prod_id +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -322,7 +302,6 @@ public class DbHelper {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, additive_id);
         preparedStatement.execute();
-        System.out.println("Запись:" + additive_id +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -332,15 +311,6 @@ public class DbHelper {
         preparedStatement.setString(1, exclude_id);
         preparedStatement.execute();
         System.out.println("Запись:" + exclude_id +" удалена");
-        if(connection!=null)
-            connection.close();
-    }
-    public void removeComponent(String comp) throws SQLException {
-        String statement = "DELETE FROM component WHERE comp_name = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setString(1, comp);
-        preparedStatement.execute();
-        System.out.println("Запись:" + comp +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -387,7 +357,6 @@ public class DbHelper {
             ja.put(id);
             ja.put(cat_name);
             array.put(ja);
-            System.out.println("out = [" + ja.toString() + "]");
         }
         try {
             result.put("category", array);
@@ -462,7 +431,6 @@ public class DbHelper {
         ResultSet _resultSet = _stmt.executeQuery(_statement);
         while (_resultSet.next()) {
             out.println("<button class=\"varButton\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
-//                System.out.println(_resultSet.getString("comp_name"));
         }
 
         out.flush();
@@ -591,19 +559,7 @@ public class DbHelper {
             connection.close();
         return out;
     }
-    public PrintWriter getProductID(PrintWriter out) throws SQLException{
-        String query = "SELECT prod_id FROM product ORDER BY prod_id DESC LIMIT 1";
-        Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery(query);
-        resultSet.next();
-        out.println(resultSet.getString("prod_id"));
-        out.flush();
-        if(connection!=null)
-            connection.close();
-        return out;
-    }
     public PrintWriter getAdditiveByID(PrintWriter out, String compId) throws SQLException{
-        System.out.println("compId = " + compId);
         String query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox FROM component WHERE comp_id="+compId;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);

@@ -51,6 +51,7 @@
 
     <script>
         $(document).ready(function () {
+            $('#menu').load("info.jsp");
             var table;
             var e_table;
             var exclude;
@@ -70,6 +71,8 @@
 
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
+                console.log($.cookie("username"))
+                console.log($.cookie("password"))
             });
             $(document).on('click', '#btn2', function () {
                 $('#menu').load("catalog.jsp", function () {
@@ -819,21 +822,14 @@
                                 type: 'POST',
                                 dataType: 'text',
                                 success: function (data) {
-                                    $.post("/DbInterface",
-                                            {
-                                                getProductID: "getProductID",
-                                            },
-                                            function (data) {
-                                                table.row.add([
-                                                    parseInt(data, 10),
-                                                    $(".selectCategory option:selected").text(),
-                                                    $(".prodProvider").val(),
-                                                    $(".prodName").val(),
-                                                    $(".prodCode").val()
-                                                ]).draw(false);
-                                                $(".dialog_create_product").dialog("close")
-                                            }
-                                    );
+                                    table.row.add([
+                                        parseInt(data, 10),
+                                        $(".selectCategory option:selected").text(),
+                                        $(".prodProvider").val(),
+                                        $(".prodName").val(),
+                                        $(".prodCode").val()
+                                    ]).draw(false);
+                                    $(".dialog_create_product").dialog("close")
                                 },
                                 error: function (request, status, error) {
                                     alert("Error: Could not back");
@@ -1284,14 +1280,6 @@
                 })
             };
 
-            function fillCBox(cBoxArray) {
-
-                $(".cBox #8").prop("checked", true)
-                $("#5").prop("checked", true)
-
-//                cBoxArray[0] == 1 ? $("#c0").prop("checked", true) : null;
-            };
-
             function closeDialog() {
                 componets_array_ID = [];
                 varButton = [];
@@ -1434,49 +1422,6 @@
                     })
                 });
             }
-
-            function cBoxToArray() {return cBoxs;};
-            function fillProductNames(_compoundProductID) {
-                $.ajax({
-                    url: "/DbInterface",
-                    data: {
-                        getProductCompound: "getProductNames",
-                        compoundProductID: _compoundProductID
-                    },
-                    type: 'POST',
-                    dataType: 'text',
-                    success: function (data) {
-                        $(".components button").remove().end();
-                        $(".components").append(data)
-                    },
-                    error: function (request, status, error) {
-                        alert("Error: Could not back");
-                    }
-                });
-            };
-            function fillInputComponent() {
-                $.ajax({
-                    url: "/DbInterface",
-                    data: {getAdditive: "getAdditive"},
-                    dataSrc: "additive",
-                    type: "POST",
-                    success: function (data) {
-                        var obj = JSON.parse(data);
-                        obj.additive.forEach(function (item, i, obj) {
-                            autocompleteInpComponents.push(item[3]);
-                            console.log(autocompleteInpComponents)
-                        });
-                        console.log("Success: " + autocompleteInpComponents);
-//                        $( ".getInputComponent" ).autocomplete({
-//                            source: autocompleteInpComponents,
-//                        });
-//                        $( ".getInputComponentEdit" ).autocomplete({
-//                            source: autocompleteInpComponents,
-//                        });
-                    }
-                })
-            };
-
         });
     </script>
 </head>
@@ -1493,17 +1438,13 @@
                 <button class="button" id="btn5">Ограничения</button>
             </p>
         </td>
-        <td style="text-align: right;">${username}&nbsp;</h5>
-            <a href="../LogoutServlet">
-                <button class="button">Выход</button>
-                ​</a>
+        <td style="text-align: right;">${username}&nbsp;
+            <a href="../LogoutServlet"><button class="button">Выход</button></a>
         </td>
     </tr>
     </tbody>
 </table>
-
 <hr/>
-
 <div id="menu" style="width:100%; height:400px;float:left">
 </div>
 </body>

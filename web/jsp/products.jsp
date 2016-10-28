@@ -17,8 +17,7 @@
     <%--<link rel="stylesheet" href="../css/dataTables.css">--%>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-
-    <style type="text/css">
+        <style type="text/css">
         .ui-autocomplete { position: absolute; cursor: default;z-index:30 !important; color: #1c94c4; background: #670d10;}
         tfoot input {
             width: 100%;
@@ -44,9 +43,9 @@
         /*}*/
 
         .ui-widget-content {
-        background: #F9F9F9;
-        /*border: 1px solid #90d93f;*/
-        /*color: #222222;*/
+            background: #F9F9F9;
+            /*border: 1px solid #90d93f;*/
+            /*color: #222222;*/
         }
 
         /*.ui-dialog {*/
@@ -101,16 +100,16 @@
             white-space: normal;
         }
         /*.varButton, .btnCompound{*/
-            /*!*border: 1px solid black;*!*/
-            /*!*background-color: lightblue;*!*/
-            /*margin-top: 5px;*/
-            /*margin-right: 5px;*/
-            /*margin-bottom: 5px;*/
-            /*margin-left: 5px;*/
+        /*!*border: 1px solid black;*!*/
+        /*!*background-color: lightblue;*!*/
+        /*margin-top: 5px;*/
+        /*margin-right: 5px;*/
+        /*margin-bottom: 5px;*/
+        /*margin-left: 5px;*/
         /*}*/
         /*.varButton{*/
-            /*background-color: lightblue;*/
-            /**/
+        /*background-color: lightblue;*/
+        /**/
         /*}*/
 
         .varButton, .btnCompound, .varACCButton  {
@@ -199,8 +198,8 @@
 
 <body class="products">
 <div class="temp">
-<button id = "button" class="remove">Удалить выделенное</button>
-<button id = "button_create_product" class="button_create_product">Добавить продукт</button>
+    <button id = "button" class="remove">Удалить выделенное</button>
+    <button id = "button_create_product" class="button_create_product">Добавить продукт</button>
 </div>
 <hr>
 <table id="products_table" class="display" cellspacing="0" width="100%">
@@ -246,7 +245,7 @@
             <td><input class="prodProvider" placeholder="Производитель" type="text" style="width:  100%" maxlength="50"></td>
         </tr>
         <tr>
-            <td><input class="prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="14"></td>
+            <td><input class="prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="50"></td>
         </tr>
         </tbody>
     </table>

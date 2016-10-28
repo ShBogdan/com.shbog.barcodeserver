@@ -4,7 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Form</title>
+    <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js"></script>
 
+    <script>
+        $(document).ready(function (){
+            console.log("Index")
+//            location.reload();
+            if (window.location.href.indexOf('reload')==-1) {
+                window.location.replace(window.location.href+'?reload');
+            }
+        })
+
+    </script>
     <style>
         /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
         @import url(http://fonts.googleapis.com/css?family=Open+Sans);
