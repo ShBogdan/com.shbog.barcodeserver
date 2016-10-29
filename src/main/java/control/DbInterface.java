@@ -82,9 +82,12 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("addSection")) {
                 db.createSection(req.getParameter("sectionName"));
             }
-//            if (null != req.getParameter("getProductID")) {
-//                db.getProductID(out);
-//            }
+                 if (null != req.getParameter("changeUserPass")) {
+                db.changeUserPass(req.getParameter("userID"),
+                                  req.getParameter("username"),
+                                  req.getParameter("userPass")
+                                  );
+            }
             if (null != req.getParameter("getAdditiveByID")) {
                 db.getAdditiveByID(out, req.getParameter("additiveID"));
             }

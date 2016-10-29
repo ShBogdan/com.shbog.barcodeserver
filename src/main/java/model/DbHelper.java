@@ -19,18 +19,10 @@ public class DbHelper {
     private  Connection connection = null;
 
     public static void main(String[] args) throws SQLException {
-//        new DbHelper().createCategory("Ежик");
-//        String s = "[1,2,3,4,4,5,6,6]";
-//        ArrayList<String> stringID = new ArrayList<String>(Arrays.asList(s.substring(1, s.length()-1).split(",")));
-//        ArrayList<Integer> intID = new ArrayList<>();
-//        for (String tempString : stringID) {
-//            int i = Integer.valueOf(tempString);
-//            if(!intID.contains(i)){
-//                intID.add(Integer.valueOf(i));
-//            }
-//        }
-//        System.out.println(intID);
-//
+        DbHelper db = new DbHelper();
+
+        db.getUsers();
+
 
     }
 
@@ -76,7 +68,7 @@ public class DbHelper {
                 connection.close();
         }
     }
-    public  PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) throws SQLException {
+    public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) throws SQLException {
 
         PreparedStatement prepSat;
         ResultSet resultSet;
@@ -590,6 +582,34 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
         return out;
+    }
+    public ArrayList getUsers() throws SQLException{
+        String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        ArrayList<String[]> userArray = new ArrayList<>();
+        while (resultSet.next()) {
+            String id = String.valueOf(resultSet.getInt("user_id"));
+            String user_name = resultSet.getString("user_name");
+            String user_pass = resultSet.getString("user_pass");
+            String user_permit = String.valueOf(resultSet.getInt("user_permit"));
+            String[] user = {id, user_name, user_pass, user_permit};
+            userArray.add(user);
+        }
+        if(connection!=null)
+            connection.close();
+        return userArray;
+    }
+    public void changeUserPass(String id, String user_name, String user_pass) throws SQLException {
+        System.out.println("changeUserPass");
+        String query = "UPDATE users SET user_name=?, user_pass=? WHERE user_id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, user_name);
+        preparedStatement.setString(2, user_pass);
+        preparedStatement.setString(3, id);
+        preparedStatement.execute();
+        if(connection!=null)
+            connection.close();
     }
 }
 //****************************************************Additive==Component

@@ -32,7 +32,6 @@
             border: 2px solid #e7e7e7;
             font-weight: bold
         }
-
         .button:hover {
             box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
             -webkit-transition-duration: 0.4s; /* Safari */
@@ -40,6 +39,8 @@
             background-color: white; /* Green */
             color: black; /*text color*/
         }
+        .adminButton{ color: #2b2b2b; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px;}
+        .adminButton:hover{ color: #e34b4e; text-shadow: 0 12 16px rgba(0,0,0,0.24); letter-spacing:1px;}
     </style>
     <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js">
     </script>
@@ -69,10 +70,25 @@
             var dictionaryAutoCompCompon = {};
             var cBoxs = [];
 
+            var permission = '${permission}';
+            if (permission == '1') {
+                $('.menuItem').append('' +
+                        ' <p> <button class="button" id="btn1">Сводка</button> ' +
+                        ' <button class="button" id="btn2">Каталог</button>' +
+                        '<button class="button" id="btn3">Продукты</button>' +
+                        '<button class="button" id="btn4">Добавки</button>' +
+                        '<button class="button" id="btn5">Ограничения</button>' +
+                        '</p>')
+            } else {
+                $('.menuItem').append(' ' +
+                        '<p> <button class="button" id="btn1">Сводка</button> ' +
+                        ' <button class="button" id="btn2">Каталог</button>' +
+                        '<button class="button" id="btn3">Продукты</button>' +
+                        '</p>')
+            }
+
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
-                console.log($.cookie("username"))
-                console.log($.cookie("password"))
             });
             $(document).on('click', '#btn2', function () {
                 $('#menu').load("catalog.jsp", function () {
@@ -123,7 +139,6 @@
                             $(".child-" + _id).toggle()
                         }
                         if (this.className === "remove-" + _id) {
-//                            alert(this.className)
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
@@ -168,7 +183,6 @@
                                     },
                                     CANSEL: function () {
                                         $(this).dialog("close")
-//                                                alert("Cansel")
                                     }
                                 },
                                 width: 600
@@ -202,11 +216,9 @@
                                     },
                                     CANSEL: function () {
                                         $(this).dialog("close")
-//                                                alert("Cansel")
                                     }
                                 },
                                 width: 600
-
                             })
                         }
                         if (this.className === "removeCat") {
@@ -659,6 +671,50 @@
 
                 });
             });
+            $(document).on('click', '.adminButton', function () {
+                if (permission == '1'){
+                    $('#menu').load("admin.jsp", function (){
+                    })
+                }
+            });
+            $(document).on('click', '.saveAdmin', function () {
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {
+                        changeUserPass: "changeUserPass",
+                        userID: "1",
+                        username: $(".adminname").val(),
+                        userPass: $(".adminpassword").val(),
+                    },
+                    type: 'POST',
+                    dataType: 'text',
+                    success: function (data) {
+                        alert("Данные изменены")
+                    },
+                    error: function (request, status, error) {
+                        alert("Error: Could not back1");
+                    }
+                });
+            })
+            $(document).on('click', '.saveOper', function () {
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {
+                        changeUserPass: "changeUserPass",
+                        userID: "2",
+                        username: $(".opername").val(),
+                        userPass: $(".operpassword").val(),
+                    },
+                    type: 'POST',
+                    dataType: 'text',
+                    success: function (data) {
+                        alert("Данные изменены")
+                    },
+                    error: function (request, status, error) {
+                        alert("Error: Could not back1");
+                    }
+                });
+            })
 
             $(document).on('click', "#button_create_product", function () {
                 create_product();
@@ -803,8 +859,8 @@
                         OK: function () {
 //                            var reg = /^8[0-9]{11}([0-9]{2})?$/i;
                             var reg = /^[0-9]{14}/;
-                            if(reg.test($(".prodCode").val())){
-                            }else{
+                            if (reg.test($(".prodCode").val())) {
+                            } else {
                                 alert("Код должен состоять только из 14 цифр")
                                 return;
                             }
@@ -872,7 +928,7 @@
                                 var compName;
                                 var compId;
                                 obj.additive.forEach(function (item, i, obj) {
-                                    console.log( obj)
+                                    console.log(obj)
                                     if (item[3].search(/,/i) > -1) {
                                         var arr = item[3].split(',');
                                         var index;
@@ -920,8 +976,8 @@
                     buttons: {
                         OK: function () {
                             var reg = /^[0-9]{14}/;
-                            if(reg.test($(".edit_prodCode").val())){
-                            }else{
+                            if (reg.test($(".edit_prodCode").val())) {
+                            } else {
                                 alert("Код должен состоять только из 14 цифр")
                                 return;
                             }
@@ -954,8 +1010,6 @@
                                     alert("Error: Could not back");
                                 }
                             });
-//                            $(".dialog_edit_product").dialog("close")
-
                         },
                         CANSEL: function () {
                             $(".dialog_edit_product").dialog("close")
@@ -1254,7 +1308,7 @@
 
             function getCBox(array) {
                 if (array != null) {
-                    if(array.trim().length != 0){
+                    if (array.trim().length != 0) {
                         cBoxs = array.split(",")
                     }
                 }
@@ -1326,14 +1380,6 @@
                 $(".info").val('');
                 $(".permission").val('');
                 $(".getInputComponent").val('');
-//                $('#c0:checked').prop('checked', false);
-//                $('#c1:checked').prop('checked', false);
-//                $('#c2:checked').prop('checked', false);
-//                $('#c3:checked').prop('checked', false);
-//                $('#c4:checked').prop('checked', false);
-//                $('#c5:checked').prop('checked', false);
-//                $('#c6:checked').prop('checked', false);
-//                $('#c7:checked').prop('checked', false);
                 if ($(".dialog_create_additive").dialog("isOpen")) {
                     $(".dialog_create_additive").dialog("destroy");
                 }
@@ -1347,7 +1393,7 @@
 
             };
 
-            function getAdditiveName(){
+            function getAdditiveName() {
                 $.ajax({
                     url: "/DbInterface",
                     data: {getAdditive: "getAdditive"},
@@ -1395,7 +1441,7 @@
                             var ogran = obj.component[6];
                             var ogrArr = [];
                             if (ogran != null) {
-                                if(ogran.trim().length != 0){
+                                if (ogran.trim().length != 0) {
                                     ogrArr = ogran.split(",")
                                     $.ajax({
                                         url: "/DbInterface",
@@ -1411,11 +1457,8 @@
                                                     $(".ogranicenija").append("<p>" + name + "</p>");
                                                 }
                                             })
-                                            console.log(cBoxs.sort())
                                         }
                                     })
-
-
                                 }
                             }
                         }
@@ -1429,18 +1472,8 @@
 <table align="center" style="width:100%;">
     <tbody>
     <tr>
-        <td>
-            <p>
-                <button class="button" id="btn1">Сводка</button>
-                <button class="button" id="btn2">Каталог</button>
-                <button class="button" id="btn3">Продукты</button>
-                <button class="button" id="btn4">Добавки</button>
-                <button class="button" id="btn5">Ограничения</button>
-            </p>
-        </td>
-        <td style="text-align: right;">${username}&nbsp;
-            <a href="../LogoutServlet"><button class="button">Выход</button></a>
-        </td>
+        <td class="menuItem"></td>
+        <td style="text-align: right;"><text class="adminButton">${username}&nbsp</text><a href="../LogoutServlet"><button class="button">Выход</button></a></td>
     </tr>
     </tbody>
 </table>

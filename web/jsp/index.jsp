@@ -7,13 +7,11 @@
     <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js"></script>
 
     <script>
-        $(document).ready(function (){
-            console.log("Index")
-//            location.reload();
-            if (window.location.href.indexOf('reload')==-1) {
-                window.location.replace(window.location.href+'?reload');
-            }
-        })
+//        $(document).ready(function (){
+//            if (window.location.href.indexOf('reload')==-1) {
+//                window.location.replace("http://localhost:8080/"+'?reload');
+//            }
+//        })
 
     </script>
     <style>
