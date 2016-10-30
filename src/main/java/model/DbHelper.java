@@ -17,6 +17,10 @@ public class DbHelper {
     private  final String NAME = "root";
     private  final String PASSWORD = "arisen13";
     private  Connection connection = null;
+//    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
+//    private  final String NAME = "gbua_productsdb";
+//    private  final String PASSWORD = "df14a9c2xvn";
+//    private  Connection connection = null;
 
     public static void main(String[] args) throws SQLException {
         DbHelper db = new DbHelper();
@@ -418,13 +422,12 @@ public class DbHelper {
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(statement);
         resultSet.next();
-        String _statement = "SELECT * FROM component WHERE comp_id IN"+"("+resultSet.getString("components")+")";
+        String _statement = "SELECT * FROM component WHERE comp_id IN "+"("+resultSet.getString("components")+")"; //exception in components = empty
         Statement _stmt = connection.createStatement();
         ResultSet _resultSet = _stmt.executeQuery(_statement);
         while (_resultSet.next()) {
             out.println("<button class=\"varButton\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
         }
-
         out.flush();
         if(connection!=null)
             connection.close();
@@ -587,7 +590,7 @@ public class DbHelper {
         String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
-        ArrayList<String[]> userArray = new ArrayList<>();
+        ArrayList<String[]> userArray = new ArrayList<String[]>();
         while (resultSet.next()) {
             String id = String.valueOf(resultSet.getInt("user_id"));
             String user_name = resultSet.getString("user_name");

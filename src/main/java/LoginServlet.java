@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
         boolean isIn = false;
 
         DbHelper db = new DbHelper();
-        ArrayList<String[]> usersArray = new ArrayList<>();
+        ArrayList<String[]> usersArray = new ArrayList<String[]>();
         try {
             usersArray = db.getUsers();
         } catch (SQLException e) {

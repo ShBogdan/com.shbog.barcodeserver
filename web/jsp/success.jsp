@@ -47,6 +47,7 @@
     <script type="text/javascript" language="javascript"
             src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js">
     </script>
+    <script src="/js/barcoder.js"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
@@ -69,6 +70,7 @@
             var componentGroup = [];
             var dictionaryAutoCompCompon = {};
             var cBoxs = [];
+            var listBarcode = [];
 
             var permission = '${permission}';
             if (permission == '1') {
@@ -564,6 +566,7 @@
                     $(".divInput").on("click", ".addComponent", function () {
                         var inputText = $(".getInputComponent").val().trim();
                         comp_index = componentGroup.indexOf(inputText);
+                        var inArray =autocompleteInpComponents.indexOf(inputText);
                         if (inputText == "") {
                             console.log("Its empty")
                             return;
@@ -576,8 +579,12 @@
                             console.log("Its repeat name")
                             return;
                         }
+                        if (inArray > -1) {
+                            alert("Компонент с таким именем уже добавлен")
+                            return;
+                        }
                         if (comp_index > -1) {
-                            console.log("over in the array")
+                            alert("Компонент с таким именем уже добавлен")
                         } else {
                             $(".components").append("<button class=\"varButton\">" + inputText + "</button>");
                             componentGroup.push(inputText);
@@ -857,11 +864,14 @@
                     modal: true,
                     buttons: {
                         OK: function () {
-//                            var reg = /^8[0-9]{11}([0-9]{2})?$/i;
-                            var reg = /^[0-9]{14}/;
-                            if (reg.test($(".prodCode").val())) {
+                            var inList = listBarcode.indexOf($(".prodCode").val())
+                            if( inList > -1){
+                                alert("Продукт с таким кодом уже есть")
+                                return;
+                            }
+                            if (Barcoder.validate( $(".prodCode").val() )) {
                             } else {
-                                alert("Код должен состоять только из 14 цифр")
+                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
                                 return;
                             }
                             $.ajax({
@@ -899,6 +909,7 @@
                     open: function (event, ui) {
                         console.log("open");
                         //формируем select
+                        fillBarcodeList();
                         $.ajax({
                             url: "/DbInterface",
                             data: {
@@ -968,6 +979,7 @@
             };
 
             var edit_product = function () {
+                var oldCodeValue;
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
@@ -975,10 +987,16 @@
                     modal: true,
                     buttons: {
                         OK: function () {
-                            var reg = /^[0-9]{14}/;
-                            if (reg.test($(".edit_prodCode").val())) {
+                            if($(".edit_prodCode").val() != oldCodeValue){
+                                var inList = listBarcode.indexOf($(".edit_prodCode").val())
+                                if( inList > -1){
+                                    alert("Продукт с таким кодом уже есть")
+                                    return;
+                                }
+                            }
+                            if (Barcoder.validate( $(".edit_prodCode").val() )) {
                             } else {
-                                alert("Код должен состоять только из 14 цифр")
+                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
                                 return;
                             }
                             $.ajax({
@@ -1016,6 +1034,7 @@
                         }
                     },
                     open: function (event, ui) {
+                        fillBarcodeList();
                         $.ajax({
                             url: "/DbInterface",
                             data: {
@@ -1037,6 +1056,7 @@
                                 $(".edit_prodProvider").val(edit_tableRow[2]);
                                 $(".edit_prodName").val(edit_tableRow[3]);
                                 $(".edit_prodCode").val(edit_tableRow[4]);
+                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1083,6 +1103,7 @@
 
                             }
                         });
+
                     },
                     close: function (event, ui) {
                         $(".dialog_edit_product").dialog("close");
@@ -1160,7 +1181,7 @@
                     open: function (event, ui) {
                         fillGroupAdditive();
                         getCBox();
-                        getAdditiveName();
+                        getAdditiveNames();
                     },
                     beforeClose: function (event, ui) {
                         closeAdditiveDialog()
@@ -1241,6 +1262,7 @@
                         $(".permission").val(edit_e_tableRow[5]);
                         getCBox(edit_e_tableRow[8])
                         fillGroupAdditive();
+                        getAdditiveNames();
                         arr.shift();
                         arr.sort();
                         arr.forEach(function (item, i, arr) {
@@ -1386,14 +1408,11 @@
             };
 
             function fillGroupAdditive() {
-                //в аргумент добавить id изменяемого компонента
-                console.log("group")
                 componentGroup = [];
                 $(".components button").remove();
-
             };
 
-            function getAdditiveName() {
+            function getAdditiveNames() {
                 $.ajax({
                     url: "/DbInterface",
                     data: {getAdditive: "getAdditive"},
@@ -1463,6 +1482,23 @@
                             }
                         }
                     })
+                });
+            }
+
+            function fillBarcodeList() {
+                listBarcode = [];
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {getProducts: "getProducts"},
+                    dataSrc: "products",
+                    type: "POST",
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        var i;
+                        for(i=0; obj.products.length > i; i++){
+                            listBarcode.push(obj.products[i][4]);
+                        }
+                    }
                 });
             }
         });
