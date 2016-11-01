@@ -19,6 +19,11 @@ public class LoginFilter implements javax.servlet.Filter {
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }
+        if (path.equals("/barcodeinfo")){
+            RequestDispatcher dispatcher = servletRequest.getRequestDispatcher("/jsp/barcodeinfo.jsp");
+            dispatcher.forward(servletRequest, servletResponse);
+            return;
+        }
         filterChain.doFilter(servletRequest,servletResponse);
     }
     public void destroy() {

@@ -91,6 +91,9 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("getAdditiveByID")) {
                 db.getAdditiveByID(out, req.getParameter("additiveID"));
             }
+            if (null != req.getParameter("getBarcodeInfo")) {
+                db.getBarcodeInfo(out, req.getParameter("barcode"));
+            }
             if (null != req.getParameter("removeSection")) {
                 db.removeSection(req.getParameter("sectionId"));
             }

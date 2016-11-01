@@ -366,6 +366,54 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter getBarcodeInfo(PrintWriter out, String barcode) throws SQLException {
+        String prod_id;
+        String cat_id_frk;
+        String cat_name;
+        String prod_name;
+        String prod_maker;
+        String prod_components;
+
+        String query = "SELECT prod_id, cat_id_frk, prod_name, prod_maker, components FROM product WHERE prod_code="+barcode;
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        resultSet.next();
+        prod_id = resultSet.getString("prod_id");
+        cat_id_frk = resultSet.getString("cat_id_frk");
+        prod_name = resultSet.getString("prod_name");
+        prod_maker = resultSet.getString("prod_maker");
+        prod_components = resultSet.getString("components");
+
+        query = "SELECT cat_name FROM categories WHERE cat_id="+cat_id_frk;
+        stmt = connection.createStatement();
+        resultSet = stmt.executeQuery(query);
+        resultSet.next();
+        cat_name = resultSet.getString("cat_name");
+
+//        query = "SELECT cat_name FROM components WHERE comp_id IN "+"("+resultSet.getString("components")+")";;
+//        stmt = connection.createStatement();
+//        resultSet = stmt.executeQuery(query);
+//        resultSet.next();
+//        cat_name = resultSet.getString("cat_name");
+
+        JSONObject result = new JSONObject();
+        JSONArray ja = new JSONArray();
+        ja.put(prod_id);
+        ja.put(cat_name);
+        ja.put(prod_name);
+        ja.put(prod_maker);
+        ja.put(prod_components);
+          try {
+            result.put("barcode",ja);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
     public PrintWriter getSection(PrintWriter out) throws SQLException {
         String query = "SELECT section_id, section_name FROM section ORDER BY section_name";
         Statement stmt = connection.createStatement();
