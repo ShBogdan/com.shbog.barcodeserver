@@ -17,7 +17,7 @@
     <%--<link rel="stylesheet" href="../css/dataTables.css">--%>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-        <style type="text/css">
+    <style type="text/css">
         .ui-autocomplete { position: absolute; cursor: default;z-index:30 !important; color: #1c94c4; background: #670d10;}
         tfoot input {
             width: 100%;
@@ -30,6 +30,7 @@
         }
         .margin{
             margin-top: 10px;
+            width: 700px;
         }
 
         /*textarea {*/
@@ -138,7 +139,7 @@
             margin-bottom: 5px;
             margin-left: 5px;
         }
-        .varButton:hover, .btnCompound:hover  {
+        .varButton:hover, .btnCompound:hover, .varACCButton:hover  {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
             background:-moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
             background:-webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
@@ -153,7 +154,7 @@
             top:1px;
         }
 
-        .remove, .button_create_product, .addComponent {
+        .remove, .button_create_product, .addComponent, .addComponentEdit {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
             background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
             background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -176,7 +177,7 @@
             text-decoration:none;
             margin-left: 5px;
         }
-        .remove:hover , .button_create_product:hover, .addComponent:hover {
+        .remove:hover , .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
             background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
             background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -228,7 +229,6 @@
     <tbody>
     </tbody>
 </table>
-<div class="test"></div>
 <div class="dialog_create_product" title="Создать продукт" hidden>
     <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
         <tbody>
@@ -252,19 +252,24 @@
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>
         <tr>
-            <td width="50%" align="center"><b>Компоненты</b><hr></td>
             <td width="50%" align="center"><b>Состав</b><hr></td>
+            <td width="50%" align="center"><b>Все компоненты категории</b><hr></td>
         </tr>
         <tr>
             <td class = "components"  height="200px" valign="top"></td>
             <td class = "compound"  height="200px" valign="top"></td>
         </tr>
+        <tr>
+            <td align="center" width="50%">
+                <div class="divInput" align="center">
+                    <input class = "getInputComponent" placeholder="Новый компонент" type="text" style="display:table-cell; width:60%" maxlength="50" list="components"><button class="addComponent" style="display:table-cell; width:36%">Добавить</button>
+                    <datalist id="components"></datalist>
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
-    <div class="divInput" align="center">
-        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить компонент</button>
-        <datalist id="components"></datalist>
-    </div>
+
     <hr class= "margin">
     <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>
@@ -299,22 +304,27 @@
         </tr>
         </tbody>
     </table>
-    <table class="edit_sostav" align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table class="edit_sostav" style="width: 700px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
         <tr>
-            <td width="50%" align="center"><b>Компоненты</b><hr></td>
-            <td width="50%" align="center"><b>Состав</b><hr></td>
+            <td align="center" width="50%"><strong>Состав</strong><hr/></td>
+            <td align="center" width="50%"><strong>Все компоненты категории</strong><hr /></td>
         </tr>
         <tr>
-            <td class = "components"  height="200px" valign="top"></td>
-            <td class = "compound"  height="200px" valign="top"></td>
+            <td class="components" valign="top" height="200px"></td>
+            <td class="compound" valign="top" height="200px"></td>
+        </tr>
+        <tr>
+            <td align="center" width="50%">
+                <div class="divInputEdit"align="center">
+                    <input class = "getInputComponentEdit" placeholder="Новый компонент" type="text" style="display:table-cell; width:60%" list="edit_components"><button class="addComponentEdit" style="display:table-cell; width:36%">Добавить</button>
+                    <datalist id="edit_components"></datalist>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>
-    <div class="divInputEdit"align="center">
-        <input class = "getInputComponentEdit" placeholder="название компонента" type="text" maxlength="50" list="edit_components"><button class="addComponentEdit" >Добавить компонент</button>
-        <datalist id="edit_components"></datalist>
-    </div>
+
     <hr class= "margin">
     <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>

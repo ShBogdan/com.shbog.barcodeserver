@@ -367,6 +367,8 @@
                             $(".components").append($(this));
                             componets_array_ID.push($(this).attr("id"));
                             fillDobOgr()
+                        }else{
+                            alert("Данный компонент присутствует в составе продукта")
                         }
                     });
                     $(".components").on("click", ".btnCompound", function () {
@@ -419,6 +421,8 @@
                         }
                         if (comp_index > -1) {
                             console.log("over in the array")
+                            alert("Данный компонент присутствует в составе продукта")
+
                             return;
                         }
                         if (!(input in dictionaryAutoCompCompon)) {
@@ -432,15 +436,14 @@
                             if (name == input) {
                                 compId = dictionaryAutoCompCompon[name];
                                 console.log('in dictionary')
-                                console.log('name ' + name)
-                                console.log('index ' + compId)
                                 if (!componets_array_ID.includes(compId)) {
                                     console.log('not in the array')
                                     componets_array_ID.push(compId);
                                     $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + compId + "\"" + ">" + input + "</button>");
                                     $(".getInputComponent").val('');
                                     fillDobOgr();
-
+                                }else{
+                                    alert("Данный компонент присутствует в составе продукта")
                                 }
                             }
                         }
@@ -470,14 +473,14 @@
                             if (name == input) {
                                 var id = dictionaryAutoCompCompon[name];
                                 console.log('in dictionary')
-                                console.log('name ' + name)
-                                console.log('index ' + id)
                                 if (!componets_array_ID.includes(id)) {
                                     console.log('not in the array')
                                     componets_array_ID.push(id);
                                     $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
                                     $(".getInputComponentEdit").val('');
                                     fillDobOgr()
+                                }else{
+                                    alert("Данный компонент присутствует в составе продукта")
                                 }
                             }
                         }
@@ -619,7 +622,7 @@
                             {"targets": 1},
                             {"targets": 2, "visible": false, "wodht": "5%"},
                             {
-                                "targets": 3,
+                                "targets": 4,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
@@ -627,7 +630,7 @@
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
                             },
                             {
-                                "targets": 4,
+                                "targets": 3,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
@@ -1395,6 +1398,8 @@
                 autocompleteInpComponents = [];
                 cBoxs = [];
                 $.ajaxSetup({cache: false});
+                $(".e_for").val('');
+                $(".e_notes").val('');
                 $(".exclude p").remove();
                 $(".e_namber").val('');
                 $(".e_name").val('');
@@ -1440,49 +1445,59 @@
                 $(".dobavki p").remove();
                 $(".ogranicenija p").remove();
                 componets_array_ID.sort();
-                componets_array_ID.forEach(function (compId, i, componets_array_ID) {
-                    console.log(compId);
-                    $.ajax({
-                        url: "/DbInterface",
-                        data: {
-                            getAdditiveByID: "getAdditiveByID",
-                            additiveID: compId,
-                        },
-                        dataSrc: "component",
-                        type: "POST",
-                        success: function (data) {
-                            var obj = JSON.parse(data);
-                            console.log(obj);
-                            console.log(obj.component[1] + "in obj");
-                            if (obj.component[2] != 0) {
-                                $(".dobavki").append("<p>E" + obj.component[2] + " - " + obj.component[1] + "</p>");
-                            }
-                            var ogran = obj.component[6];
-                            var ogrArr = [];
-                            if (ogran != null) {
-                                if (ogran.trim().length != 0) {
-                                    ogrArr = ogran.split(",")
-                                    $.ajax({
-                                        url: "/DbInterface",
-                                        data: {getCBox: 'getCBox'},
-                                        type: 'POST',
-                                        success: function (data) {
-                                            var obj = (JSON.parse(data)).exclude;
-                                            obj.forEach(function (item, i, obj) {
-                                                var id = item[0];
-                                                var name = item[1];
-                                                var indexChecked = ogrArr.indexOf(id);
-                                                if (indexChecked > -1) {
-                                                    $(".ogranicenija").append("<p>" + name + "</p>");
-                                                }
-                                            })
+                var ogrArr = [];
+                function fillArray() {
+                    var deferreds = [];
+                    var i;
+                    for (i = 0; i < componets_array_ID.length; i++) {
+                        deferreds.push($.ajax({
+                            url: "/DbInterface",
+                            data: {
+                                getAdditiveByID: "getAdditiveByID",
+                                additiveID: componets_array_ID[i],
+                            },
+                            dataSrc: "component",
+                            type: "POST",
+                            success: function (data) {
+                                var obj = JSON.parse(data);
+                                if (obj.component[2] != 0) {
+                                    $(".dobavki").append("<p>E" + obj.component[2] + " - " + obj.component[1] + "</p>");
+                                }
+                                var ogran = obj.component[6];
+                                var tempOgtArr = [];
+                                if (ogran != null) {
+                                    if (ogran.trim().length != 0) {
+                                        tempOgtArr = ogran.split(",")
+                                        var i;
+                                        for (i = 0; i < tempOgtArr.length; i++) {
+                                            if (!ogrArr.includes(tempOgtArr[i])) {
+                                                ogrArr.push(tempOgtArr[i])
+                                            }
                                         }
-                                    })
+                                    }
                                 }
                             }
+                        }))
+                    }
+                    return deferreds;
+                }
+                $.when.apply(null, fillArray()).done(function () {
+                    $.ajax({
+                        url: "/DbInterface",
+                        data: {getCBox: 'getCBox'},
+                        type: 'POST',
+                        success: function (data) {
+                            var jsonCboxs = (JSON.parse(data)).exclude;
+                            jsonCboxs.forEach(function (item, i, obj) {
+                                var id = item[0];
+                                var name = item[1];
+                                if (ogrArr.includes(id)) {
+                                    $(".ogranicenija").append("<p>" + name + "</p>");
+                                }
+                            })
                         }
                     })
-                });
+                })
             }
 
             function fillBarcodeList() {

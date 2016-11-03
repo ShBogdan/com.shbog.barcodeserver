@@ -276,13 +276,17 @@
             <td class = "components"  height="300px" valign="top"></td>
             <td class = "exclude"  height="300px" valign="top">
         </tr>
-        </tbody>
-    </table>
-    <div class="divInput" align="center">
-        <input class = "getInputComponent" placeholder="название компонента" type="text" maxlength="50" list="components"><button class="addComponent" >Добавить название</button>
-        <datalist id="components"></datalist>
-    </div>
 
+        <tr>
+            <td align="center" width="50%">
+                <div class="divInput" align="center">
+                    <input class = "getInputComponent" placeholder="Новый компонент" type="text"  style="display:table-cell; width:60%" list="components"><button class="addComponent" style="display:table-cell; width:36%">Добавить</button>
+                    <datalist id="components"></datalist>
+                </div>
+            </td>
+        </tr>
+       </tbody>
+    </table>
 </div>
 </body>
 </html>
