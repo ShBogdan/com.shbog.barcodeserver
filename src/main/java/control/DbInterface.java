@@ -116,7 +116,7 @@ public class DbInterface extends HttpServlet {
                 db.getExclude(out);
             }
             if (null != req.getParameter("getCompound")) {
-                db.getCompound(out, req.getParameter("compoundID"));
+                db.getCompound(out, req.getParameter("catId"));
             }
             if (null != req.getParameter("getProductCompound")) {
                 db.getProductCompound(out, req.getParameter("compoundProductID"));

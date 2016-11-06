@@ -85,8 +85,8 @@
 <div class="login">
     <h1>Login!</h1>
     <form action="../LoginServlet" method="post">
-        <input type="text" name="username" placeholder="Username" required="required" />
-        <input type="password" name="password" placeholder="Password" required="required" />
+        <input type="text" name="username" placeholder="Username" required="required" value="admin"/>
+        <input type="password" name="password" placeholder="Password" required="required" value="admin"/>
         <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
     </form>
     <h5>${message}</h5>

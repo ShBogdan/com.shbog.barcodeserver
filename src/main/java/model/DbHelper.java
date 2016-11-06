@@ -52,11 +52,12 @@ public class DbHelper {
 
     public void createCategory(String cat, String sectionId) throws SQLException {
         if(cat != null && !cat.trim().isEmpty()) {
-            String statement = "INSERT INTO categories(cat_name, section_id_frk, components) VALUE (?,?,?)";
+//            String statement = "INSERT INTO categories(cat_name, section_id_frk, components) VALUE (?,?,?)";
+            String statement = "INSERT INTO categories(cat_name, section_id_frk) VALUE (?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, cat);
             preparedStatement.setString(2, sectionId);
-            preparedStatement.setString(3, "");
+//            preparedStatement.setString(3, "");
             preparedStatement.execute();
             if(connection!=null)
                 connection.close();
@@ -105,40 +106,33 @@ public class DbHelper {
         System.out.println("Список компонентов продукта после: " +input_components_ID);
 
         //создаем продукт до обновления input_components_ID
-        String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, components) VALUE (?,?,?,?,?);";
+//        String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, components) VALUE (?,?,?,?,?);";
+        String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code) VALUE (?,?,?,?);";
         prepSat = connection.prepareStatement(statement);
         prepSat.setString(1, prodCategory_id);
         prepSat.setString(2, prodProvider);
         prepSat.setString(3, prodName);
         prepSat.setString(4, prodCode);
-        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
+//        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
         prepSat.execute();
 
-        //получаем старый список компонентов группы
-        String statement_get_cat_componentID = "SELECT components FROM categories WHERE cat_id=\""+prodCategory_id+"\"";
-        stmt = connection.createStatement();
-        resultSet = stmt.executeQuery(statement_get_cat_componentID);
-        resultSet.next();
-        List<String> list_cat_components_id = new ArrayList<String>(Arrays.asList(resultSet.getString("components").split(",")));
-        for (String s : list_cat_components_id) {
-            input_components_ID.add(s);
-        }
-        input_components_ID.remove("");
-        String allComponentsId = input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+","");
-        System.out.println("Все компонентыЖ " + allComponentsId);
-        //заменяем на новую группу компонентов
-        String statement_add_cat_componentID = "UPDATE categories SET components =? WHERE cat_id=?";
-        prepSat = connection.prepareStatement(statement_add_cat_componentID);
-        prepSat.setString(1, allComponentsId);
-        prepSat.setString(2, prodCategory_id);
-        prepSat.execute();
-
+        String prodId;
         String query = "SELECT LAST_INSERT_ID() as last_id from product;";
         stmt = connection.createStatement();
         resultSet = stmt.executeQuery(query);
         resultSet.next();
-        out.println(resultSet.getString("last_id"));
+        prodId = resultSet.getString("last_id");
+        out.println(prodId);
         out.flush();
+///// new logic
+        for (String s : input_components_ID) {
+            String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
+            prepSat = connection.prepareStatement(qInsertFrk);
+            prepSat.setString(1, prodCategory_id);
+            prepSat.setString(2, prodId);
+            prepSat.setString(3, s);
+            prepSat.execute();
+        }
 
         System.out.println("Запись:" + prodName + " добавлен");
         if(connection!=null)
@@ -236,33 +230,32 @@ public class DbHelper {
         }
 
         //создаем продукт до обновления input_components_ID
-        String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, components = ? WHERE prod_id = ?";
+//        String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, components = ? WHERE prod_id = ?";
+        String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ? WHERE prod_id = ?";
         prepSat = connection.prepareStatement(statement);
-        prepSat.setString(6, prod_id);
+        prepSat.setString(5, prod_id);
         prepSat.setString(1, prodCategory_id);
         prepSat.setString(2, prodProvider);
         prepSat.setString(3, prodName);
         prepSat.setString(4, prodCode);
-        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
+//        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
         prepSat.execute();
 
-        //получаем старый список компонентов группы
-        String statement_get_cat_componentID = "SELECT components FROM categories WHERE cat_id=\""+prodCategory_id+"\"";
-        stmt = connection.createStatement();
-        resultSet = stmt.executeQuery(statement_get_cat_componentID);
-        resultSet.next();
-        List<String> list_cat_components_id = new ArrayList<String>(Arrays.asList(resultSet.getString("components").split(",")));
-        for (String s : list_cat_components_id) {
-            input_components_ID.add(s);
+
+        statement = "DELETE FROM frkgroup WHERE prod = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, prod_id);
+        preparedStatement.execute();
+
+
+        for (String s : input_components_ID) {
+            String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
+            prepSat = connection.prepareStatement(qInsertFrk);
+            prepSat.setString(1, prodCategory_id);
+            prepSat.setString(2, prod_id);
+            prepSat.setString(3, s);
+            prepSat.execute();
         }
-        input_components_ID.remove("");
-        String allComponentsId = input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+","");
-        //заменяем на новую группу компонентов
-        String statement_add_cat_componentID = "UPDATE categories SET components =? WHERE cat_id=?";
-        prepSat = connection.prepareStatement(statement_add_cat_componentID);
-        prepSat.setString(1, allComponentsId);
-        prepSat.setString(2, prodCategory_id);
-        prepSat.execute();
 
 
         if(connection!=null)
@@ -290,6 +283,12 @@ public class DbHelper {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, prod_id);
         preparedStatement.execute();
+
+        statement = "DELETE FROM frkgroup WHERE prod = ?";
+        preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, prod_id);
+        preparedStatement.execute();
+
         if(connection!=null)
             connection.close();
     }
@@ -390,11 +389,6 @@ public class DbHelper {
         resultSet.next();
         cat_name = resultSet.getString("cat_name");
 
-//        query = "SELECT cat_name FROM components WHERE comp_id IN "+"("+resultSet.getString("components")+")";;
-//        stmt = connection.createStatement();
-//        resultSet = stmt.executeQuery(query);
-//        resultSet.next();
-//        cat_name = resultSet.getString("cat_name");
 
         JSONObject result = new JSONObject();
         JSONArray ja = new JSONArray();
@@ -403,7 +397,7 @@ public class DbHelper {
         ja.put(prod_name);
         ja.put(prod_maker);
         ja.put(prod_components);
-          try {
+        try {
             result.put("barcode",ja);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -449,16 +443,21 @@ public class DbHelper {
             connection.close();
         return out;
     }
-    public PrintWriter getCompound(PrintWriter out, String compoundID) throws SQLException {
-        String statement = "SELECT components FROM categories WHERE cat_id=" + compoundID;
+    public PrintWriter getCompound(PrintWriter out, String catId) throws SQLException {
+        ArrayList<String> componArrId = new ArrayList<String>();
+        String statement = "SELECT compon FROM frkgroup WHERE cat=" + catId;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(statement);
-        resultSet.next();
-        String _statement = "SELECT * FROM component WHERE comp_id IN"+"("+resultSet.getString("components")+")";
-        Statement _stmt = connection.createStatement();
-        ResultSet _resultSet = _stmt.executeQuery(_statement);
-        while (_resultSet.next()) {
-            out.println("<button class=\"btnCompound\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
+        while (resultSet.next()){
+            componArrId.add(resultSet.getString("compon"));
+        }
+        if(componArrId.size()!=0){
+            String _statement = "SELECT * FROM component WHERE comp_id IN"+"(" +componArrId.toString().substring(1, componArrId.toString().length()-1).replaceAll("\\s+","")+")";
+            Statement _stmt = connection.createStatement();
+            ResultSet _resultSet = _stmt.executeQuery(_statement);
+            while (_resultSet.next()) {
+                out.println("<button class=\"btnCompound\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
+            }
         }
         out.flush();
         if(connection!=null)
@@ -466,11 +465,20 @@ public class DbHelper {
         return out;
     }
     public PrintWriter getProductCompound(PrintWriter out, String productID) throws SQLException {
-        String statement = "SELECT components FROM product WHERE prod_id=" + productID;
+        ArrayList<String> componArrId = new ArrayList<String>();
+        String statement = "SELECT compon FROM frkgroup WHERE prod=" + productID;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(statement);
-        resultSet.next();
-        String _statement = "SELECT * FROM component WHERE comp_id IN "+"("+resultSet.getString("components")+")"; //exception in components = empty
+        try {
+            while (resultSet.next()){
+                componArrId.add(resultSet.getString("compon"));
+            }
+        } catch (SQLException e) {
+//            e.printStackTrace();
+            System.out.println("нет компонентов");
+        }
+
+        String _statement = "SELECT * FROM component WHERE comp_id IN "+"(" +componArrId.toString().substring(1, componArrId.toString().length()-1).replaceAll("\\s+","")+")";
         Statement _stmt = connection.createStatement();
         ResultSet _resultSet = _stmt.executeQuery(_statement);
         while (_resultSet.next()) {

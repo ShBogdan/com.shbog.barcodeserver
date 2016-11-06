@@ -1282,7 +1282,7 @@
                 });
             };
 
-            function fillCompound(_compoundID) {
+            function fillCompound(catId) {
                 varButton = [];
                 componets_array_ID = [];
                 $(".compound button").remove();
@@ -1291,7 +1291,7 @@
                     url: "/DbInterface",
                     data: {
                         getCompound: "getCompound",
-                        compoundID: _compoundID
+                        catId: catId
                     },
                     type: 'POST',
                     dataType: 'text',
