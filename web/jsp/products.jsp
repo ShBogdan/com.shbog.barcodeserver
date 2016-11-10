@@ -199,7 +199,7 @@
 
 <body class="products">
 <script>
-   function previewFile() {
+    function previewFile() {
         var preview = document.querySelector('img');
         var file = document.querySelector('input[type=file]').files[0];
         var reader  = new FileReader();
@@ -212,30 +212,32 @@
         $("#x").show().css("margin-right","10px");
     }
     function closeImage(){
-        var blank="http://upload.wikimedia.org/wikipedia/commons/c/c0/Blank.gif";
+        var blank="/image/bgr.jpg";
         $("#inputImg").attr("src",blank);
         $("#x").hide();
+        var el = $('#image');
+        el.wrap('<form>').closest('form').get(0).reset();
+        el.unwrap();
     }
 
-    function dynamicUpload(){
-        var formElement = $("[name='attachfileform']")[0];
-        var fd = new FormData(formElement);
-        var fileInput = $("[name='attachfile']")[0];
-        fd.append('file', fileInput.files[0] );
-        fd.append('myname', 99 ); //how to read value?
-
-
-        $.ajax({
-            url: '../FileUploadServlet',
-            data: fd,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-            }
-        });
-    }
+//    function dynamicUpload(){
+//        var formElement = $("[name='attachfileform']")[0];
+//        var fd = new FormData(formElement);
+//        var fileInput = $("[name='attachfile']")[0];
+//        fd.append('file', fileInput.files[0] );
+//        fd.append('myname', imageId ); //how to read value?
+//        if(fileInput.files[0]){
+//            $.ajax({
+//                url: '../FileUploadServlet',
+//                data: fd,
+//                processData: false,
+//                contentType: false,
+//                type: 'POST',
+//                success: function(data){
+//                    console.log(data);
+//                }
+//            });}else alert("нет файла")
+//    }
 
 </script>
 <div class="temp">
@@ -273,17 +275,27 @@
     <table style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
         <tr>
-            <td align="left" width="30%">
-                <form action="" id="attachfileform" name="attachfileform" method="post" enctype="multipart/form-data">
-                    <img id = "inputImg" style="max-width: 100%; height: 150px;"/><br>
-                    <span id="x" hidden onclick="closeImage()" >[X]</span>
-                    <input type="button" id="loadFileXml" value="loadXml" onclick="document.getElementById('image').click();" />
-                    <input type="file"  name="attachfile" onchange="previewFile();  //this.value=null; return false;" id="image" style="display:none;" class = ".addPhoto"  >
-                    <input type="button" class="update_but"  value="Upload File" onclick="dynamicUpload()"/>
+            <td align="center" width="50%">
+                <form id="attachfileform" action="" enctype="multipart/form-data" method="post" name="attachfileform">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><img id="inputImg" style="max-width: 100%; height: 130px;" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span id="x" hidden onclick="closeImage()" >[X]</span>
+                                <input type="button" id="loadFileXml" value="loadXml" onclick="document.getElementById('image').click();" />
+                                <input type="file" name="attachfile" onchange="previewFile();  //this.value=null; return false;" id="image" style="display:none;" class = ".addPhoto"  >
+                                <%--<input type="button" class="dynamicUpload"  value="Upload File" onclick="dynamicUpload()"/>--%>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </form>
 
             </td>
-            <td align="right" width="20%">
+            <td align="center" width="40%" valign="top">
                 <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
                     <tbody>
                     <tr>

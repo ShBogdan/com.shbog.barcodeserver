@@ -53,6 +53,7 @@
 
     <script>
         $(document).ready(function () {
+            window.imageId = 111;
             $('#menu').load("info.jsp");
             var table;
             var e_table;
@@ -583,10 +584,10 @@
                             console.log("Its repeat name")
                             return;
                         }
-//                        if (inArray > -1) {
-//                            alert("Компонент с таким именем уже добавлен")
-//                            return;
-//                        }
+                        if (inArray > -1) {
+                            alert("Компонент с таким именем уже добавлен")
+                            return;
+                        }
                         if (comp_index > -1) {
                             alert("Компонент с таким именем уже добавлен")
                         } else {
@@ -870,6 +871,7 @@
                     position:['middle',10],
                     buttons: {
                         OK: function () {
+                            dynamicUpload();
                             var inList = listBarcode.indexOf($(".prodCode").val())
                             if( inList > -1){
                                 alert("Продукт с таким кодом уже есть")
@@ -1109,7 +1111,6 @@
                                 return;
                             }
                             componentGroup.unshift($(".e_name").val());
-                            console.log("arr = " + componentGroup.toString())
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
@@ -1235,7 +1236,7 @@
                         $(".permission").val(edit_e_tableRow[5]);
                         getCBox(edit_e_tableRow[8])
 //                        fillGroupAdditive();
-//                        getComponentNames();
+                        getComponentNames();
                         $.ajax({
                             url: "/DbInterface",
                             data: {getComponenNames: "getComponenNames"},
@@ -1403,29 +1404,22 @@
                 $(".components button").remove();
             };
 
-//            function getComponentNames() {
-//                $.ajax({
-//                    url: "/DbInterface",
-//                    data: {getAdditive: "getAdditive"},
-//                    dataSrc: "additive",
-//                    type: "POST",
-//                    success: function (data) {
-//                        var obj = JSON.parse(data);
-//                        var compName;
-//                        obj.additive.forEach(function (item, i, obj) {
-//                            if (item[3].search(/,/i) > -1) {
-//                                var arr = item[3].split(',');
-//                                var index;
-//                                for (index = 0; index < arr.length; ++index) {
-//                                    autocompleteInpComponents.push(arr[index]);
-//                                }
-//                            } else {
-//                                autocompleteInpComponents.push(item[3]);
-//                            }
-//                        });
-//                    }
-//                });
-//            };
+            function getComponentNames() {
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {getComponenNames: "getComponenNames"},
+                    dataSrc: "additive",
+                    type: "POST",
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        var compName;
+                        obj.additive.forEach(function (item, i, obj) {
+                            autocompleteInpComponents.push(item[3]);
+                            console.log(item[3])
+                        });
+                    }
+                });
+            };
 
             function fillDobOgr() {
                 $(".dobavki p").remove();
@@ -1504,6 +1498,26 @@
                     }
                 });
             }
+
+            function dynamicUpload(){
+                var formElement = $("[name='attachfileform']")[0];
+                var fd = new FormData(formElement);
+                var fileInput = $("[name='attachfile']")[0];
+                fd.append('file', fileInput.files[0] );
+                fd.append('myname', imageId ); //how to read value?
+                if(fileInput.files[0]){
+                    $.ajax({
+                        url: '../FileUploadServlet',
+                        data: fd,
+                        processData: false,
+                        contentType: false,
+                        type: 'POST',
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });}else alert("нет файла")
+            }
+
 //            $(document).on('click', '.getPhoto', function (){
 //                var preview = document.querySelector('img');
 //                var file    = document.querySelector('input[type=file]').files[0];
