@@ -566,6 +566,7 @@
                         }
                     });
 
+                    //созадаем еще одно название
                     $(".divInput").on("click", ".addComponent", function () {
                         var inputText = $(".getInputComponent").val().trim();
                         comp_index = componentGroup.indexOf(inputText);
@@ -582,10 +583,10 @@
                             console.log("Its repeat name")
                             return;
                         }
-                        if (inArray > -1) {
-                            alert("Компонент с таким именем уже добавлен")
-                            return;
-                        }
+//                        if (inArray > -1) {
+//                            alert("Компонент с таким именем уже добавлен")
+//                            return;
+//                        }
                         if (comp_index > -1) {
                             alert("Компонент с таким именем уже добавлен")
                         } else {
@@ -595,6 +596,7 @@
                             console.log(componentGroup)
                         }
                     });
+                    //удаляем новую кнопку
                     $(".components").on("click", ".varButton", function () {
                         $(this).remove();
                         comp_index = componentGroup.indexOf($(this).text());
@@ -865,6 +867,7 @@
                     autoOpen: true,
                     width: 800,
                     modal: true,
+                    position:['middle',10],
                     buttons: {
                         OK: function () {
                             var inList = listBarcode.indexOf($(".prodCode").val())
@@ -988,6 +991,7 @@
                     autoOpen: true,
                     width: 800,
                     modal: true,
+                    position:['middle',10],
                     buttons: {
                         OK: function () {
                             if($(".edit_prodCode").val() != oldCodeValue){
@@ -1123,6 +1127,7 @@
                     autoOpen: true,
                     width: 850,
                     modal: true,
+                    position:['middle',10],
                     buttons: {
                         OK: function () {
                             if ($(".e_name").val() == "") {
@@ -1198,6 +1203,7 @@
                     autoOpen: true,
                     width: 850,
                     modal: true,
+                    position:['middle',10],
                     buttons: {
                         OK: function () {
                             if ($(".e_name").val() == "") {
@@ -1371,6 +1377,11 @@
                 $(".prodProvider").val('');
                 $(".prodCode").val('');
                 $(".selectCategory").find('option').remove();
+
+                var blank="http://upload.wikimedia.org/wikipedia/commons/c/c0/Blank.gif";
+                $("#inputImg").attr("src",blank);
+                $("#x").hide();
+
                 if ($(".dialog_create_product").dialog("isOpen")) {
                     $(".dialog_create_product").dialog("destroy");
                 }
@@ -1516,6 +1527,36 @@
                     }
                 });
             }
+//            $(document).on('click', '.getPhoto', function (){
+//                var preview = document.querySelector('img');
+//                var file    = document.querySelector('input[type=file]').files[0];
+//                var reader  = new FileReader();
+//                console.log(1)
+//
+//                reader.addEventListener("load", function () {
+//                    preview.src = reader.result;
+//                    console.log(2)
+//
+//                }, false);
+//
+//                if (file) {
+//                    console.log(3)
+//                    reader.readAsDataURL(file);
+//                }
+//            })
+//            function previewFile() {
+//                var preview = document.querySelector('img');
+//                var file    = document.querySelector('input[type=file]').files[0];
+//                var reader  = new FileReader();
+//
+//                reader.addEventListener("load", function () {
+//                    preview.src = reader.result;
+//                }, false);
+//
+//                if (file) {
+//                    reader.readAsDataURL(file);
+//                }
+//            }
         });
     </script>
 </head>

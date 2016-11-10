@@ -11,6 +11,20 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.util.*;
 
+
+
+//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+//import org.apache.poi.ss.usermodel.Cell;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.ss.usermodel.Sheet;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.ArrayList;
+
+
 public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
@@ -24,10 +38,11 @@ public class DbHelper {
 
     public static void main(String[] args) throws SQLException {
         DbHelper db = new DbHelper();
-
-        db.getUsers();
-
-
+//
+//        db.getUsers();
+//        System.out.println("start");
+//        db.parse("C:\\test.xls");
+//        System.out.println("end");
     }
 
     public DbHelper() {
@@ -557,7 +572,7 @@ public class DbHelper {
             String id = String.valueOf(resultSet.getInt("comp_id"));
             String additive_for = resultSet.getString("comp_for");
             String additive_name = resultSet.getString("comp_name");
-            Integer additive_code = resultSet.getInt("comp_e_code");
+            String additive_code = resultSet.getString("comp_e_code");
             String additive_info = resultSet.getString("comp_info");
             String additive_perm = resultSet.getString("comp_perm");
             Integer additive_color = resultSet.getInt("comp_color");
@@ -670,6 +685,145 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
+    public void addFile(PrintWriter out){System.out.println("addFile");}
+
+//    public void parse(String name) throws SQLException {
+//
+//        InputStream in = null;
+//        HSSFWorkbook wb = null;
+//        try {
+//            in = new FileInputStream(name);
+//            wb = new HSSFWorkbook(in);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        Sheet sheet = wb.getSheetAt(0);
+//        Iterator<Row> it = sheet.iterator();
+//        while (it.hasNext()) {
+//            Row row = it.next();
+//            Iterator<Cell> cells = row.iterator();
+//            int count = 0;
+//            Dobavka d = new Dobavka();
+//            while (cells.hasNext()) {
+//                String result;
+//                ++count;
+//                Cell cell = cells.next();
+//                int cellType = cell.getCellType();
+//                switch (cellType) {
+//                    case Cell.CELL_TYPE_STRING:
+//                        result = cell.getStringCellValue();
+//                        break;
+//                    case Cell.CELL_TYPE_NUMERIC:
+//                        result = String.valueOf(cell.getNumericCellValue());
+//                        break;
+//
+//                    case Cell.CELL_TYPE_FORMULA:
+//                        result = String.valueOf(cell.getNumericCellValue());
+//                        break;
+//                    default:
+//                        result = "";
+//                        break;
+//                }
+////                System.out.println(result);
+//                switch (count){
+//                    case 1: d.type = result;
+//                        break;
+//                    case 2: d.naznac = result;
+//                        break;
+//                    case 3: d.nomerE = result;
+//                        break;
+//                    case 4: d.nazvRu = result;
+//                        break;
+//                    case 5: d.nazvEN = result;
+//                        break;
+//                    case 6: d.forWhat = result;
+//                        break;
+//                    case 7: d.zaProtiv = result;
+//                        break;
+//                    case 8: d.primecanie = result;
+//                        break;
+//                    case 9:  if(result.equals("1.0")) d.ogran.add("1");
+//                        break;
+//                    case 10: if(result.equals("1.0")) d.ogran.add("2");
+//                        break;
+//                    case 11: if(result.equals("1.0")) d.ogran.add("3");
+//                        break;
+//                    case 12: if(result.equals("1.0")) d.ogran.add("4");
+//                        break;
+//                    case 13: if(result.equals("1.0")) d.ogran.add("5");
+//                        break;
+//                    case 14: if(result.equals("1.0")) d.ogran.add("6");
+//                        break;
+//                    case 15: if(result.equals("1.0")) d.ogran.add("7");
+//                        break;
+//                    case 16: if(result.equals("1.0")) d.ogran.add("8");
+//                        break;
+//                    case 17:
+//                        if(result.equals("З")){d.color="0";};
+//                        if(result.equals("Ж")){d.color="1";};
+//                        if(result.equals("К")){d.color="2";};
+//                        break;
+//                }
+//            }
+//            if( null!=d.nazvRu &&  !d.nazvRu.equals("")){
+////                String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes) VALUE (?,?,?,?,?,?,?,?)";
+////                PreparedStatement preparedStatement = connection.prepareStatement(statement);
+////                preparedStatement.setString(1, d.nazvRu);
+////                preparedStatement.setString(2, d.nomerE);
+////                preparedStatement.setString(3, d.forWhat);
+////                preparedStatement.setString(4, d.zaProtiv);
+////                preparedStatement.setString(5, d.color);
+////                preparedStatement.setString(6, d.ogranicenie);
+////                preparedStatement.setString(7, d.naznac);
+////                preparedStatement.setString(8, d.primecanie);
+////                preparedStatement.execute();
+//////
+////                if(connection!=null)
+////                    connection.close();
+//                System.out.println(d);
+//            }
+//            count = 0;
+//        }
+//        System.out.println("in end");
+//    }
+    class Dobavka{
+        String type;
+        String naznac;
+        String nomerE;
+        String nazvRu;
+        String nazvEN;
+        String forWhat;
+        String zaProtiv;
+        String primecanie;
+        ArrayList<String> ogran = new ArrayList<String>();
+        String color;
+
+        String getOgranicenie(){
+
+            String s = ogran.toString().replace(" ", "");
+            String ogranicenie = s.substring(1, s.length()-1);
+            return ogranicenie;
+        }
+
+        @Override
+        public String toString() {
+            return "Dobavka{" +
+                    "type='" + type + '\'' +
+                    ", naznac='" + naznac + '\'' +
+                    ", nomerE='" + nomerE + '\'' +
+                    ", nazvRu='" + nazvRu + '\'' +
+                    ", nazvEN='" + nazvEN + '\'' +
+                    ", forWhat='" + forWhat + '\'' +
+                    ", zaProtiv='" + zaProtiv + '\'' +
+                    ", primecanie='" + primecanie + '\'' +
+                    ", ogran='" + ogran + '\'' +
+                    ", ogranicenie=" + getOgranicenie() +
+                    ", color='" + color + '\'' +
+                    '}';
+        }
+    }
+
 }
 //****************************************************Additive==Component
 //    public void createForeigners(int cat, int prod, int comp) throws SQLException {

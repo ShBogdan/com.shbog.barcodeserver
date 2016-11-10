@@ -105,7 +105,7 @@
         <data-type>varchar(150)|0</data-type>
       </column>
       <column id="33" parent="9" name="comp_e_code">
-        <data-type>int(11)|0</data-type>
+        <data-type>varchar(10)|0</data-type>
       </column>
       <column id="34" parent="9" name="comp_info">
         <data-type>text|0</data-type>

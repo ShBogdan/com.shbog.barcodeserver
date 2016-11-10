@@ -18,6 +18,17 @@
 
     <servlet>
         <description></description>
+        <display-name>FileUploadServlet</display-name>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <servlet-class>control.FileUploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileUploadServlet</servlet-name>
+        <url-pattern>/FileUploadServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <description></description>
         <display-name>ProfileServlet</display-name>
         <servlet-name>ProfileServlet</servlet-name>
         <servlet-class>ProfileServlet</servlet-class>

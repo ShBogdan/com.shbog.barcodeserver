@@ -140,6 +140,9 @@ public class DbInterface extends HttpServlet {
                 String exclude_id = req.getParameter("exclude_id");
                 db.removeExclude(exclude_id);
             }
+            if (null != req.getParameter("addFile")) {
+                db.addFile(out);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

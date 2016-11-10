@@ -154,7 +154,7 @@
             top:1px;
         }
 
-        .remove, .button_create_product, .addComponent, .addComponentEdit {
+        .remove, .button_create_product, .addComponent, .addComponentEdit{
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
             background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
             background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -177,7 +177,7 @@
             text-decoration:none;
             margin-left: 5px;
         }
-        .remove:hover , .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover {
+        .remove:hover , .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover{
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
             background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
             background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -198,6 +198,46 @@
 </head>
 
 <body class="products">
+<script>
+   function previewFile() {
+        var preview = document.querySelector('img');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader  = new FileReader();
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+        $("#x").show().css("margin-right","10px");
+    }
+    function closeImage(){
+        var blank="http://upload.wikimedia.org/wikipedia/commons/c/c0/Blank.gif";
+        $("#inputImg").attr("src",blank);
+        $("#x").hide();
+    }
+
+    function dynamicUpload(){
+        var formElement = $("[name='attachfileform']")[0];
+        var fd = new FormData(formElement);
+        var fileInput = $("[name='attachfile']")[0];
+        fd.append('file', fileInput.files[0] );
+        fd.append('myname', 99 ); //how to read value?
+
+
+        $.ajax({
+            url: '../FileUploadServlet',
+            data: fd,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data){
+                console.log(data);
+            }
+        });
+    }
+
+</script>
 <div class="temp">
     <button id = "button" class="remove">Удалить выделенное</button>
     <button id = "button_create_product" class="button_create_product">Добавить продукт</button>
@@ -230,25 +270,44 @@
     </tbody>
 </table>
 <div class="dialog_create_product" title="Создать продукт" hidden>
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
+    <table style="width: 700px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
         <tr>
-            <td>
-                <select class="selectCategory" style="width: 100%">
-                </select>
+            <td align="center" width="30%">
+                <form action="" id="attachfileform" name="attachfileform" method="post" enctype="multipart/form-data">
+                    <img id = "inputImg" style="max-width: 100%; height: 150px;"/><br>
+                    <span id="x" hidden onclick="closeImage()" >[X]</span>
+                    <input type="button" id="loadFileXml" value="loadXml" onclick="document.getElementById('image').click();" />
+                    <input type="file"  name="attachfile" onchange="previewFile();  //this.value=null; return false;" id="image" style="display:none;" class = ".addPhoto"  >
+                    <input type="button" class="update_but"  value="Upload File" onclick="dynamicUpload()"/>
+                </form>
+
             </td>
-        </tr>
-        <tr>
-            <td><input class="prodName" placeholder="Название" type="text" style="width:  100%" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><input class="prodProvider" placeholder="Производитель" type="text" style="width:  100%" maxlength="50"></td>
-        </tr>
-        <tr>
-            <td><input class="prodCode" placeholder="штрих-код" type="text" style="width:  100%" maxlength="18"></td>
+            <td align="center" width="70%">
+                <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <select class="selectCategory" style="width: 100%">
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input class="prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
+                    </tr>
+                    <tr>
+                        <td><input class="prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
+                    </tr>
+                    <tr>
+                        <td><input class="prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
         </tr>
         </tbody>
     </table>
+
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
         <tbody>
         <tr>
