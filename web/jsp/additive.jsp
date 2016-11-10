@@ -229,12 +229,12 @@
 </table>
 
 <div class="dialog_create_additive" title="Создать добавку" hidden>
-    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 800px">
+    <table align="center" border="0" cellpadding="2" cellspacing="2">
         <tbody>
         <tr>
             <td align="center">
-                <input  class="e_namber" placeholder="Номер" type="text" style="width: 80px" maxlength="10" />
-                <input  class="e_name" placeholder="Название" type="text" style="width: 520px" maxlength="150" />
+                <input  class="e_namber" placeholder="Номер" type="text" style="width: 80px"/>
+                <input  class="e_name" placeholder="Название" type="text" style="width: 750px"/>
                 <select style="width: 100px" class="e_color">
                     <option value="0">Зеленый</option>
                     <option value="1">Желтый</option>
@@ -244,29 +244,26 @@
         </tr>
         <tr>
             <td align="center">
-                <input  class="e_for" placeholder="Назначение" type="text" style="width: 150px" maxlength="25" />
-                <input  class="e_notes" placeholder="Примечание" type="text" style="width: 555px" maxlength="150" />
+                <input  class="e_for" placeholder="Назначение" type="text" style="width: 150px"/>
+                <input  class="permission" placeholder="Запрет/разрешение" type="text" style="width: 790px" />
             </td>
         </tr>
         </tbody>
     </table>
 
-    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Описание</b><hr></td>
-            <td width="50%" align="center"><b>Запрет/разрешение</b><hr></td>
+            <td width="50%" align="center"><b>Примечание</b><hr></td>
         </tr>
         <tr>
-            <td valign="top"><textarea rows="10" cols="40" class="info"></textarea></td>
-            <td valign="top"><textarea rows="10" cols="40" class="permission"></textarea></td>
+            <td valign="top"><textarea rows="10" cols="40" class="info" style="width: 460px"></textarea></td>
+            <td valign="top"><textarea rows="10" cols="40" class="e_notes" style="width: 460px"></textarea></td>
         </tr>
         </tbody>
     </table>
-    <%--<div align="center">--%>
-        <%--<input class="e_notes" placeholder="Примечание" type="text" style="width: 690px" maxlength="150" />--%>
-    <%--</div>--%>
-    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Соотвецтвует Компоненту</b><hr></td>

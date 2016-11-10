@@ -30,7 +30,7 @@
         }
         .margin{
             margin-top: 10px;
-            width: 700px;
+            width: 1000px;
         }
 
         /*textarea {*/
@@ -270,10 +270,10 @@
     </tbody>
 </table>
 <div class="dialog_create_product" title="Создать продукт" hidden>
-    <table style="width: 700px;" border="0" cellspacing="2" cellpadding="2" align="center">
+    <table style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
         <tr>
-            <td align="center" width="30%">
+            <td align="left" width="30%">
                 <form action="" id="attachfileform" name="attachfileform" method="post" enctype="multipart/form-data">
                     <img id = "inputImg" style="max-width: 100%; height: 150px;"/><br>
                     <span id="x" hidden onclick="closeImage()" >[X]</span>
@@ -283,7 +283,7 @@
                 </form>
 
             </td>
-            <td align="center" width="70%">
+            <td align="right" width="20%">
                 <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
                     <tbody>
                     <tr>
@@ -308,7 +308,7 @@
         </tbody>
     </table>
 
-    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 1000px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Состав</b><hr></td>
@@ -330,7 +330,7 @@
     </table>
 
     <hr class= "margin">
-    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 1000px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Добавки</b></td>
@@ -344,7 +344,7 @@
     </table>
 </div>
 <div class="dialog_edit_product" title="Изменить продукт" hidden>
-    <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 70%">
+    <table align="center" border="0" cellpadding="5" cellspacing="0" style="width: 1000px">
         <tbody>
         <tr>
             <td>
@@ -363,7 +363,7 @@
         </tr>
         </tbody>
     </table>
-    <table class="edit_sostav" style="width: 700px;" border="0" cellspacing="2" cellpadding="2" align="center">
+    <table class="edit_sostav" style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
         <tr>
             <td align="center" width="50%"><strong>Состав</strong><hr/></td>
@@ -385,7 +385,7 @@
     </table>
 
     <hr class= "margin">
-    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 700px">
+    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 1000px">
         <tbody>
         <tr>
             <td width="50%" align="center"><b>Добавки</b></td>

@@ -551,7 +551,7 @@
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
-                                    removeAdditive: "removeAdditive",
+                                    removeComponent: "removeComponent",
                                     additive_id: e_table.row('.selected').data()[0]
                                 },
                                 type: 'POST',
@@ -865,7 +865,7 @@
                 isEdit = false;
                 $(".dialog_create_product").dialog({
                     autoOpen: true,
-                    width: 800,
+                    width: 1050,
                     modal: true,
                     position:['middle',10],
                     buttons: {
@@ -937,7 +937,7 @@
                         });
                         $.ajax({
                             url: "/DbInterface",
-                            data: {getAdditive: "getAdditive"},
+                            data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
                             success: function (data) {
@@ -945,27 +945,11 @@
                                 var compName;
                                 var compId;
                                 obj.additive.forEach(function (item, i, obj) {
-                                    console.log(obj)
-                                    if (item[3].search(/,/i) > -1) {
-                                        var arr = item[3].split(',');
-                                        var index;
-                                        for (index = 0; index < arr.length; ++index) {
-                                            console.log("index is " + index + " name " + arr[index])
-                                            compName = arr[index];
-                                            compId = item[0]
-                                            dictionaryAutoCompCompon[compName] = compId;
-                                            autocompleteInpComponents.push(compName);
-
-                                        }
-                                    } else {
-                                        compName = item[3];
-                                        compId = item[0]
-                                        dictionaryAutoCompCompon[compName] = compId;
-                                        autocompleteInpComponents.push(compName);
-
-                                    }
+                                    compName = item[3];
+                                    compId = item[0]
+                                    dictionaryAutoCompCompon[compName] = compId;
+                                    autocompleteInpComponents.push(compName);
                                 });
-
                                 autocompleteInpComponents.sort();
                                 var options = '';
                                 for (var i = 0; i < autocompleteInpComponents.length; i++) {
@@ -989,7 +973,7 @@
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
-                    width: 800,
+                    width: 1050,
                     modal: true,
                     position:['middle',10],
                     buttons: {
@@ -1071,7 +1055,7 @@
                         });
                         $.ajax({
                             url: "/DbInterface",
-                            data: {getAdditive: "getAdditive"},
+                            data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
                             success: function (data) {
@@ -1079,35 +1063,17 @@
                                 var compName;
                                 var compId;
                                 obj.additive.forEach(function (item, i, obj) {
-                                    console.log(item[3])
-                                    if (item[3].search(/,/i) > -1) {
-                                        var arr = item[3].split(',');
-                                        var index;
-                                        for (index = 0; index < arr.length; ++index) {
-                                            console.log("index is " + index + " name " + arr[index])
-                                            compName = arr[index];
-                                            compId = item[0]
-                                            dictionaryAutoCompCompon[compName] = compId;
-                                            autocompleteInpComponents.push(compName);
-
-                                        }
-                                    } else {
-                                        compName = item[3];
-                                        compId = item[0]
-                                        dictionaryAutoCompCompon[compName] = compId;
-                                        autocompleteInpComponents.push(compName);
-
-                                    }
+                                    compName = item[3];
+                                    compId = item[0]
+                                    dictionaryAutoCompCompon[compName] = compId;
+                                    autocompleteInpComponents.push(compName);
                                 });
-
                                 autocompleteInpComponents.sort();
                                 var options = '';
                                 for (var i = 0; i < autocompleteInpComponents.length; i++) {
                                     options += '<option value="' + autocompleteInpComponents[i] + '" />'
                                 }
-
                                 document.getElementById('edit_components').innerHTML = options;
-
                             }
                         });
 
@@ -1125,7 +1091,7 @@
                 isEdit = false;
                 $(".dialog_create_additive").dialog({
                     autoOpen: true,
-                    width: 850,
+                    width: 1050,
                     modal: true,
                     position:['middle',10],
                     buttons: {
@@ -1138,7 +1104,6 @@
                                 alert("Недопустимый символ ','")
                                 return;
                             }
-
                             if ($.inArray($(".e_name").val(), autocompleteInpComponents) != -1) {
                                 alert("Уже есть компонент с таким именем")
                                 return;
@@ -1148,7 +1113,7 @@
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
-                                    createAdditive: "createAdditive",
+                                    createComponent: "createComponent",
                                     additiveNamber: $(".e_namber").val() == "" ? 0 : $(".e_namber").val(),
                                     additiveName: componentGroup.toString(),
                                     additiveColor: $(".e_color").val(),
@@ -1166,7 +1131,7 @@
                                         parseInt(data, 10),
                                         $(".e_for").val(),
                                         $(".e_namber").val(),
-                                        componentGroup.toString(),
+                                        $(".e_name").val(),
                                         $(".info").val(),
                                         $(".permission").val(),
                                         $(".e_notes").val(),
@@ -1187,9 +1152,9 @@
                         }
                     },
                     open: function (event, ui) {
-                        fillGroupAdditive();
+//                        fillGroupAdditive();
                         getCBox();
-                        getAdditiveNames();
+                        getComponentNames();
                     },
                     beforeClose: function (event, ui) {
                         closeAdditiveDialog()
@@ -1201,7 +1166,7 @@
                 isEdit = false;
                 $(".dialog_create_additive").dialog({
                     autoOpen: true,
-                    width: 850,
+                    width: 1050,
                     modal: true,
                     position:['middle',10],
                     buttons: {
@@ -1218,7 +1183,7 @@
                             $.ajax({
                                 url: "/DbInterface",
                                 data: {
-                                    changeAdditive: "changeAdditive",
+                                    changeComponent: "changeComponent",
                                     additiveId: edit_e_tableRow[0],
                                     additiveNamber: $(".e_namber").val(),
                                     additiveName: componentGroup.toString(),
@@ -1233,12 +1198,11 @@
                                 type: 'POST',
                                 dataType: 'text',
                                 success: function (data) {
-                                    console.log(componentGroup.toString());
                                     e_table.row.add([
                                         edit_e_tableRow[0],
                                         $(".e_for").val(),
                                         $(".e_namber").val(),
-                                        componentGroup.toString(),
+                                        $(".e_name").val(),
                                         $(".info").val(),
                                         $(".permission").val(),
                                         $(".e_notes").val(),
@@ -1270,13 +1234,22 @@
                         $(".info").val(edit_e_tableRow[4]);
                         $(".permission").val(edit_e_tableRow[5]);
                         getCBox(edit_e_tableRow[8])
-                        fillGroupAdditive();
-                        getAdditiveNames();
-                        arr.shift();
-                        arr.sort();
-                        arr.forEach(function (item, i, arr) {
-                            $(".components").append("<button class=\"varButton\">" + item.trim() + "</button>");
-                            componentGroup.push(item.trim())
+//                        fillGroupAdditive();
+//                        getComponentNames();
+                        $.ajax({
+                            url: "/DbInterface",
+                            data: {getComponenNames: "getComponenNames"},
+                            dataSrc: "additive",
+                            type: "POST",
+                            success: function (data) {
+                                var obj = JSON.parse(data);
+                                obj.additive.forEach(function (item, i, obj) {
+                                    if (edit_e_tableRow[0] == item[9]) {
+                                        $(".components").append("<button class=\"varButton\">" + item[3].trim() + "</button>");
+                                        componentGroup.push(item[3].trim())
+                                    }
+                                });
+                            }
                         });
                     },
                     close: function (event, ui) {
@@ -1406,6 +1379,8 @@
             };
 
             function closeAdditiveDialog() {
+                componentGroup = [];
+                $(".components button").remove();
                 autocompleteInpComponents = [];
                 cBoxs = [];
                 $.ajaxSetup({cache: false});
@@ -1428,29 +1403,29 @@
                 $(".components button").remove();
             };
 
-            function getAdditiveNames() {
-                $.ajax({
-                    url: "/DbInterface",
-                    data: {getAdditive: "getAdditive"},
-                    dataSrc: "additive",
-                    type: "POST",
-                    success: function (data) {
-                        var obj = JSON.parse(data);
-                        var compName;
-                        obj.additive.forEach(function (item, i, obj) {
-                            if (item[3].search(/,/i) > -1) {
-                                var arr = item[3].split(',');
-                                var index;
-                                for (index = 0; index < arr.length; ++index) {
-                                    autocompleteInpComponents.push(arr[index]);
-                                }
-                            } else {
-                                autocompleteInpComponents.push(item[3]);
-                            }
-                        });
-                    }
-                });
-            };
+//            function getComponentNames() {
+//                $.ajax({
+//                    url: "/DbInterface",
+//                    data: {getAdditive: "getAdditive"},
+//                    dataSrc: "additive",
+//                    type: "POST",
+//                    success: function (data) {
+//                        var obj = JSON.parse(data);
+//                        var compName;
+//                        obj.additive.forEach(function (item, i, obj) {
+//                            if (item[3].search(/,/i) > -1) {
+//                                var arr = item[3].split(',');
+//                                var index;
+//                                for (index = 0; index < arr.length; ++index) {
+//                                    autocompleteInpComponents.push(arr[index]);
+//                                }
+//                            } else {
+//                                autocompleteInpComponents.push(item[3]);
+//                            }
+//                        });
+//                    }
+//                });
+//            };
 
             function fillDobOgr() {
                 $(".dobavki p").remove();
@@ -1461,34 +1436,36 @@
                     var deferreds = [];
                     var i;
                     for (i = 0; i < componets_array_ID.length; i++) {
-                        deferreds.push($.ajax({
-                            url: "/DbInterface",
-                            data: {
-                                getAdditiveByID: "getAdditiveByID",
-                                additiveID: componets_array_ID[i],
-                            },
-                            dataSrc: "component",
-                            type: "POST",
-                            success: function (data) {
-                                var obj = JSON.parse(data);
-                                if (obj.component[2] != 0) {
-                                    $(".dobavki").append("<p>E" + obj.component[2] + " - " + obj.component[1] + "</p>");
-                                }
-                                var ogran = obj.component[6];
-                                var tempOgtArr = [];
-                                if (ogran != null) {
-                                    if (ogran.trim().length != 0) {
-                                        tempOgtArr = ogran.split(",")
-                                        var i;
-                                        for (i = 0; i < tempOgtArr.length; i++) {
-                                            if (!ogrArr.includes(tempOgtArr[i])) {
-                                                ogrArr.push(tempOgtArr[i])
+                        deferreds.push(
+                                $.ajax({
+                                    url: "/DbInterface",
+                                    data: {
+                                        getAdditiveByID: "getAdditiveByID",
+                                        additiveID: componets_array_ID[i],
+                                    },
+                                    dataSrc: "component",
+                                    type: "POST",
+                                    success: function (data) {
+                                        var obj = JSON.parse(data);
+                                        if (obj.component[2] != 0) {
+                                            $(".dobavki").append("<p>E" + obj.component[2] + " - " + obj.component[1] + "</p>");
+                                        }
+                                        var ogran = obj.component[6];
+                                        var tempOgtArr = [];
+                                        if (ogran != null) {
+                                            if (ogran.trim().length != 0) {
+                                                tempOgtArr = ogran.split(",")
+                                                var i;
+                                                for (i = 0; i < tempOgtArr.length; i++) {
+                                                    if (!ogrArr.includes(tempOgtArr[i])) {
+                                                        ogrArr.push(tempOgtArr[i])
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }))
+                                })
+                        )
                     }
                     return deferreds;
                 }

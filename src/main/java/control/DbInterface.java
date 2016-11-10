@@ -37,9 +37,9 @@ public class DbInterface extends HttpServlet {
                                  out
                 );
             }
-            if (null != req.getParameter("createAdditive")) {
-                System.out.println("createAdditive");
-                db.createAdditive(req.getParameter("additiveNamber"),
+            if (null != req.getParameter("createComponent")) {
+                System.out.println("createComponent");
+                db.createComponent(req.getParameter("additiveNamber"),
                                   req.getParameter("additiveName"),
                                   req.getParameter("additiveColor"),
                                   req.getParameter("additiveInfo"),
@@ -54,8 +54,8 @@ public class DbInterface extends HttpServlet {
                 System.out.println("addExclude");
                 db.createExclude(req.getParameter("excludeName"), out);
             }
-            if (null != req.getParameter("changeAdditive")) {
-                db.changeAdditive(req.getParameter("additiveId"),
+            if (null != req.getParameter("changeComponent")) {
+                db.changeComponent(req.getParameter("additiveId"),
                                   req.getParameter("additiveNamber"),
                                   req.getParameter("additiveName"),
                                   req.getParameter("additiveColor"),
@@ -125,16 +125,18 @@ public class DbInterface extends HttpServlet {
                 db.getProducts(out);
             }
             if (null != req.getParameter("getAdditive")) {
-                System.out.println("0");
                 db.getAdditive(out);
+            }
+            if (null != req.getParameter("getComponenNames")) {
+                db.getComponenNames(out);
             }
             if (null != req.getParameter("removeProduct")) {
                 String prod_id = req.getParameter("prod_id");
                 db.removeProduct(prod_id);
             }
-            if (null != req.getParameter("removeAdditive")) {
+            if (null != req.getParameter("removeComponent")) {
                 String additive_id = req.getParameter("additive_id");
-                db.removeAdditive(additive_id);
+                db.removeComponent(additive_id);
             }
             if (null != req.getParameter("removeExclude")) {
                 String exclude_id = req.getParameter("exclude_id");
