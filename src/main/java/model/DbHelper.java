@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -20,9 +20,6 @@ import java.util.*;
 //import org.apache.poi.ss.usermodel.Row;
 //import org.apache.poi.ss.usermodel.Sheet;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -43,7 +40,7 @@ public class DbHelper {
 //    private  final String PASSWORD = "df14a9c2xvn";
 //    private  Connection connection = null;
 
-    public static void main(String[] args) throws SQLException, ParseException, JSONException {
+    public static void main(String[] args) throws SQLException, ParseException, JSONException, IOException {
         DbHelper db = new DbHelper();
 //
 //        org.json.simple.parser.JSONParser parser = new JSONParser();
@@ -54,20 +51,29 @@ public class DbHelper {
 //            System.out.println(jsonObject.get("name_"+i+":"));
 //        }
 
-
-
-
-
-//        System.out.println();
-
-
-//        db.getUsers();
-//        System.out.println("start");
 //        db.parse("C:\\test2.xls");
 
-//        String s = "hello";
-//        String s2 = "hello";
-//        System.out.println(s+s2);
+//        FileReader input = new FileReader("C:\\\\cat.txt");
+//        BufferedReader bufRead = new BufferedReader(input);
+//        String myLine = null;
+//        String count = "";
+//        while ( (myLine = bufRead.readLine()) != null)
+//        {
+//            if(!myLine.contains("\t")){
+//                db.createSection(myLine.trim());
+//                System.out.println(myLine.trim());
+//                String query = "SELECT LAST_INSERT_ID() as last_id from section;";
+//                Statement stmt = db.connection.createStatement();
+//                ResultSet resultSet = stmt.executeQuery(query);
+//                resultSet.next();
+//                count = resultSet.getString("last_id");
+//            }else{
+//                db.createCategory(myLine.trim(), count);
+//                System.out.println(myLine.trim());
+//            }
+//
+//        }
+
     }
 
     public DbHelper() {

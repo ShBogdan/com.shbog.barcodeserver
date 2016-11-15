@@ -30,7 +30,7 @@
       </column>
       <column id="16" parent="7" name="cat_name">
         <mandatory>1</mandatory>
-        <data-type>varchar(25)|0</data-type>
+        <data-type>varchar(100)|0</data-type>
       </column>
       <column id="17" parent="7" name="section_id_frk">
         <data-type>int(11)|0</data-type>
@@ -167,7 +167,7 @@
       </column>
       <column id="50" parent="10" name="section_name">
         <mandatory>1</mandatory>
-        <data-type>varchar(25)|0</data-type>
+        <data-type>varchar(100)|0</data-type>
       </column>
       <index id="51" parent="10" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>

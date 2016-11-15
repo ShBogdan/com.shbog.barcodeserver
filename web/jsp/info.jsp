@@ -18,10 +18,6 @@
 </head>
 <body>
 <h1>Info</h1>
-<form enctype="multipart/form-data" method="post" action="" id="attachfileform" name="attachfileform" >
-    <input type="file" id="attachfile" class="regi_textbox"/>
-    <input type="button" class="update_but"  value="Upload File" onclick="dynamicUpload()"/>
-</form>
 </body>
 </html>
 

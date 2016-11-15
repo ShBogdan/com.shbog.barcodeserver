@@ -44,7 +44,7 @@
     </style>
     <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="/js/js.cookie.js"></script>
+    <%--<script src="/js/js.cookie.js"></script>--%>
     <script src="/js/barcoder.js"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -73,8 +73,7 @@
             var dictionaryAutoCompCompon = {};
             var cBoxs = [];
 
-
-            Cookies.set('session', '1');
+//            Cookies.set('session', '1');
             var permission = '${permission}';
             if (permission == '1') {
                 $('.menuItem').append('' +
@@ -94,8 +93,8 @@
                         '</p>')
             }
             $(document).click(function(event){
-                console.log(Cookies.get("username"));
-                console.log(Cookies.get("session"));
+            <%--console.log(${sessionScope.username});--%>
+            <%--console.log('<%= session.getAttribute("username") %>');--%>
             });
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
