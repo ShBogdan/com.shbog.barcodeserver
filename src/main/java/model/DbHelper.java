@@ -1,6 +1,7 @@
 package model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.util.*;
+
 
 
 
@@ -25,6 +27,11 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
+
 public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
@@ -36,13 +43,31 @@ public class DbHelper {
 //    private  final String PASSWORD = "df14a9c2xvn";
 //    private  Connection connection = null;
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ParseException, JSONException {
         DbHelper db = new DbHelper();
 //
+//        org.json.simple.parser.JSONParser parser = new JSONParser();
+//        String json = "{\"name_0:\" \"131,13\", \"name_1:\" \"12,223\"}";
+//        org.json.simple.JSONObject jsonObject = null;
+//        jsonObject = (org.json.simple.JSONObject) parser.parse(json);
+//        for (int i = 0; i < jsonObject.size(); i++) {
+//            System.out.println(jsonObject.get("name_"+i+":"));
+//        }
+
+
+
+
+
+//        System.out.println();
+
+
 //        db.getUsers();
 //        System.out.println("start");
-//        db.parse("C:\\test.xls");
-//        System.out.println("end");
+//        db.parse("C:\\test2.xls");
+
+//        String s = "hello";
+//        String s2 = "hello";
+//        System.out.println(s+s2);
     }
 
     public DbHelper() {
@@ -88,7 +113,7 @@ public class DbHelper {
                 connection.close();
         }
     }
-    public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) throws SQLException {
+    public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) {
 
         PreparedStatement prepSat;
         ResultSet resultSet;
@@ -96,70 +121,98 @@ public class DbHelper {
         Set<String> input_components_ID = new HashSet<String>(new ArrayList<String>(Arrays.asList(componets_array_ID.split(","))));
         Set<String> input_components_name = new HashSet<String>();
         if(varButton != null && !varButton.isEmpty()){
-            input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
+            org.json.simple.parser.JSONParser parser = new JSONParser();
+            org.json.simple.JSONObject jsonObject = null;
+            try {
+                jsonObject = (org.json.simple.JSONObject) parser.parse(varButton);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < jsonObject.size(); i++) {
+                input_components_name.add((String) jsonObject.get("name_"+i));
+            }
         }
         input_components_ID.remove("");
+        try {
+            //создаем новый компонент или обновляем старый
+            for (String s : input_components_name) {
+                String statement_add_component = "INSERT INTO component(comp_name) VALUE (?) ON DUPLICATE KEY UPDATE comp_name = ?";
+                prepSat = connection.prepareStatement(statement_add_component);
+                prepSat.setString(1, s);
+                prepSat.setString(2, s);
+                prepSat.execute();
+            }
+            System.out.println("Список компонентов продукта до: " +input_components_ID);
 
-        //создаем новый компонент или обновляем старый
-        for (String s : input_components_name) {
-            String statement_add_component = "INSERT INTO component(comp_name) VALUE (?) ON DUPLICATE KEY UPDATE comp_name = ?";
-            prepSat = connection.prepareStatement(statement_add_component);
-            prepSat.setString(1, s);
-            prepSat.setString(2, s);
-            prepSat.execute();
-        }
-        System.out.println("Список компонентов продукта до: " +input_components_ID);
+            //получаем id добавленных компонентов
+            for (String s : input_components_name) {
+                String statement_get_componentID = "SELECT comp_id FROM component WHERE comp_name=\""+s+"\"";
+                stmt = connection.createStatement();
+                resultSet = stmt.executeQuery(statement_get_componentID);
+                resultSet.next();
+                input_components_ID.add(resultSet.getString("comp_id"));
+            }
+            System.out.println("Список компонентов продукта после: " +input_components_ID);
 
-        //получаем id добавленных компонентов
-        for (String s : input_components_name) {
-            String statement_get_componentID = "SELECT comp_id FROM component WHERE comp_name=\""+s+"\"";
-            stmt = connection.createStatement();
-            resultSet = stmt.executeQuery(statement_get_componentID);
-            resultSet.next();
-            input_components_ID.add(resultSet.getString("comp_id"));
-        }
-        System.out.println("Список компонентов продукта после: " +input_components_ID);
-
-        //создаем продукт до обновления input_components_ID
-//        String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, components) VALUE (?,?,?,?,?);";
-        String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code) VALUE (?,?,?,?);";
-        prepSat = connection.prepareStatement(statement);
-        prepSat.setString(1, prodCategory_id);
-        prepSat.setString(2, prodProvider);
-        prepSat.setString(3, prodName);
-        prepSat.setString(4, prodCode);
-//        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
-        prepSat.execute();
-
-        String prodId;
-        String query = "SELECT LAST_INSERT_ID() as last_id from product;";
-        stmt = connection.createStatement();
-        resultSet = stmt.executeQuery(query);
-        resultSet.next();
-        prodId = resultSet.getString("last_id");
-        out.println(prodId);
-        out.flush();
-///// new logic
-        for (String s : input_components_ID) {
-            String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
-            prepSat = connection.prepareStatement(qInsertFrk);
+            //создаем продукт до обновления input_components_ID
+            String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code) VALUE (?,?,?,?);";
+            prepSat = connection.prepareStatement(statement);
             prepSat.setString(1, prodCategory_id);
-            prepSat.setString(2, prodId);
-            prepSat.setString(3, s);
+            prepSat.setString(2, prodProvider);
+            prepSat.setString(3, prodName);
+            prepSat.setString(4, prodCode);
             prepSat.execute();
-        }
 
-        System.out.println("Запись:" + prodName + " добавлен");
-        if(connection!=null)
-            connection.close();
-        return out;
+            String prodId;
+            String query = "SELECT LAST_INSERT_ID() as last_id from product;";
+            stmt = connection.createStatement();
+            resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            prodId = resultSet.getString("last_id");
+            out.println(prodId);
+            out.flush();
+
+            for (String s : input_components_ID) {
+                String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
+                prepSat = connection.prepareStatement(qInsertFrk);
+                prepSat.setString(1, prodCategory_id);
+                prepSat.setString(2, prodId);
+                prepSat.setString(3, s);
+                prepSat.execute();
+            }
+        } catch (MySQLIntegrityConstraintViolationException e){
+            out.println("-1");
+            out.flush();
+        } catch (SQLException   e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("Запись:" + prodName + " добавлен");
+            if(connection!=null)
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            return out;
+        }
     }
-    public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out) throws SQLException {
+    public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out, String additiveType) throws SQLException {
         //создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
-        List<String> names = Arrays.asList(additiveName.split("\\s*,\\s*"));
+        List<String> names = new ArrayList<String>();
         String mainId;
 
-        String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes) VALUE (?,?,?,?,?,?,?,?)";
+        org.json.simple.parser.JSONParser parser = new JSONParser();
+        org.json.simple.JSONObject jsonObject = null;
+        try {
+            jsonObject = (org.json.simple.JSONObject) parser.parse(additiveName);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < jsonObject.size(); i++) {
+            names.add((String) jsonObject.get("name_"+i));
+        }
+
+        String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type) VALUE (?,?,?,?,?,?,?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, names.get(0));
         preparedStatement.setString(2, additiveNamber);
@@ -169,6 +222,8 @@ public class DbHelper {
         preparedStatement.setString(6, additiveCBox);
         preparedStatement.setString(7, additiveFor);
         preparedStatement.setString(8, additiveNotes);
+        preparedStatement.setString(9, additiveType);
+
         preparedStatement.execute();
 
         String query = "SELECT LAST_INSERT_ID() as last_id from component;";
@@ -212,12 +267,23 @@ public class DbHelper {
             connection.close();
         return out;
     }
-    public void changeComponent(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes) throws SQLException {
-        List<String> names = Arrays.asList(additiveName.split("\\s*,\\s*"));
+    public void changeComponent(String additiveId,String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String additiveType) throws SQLException {
+        List<String> names = new ArrayList<String>();
+
+        org.json.simple.parser.JSONParser parser = new JSONParser();
+        org.json.simple.JSONObject jsonObject = null;
+        try {
+            jsonObject = (org.json.simple.JSONObject) parser.parse(additiveName);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < jsonObject.size(); i++) {
+            names.add((String) jsonObject.get("name_"+i));
+        }
         List<String> copyNames = new ArrayList<String>(names);
         copyNames.remove(0);
 
-        String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ? WHERE comp_id = ?";
+        String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ? WHERE comp_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, names.get(0));
         preparedStatement.setString(2, additiveNamber);
@@ -227,24 +293,25 @@ public class DbHelper {
         preparedStatement.setString(6, additiveCBox);
         preparedStatement.setString(7, additiveFor);
         preparedStatement.setString(8, additiveNotes);
-        preparedStatement.setString(9, additiveId);
+        preparedStatement.setString(9, additiveType);
+        preparedStatement.setString(10, additiveId);
         preparedStatement.execute();
         //получаем id всех текущих названий
         statement = "SELECT comp_id, comp_name FROM component WHERE comp_group=" + additiveId;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(statement);
         while (resultSet.next()){
-             if(names.contains(resultSet.getString("comp_name"))){
-                 copyNames.remove(resultSet.getString("comp_name"));
-                 String _statement = "UPDATE component SET comp_name=?, comp_group=?, comp_cbox=?, comp_e_code=?, comp_color=? WHERE comp_id=?";
-                 PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
-                 _preparedStatement.setString(1, resultSet.getString("comp_name"));
-                 _preparedStatement.setString(2, additiveId);
-                 _preparedStatement.setString(3, additiveCBox);
-                 _preparedStatement.setString(4, additiveNamber);
-                 _preparedStatement.setString(5, additiveColor);
-                 _preparedStatement.setString(6, resultSet.getString("comp_id"));
-                 _preparedStatement.execute();
+            if(names.contains(resultSet.getString("comp_name"))){
+                copyNames.remove(resultSet.getString("comp_name"));
+                String _statement = "UPDATE component SET comp_name=?, comp_group=?, comp_cbox=?, comp_e_code=?, comp_color=? WHERE comp_id=?";
+                PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
+                _preparedStatement.setString(1, resultSet.getString("comp_name"));
+                _preparedStatement.setString(2, additiveId);
+                _preparedStatement.setString(3, additiveCBox);
+                _preparedStatement.setString(4, additiveNamber);
+                _preparedStatement.setString(5, additiveColor);
+                _preparedStatement.setString(6, resultSet.getString("comp_id"));
+                _preparedStatement.execute();
             } else {
                 String tempStatement = "DELETE FROM component WHERE comp_id = ?";
                 PreparedStatement tempPreparedStatement = connection.prepareStatement(tempStatement);
@@ -269,67 +336,84 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
-    public void changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton) throws SQLException {
+    public PrintWriter changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out) {
         PreparedStatement prepSat;
         ResultSet resultSet;
         Statement stmt;
         Set<String> input_components_ID = new HashSet<String>(new ArrayList<String>(Arrays.asList(componets_array_ID.split(","))));
-        Set<String> input_components_name = input_components_name = new HashSet<String>();
+        Set<String> input_components_name = new HashSet<String>();
         if(varButton != null && !varButton.isEmpty()){
-            input_components_name = new HashSet<String>(new ArrayList<String>(Arrays.asList(varButton.split(","))));
+            org.json.simple.parser.JSONParser parser = new JSONParser();
+            org.json.simple.JSONObject jsonObject = null;
+            try {
+                jsonObject = (org.json.simple.JSONObject) parser.parse(varButton);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < jsonObject.size(); i++) {
+                input_components_name.add((String) jsonObject.get("name_"+i));
+            }
         }
         input_components_ID.remove("");
+        try {
+            //создаем новый компонент
+            for (String s : input_components_name) {
+                String statement_add_component = "INSERT INTO component(comp_name) VALUE (?) ON DUPLICATE KEY UPDATE comp_name = ?";
+                prepSat = connection.prepareStatement(statement_add_component);
+                prepSat.setString(1, s);
+                prepSat.setString(2, s);
+                prepSat.execute();
+            }
 
-        //создаем новый компонент
-        for (String s : input_components_name) {
-            String statement_add_component = "INSERT INTO component(comp_name) VALUE (?) ON DUPLICATE KEY UPDATE comp_name = ?";
-            prepSat = connection.prepareStatement(statement_add_component);
-            prepSat.setString(1, s);
-            prepSat.setString(2, s);
-            prepSat.execute();
-        }
+            //получаем id добавленных компонентов
+            for (String s : input_components_name) {
+                String statement_get_componentID = "SELECT comp_id FROM component WHERE comp_name=\""+s+"\"";
+                stmt = connection.createStatement();
+                resultSet = stmt.executeQuery(statement_get_componentID);
+                resultSet.next();
+                input_components_ID.add(resultSet.getString("comp_id"));
+            }
 
-        //получаем id добавленных компонентов
-        for (String s : input_components_name) {
-            String statement_get_componentID = "SELECT comp_id FROM component WHERE comp_name=\""+s+"\"";
-            stmt = connection.createStatement();
-            resultSet = stmt.executeQuery(statement_get_componentID);
-            resultSet.next();
-            input_components_ID.add(resultSet.getString("comp_id"));
-        }
-
-        //создаем продукт до обновления input_components_ID
+            //создаем продукт до обновления input_components_ID
 //        String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, components = ? WHERE prod_id = ?";
-        String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ? WHERE prod_id = ?";
-        prepSat = connection.prepareStatement(statement);
-        prepSat.setString(5, prod_id);
-        prepSat.setString(1, prodCategory_id);
-        prepSat.setString(2, prodProvider);
-        prepSat.setString(3, prodName);
-        prepSat.setString(4, prodCode);
-//        prepSat.setString(5, input_components_ID.toString().substring(1, input_components_ID.toString().length()-1).replaceAll("\\s+",""));
-        prepSat.execute();
-
-
-        statement = "DELETE FROM frkgroup WHERE prod = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-        preparedStatement.setString(1, prod_id);
-        preparedStatement.execute();
-
-
-        for (String s : input_components_ID) {
-            String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
-            prepSat = connection.prepareStatement(qInsertFrk);
+            String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ? WHERE prod_id = ?";
+            prepSat = connection.prepareStatement(statement);
+            prepSat.setString(5, prod_id);
             prepSat.setString(1, prodCategory_id);
-            prepSat.setString(2, prod_id);
-            prepSat.setString(3, s);
+            prepSat.setString(2, prodProvider);
+            prepSat.setString(3, prodName);
+            prepSat.setString(4, prodCode);
             prepSat.execute();
+
+
+            statement = "DELETE FROM frkgroup WHERE prod = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+            preparedStatement.setString(1, prod_id);
+            preparedStatement.execute();
+
+
+            for (String s : input_components_ID) {
+                String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
+                prepSat = connection.prepareStatement(qInsertFrk);
+                prepSat.setString(1, prodCategory_id);
+                prepSat.setString(2, prod_id);
+                prepSat.setString(3, s);
+                prepSat.execute();
+            }
+        } catch (MySQLIntegrityConstraintViolationException e){
+            out.println("-1");
+            out.flush();
+        } catch (SQLException   e) {
+            e.printStackTrace();
+        } finally {
+            if(connection!=null)
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            return out;
         }
-
-
-        if(connection!=null)
-            connection.close();
-//        }
     }
     public void removeCategory(String cat_id) throws SQLException {
         String statement = "DELETE FROM categories WHERE cat_id = ?";
@@ -361,6 +445,14 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
+    public void removeTempProducts(String prod_id) throws SQLException {
+        String statement = "DELETE FROM newproducts WHERE prod_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, prod_id);
+        preparedStatement.execute();
+        if(connection!=null)
+            connection.close();
+    }
     public void removeComponent(String additive_id) throws SQLException {
         String statement = "DELETE FROM component WHERE comp_id = ? or comp_group = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -368,7 +460,7 @@ public class DbHelper {
         preparedStatement.setString(2, additive_id);
         preparedStatement.execute();
 
-         if(connection!=null)
+        if(connection!=null)
             connection.close();
     }
     public void removeExclude(String exclude_id) throws SQLException {
@@ -544,15 +636,16 @@ public class DbHelper {
                 componArrId.add(resultSet.getString("compon"));
             }
         } catch (SQLException e) {
-//            e.printStackTrace();
             System.out.println("нет компонентов");
         }
-
-        String _statement = "SELECT * FROM component WHERE comp_id IN "+"(" +componArrId.toString().substring(1, componArrId.toString().length()-1).replaceAll("\\s+","")+")";
-        Statement _stmt = connection.createStatement();
-        ResultSet _resultSet = _stmt.executeQuery(_statement);
-        while (_resultSet.next()) {
-            out.println("<button class=\"varButton\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
+        String listId = componArrId.toString().substring(1, componArrId.toString().length()-1).replaceAll("\\s+","");
+        if(listId.length()>0){
+            String _statement = "SELECT * FROM component WHERE comp_id IN "+"(" + listId +")";
+            Statement _stmt = connection.createStatement();
+            ResultSet _resultSet = _stmt.executeQuery(_statement);
+            while (_resultSet.next()) {
+                out.println("<button class=\"varButton\" id=\""+_resultSet.getString("comp_id")+"\">"+_resultSet.getString("comp_name")+"</button>");
+            }
         }
         out.flush();
         if(connection!=null)
@@ -590,6 +683,33 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter getNewProducts(PrintWriter out) throws SQLException{
+        String query = "SELECT prod_id, cat_name,  prod_code FROM newproducts INNER JOIN categories ON cat_id_frk=cat_id";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        while (resultSet.next()){
+            JSONArray ja = new JSONArray();
+            String id = String.valueOf(resultSet.getInt("prod_id"));
+            String cat_name = resultSet.getString("cat_name");
+            String prod_code = resultSet.getString("prod_code");
+            ja.put(id);
+            ja.put(cat_name);
+            ja.put(prod_code);
+            array.put(ja);
+        }
+        try {
+            result.put("newproducts", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
     public PrintWriter getExclude(PrintWriter out) throws SQLException{
         String query = "SELECT ogran_id, ogran_name FROM exclude";
         Statement stmt = connection.createStatement();
@@ -617,7 +737,7 @@ public class DbHelper {
         return out;
     }
     public PrintWriter getComponenNames(PrintWriter out) throws SQLException{
-        String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group FROM component"; //  WHERE COALESCE(comp_group, '') = ''
+        String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type FROM component"; //  WHERE COALESCE(comp_group, '') = ''
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
         JSONObject result = new JSONObject();
@@ -634,6 +754,7 @@ public class DbHelper {
             String additive_cbox = resultSet.getString("comp_cbox");
             String additive_notes = resultSet.getString("comp_notes");
             String additive_group = resultSet.getString("comp_group");
+            String additive_type = resultSet.getString("comp_type");
             ja.put(id);
             ja.put(additive_for);
             ja.put(additive_code);
@@ -644,6 +765,7 @@ public class DbHelper {
             ja.put(additive_color);
             ja.put(additive_cbox);
             ja.put(additive_group);
+            ja.put(additive_type);
             array.put(ja);
         }
         try {
@@ -657,8 +779,8 @@ public class DbHelper {
             connection.close();
         return out;
     }
-    public PrintWriter getAdditive(PrintWriter out) throws SQLException{
-        String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group FROM component WHERE COALESCE(comp_group, '') = ''";
+    public PrintWriter getComponents(PrintWriter out) throws SQLException{
+        String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type FROM component WHERE COALESCE(comp_group, '') = ''";
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
         JSONObject result = new JSONObject();
@@ -675,7 +797,9 @@ public class DbHelper {
             String additive_cbox = resultSet.getString("comp_cbox");
             String additive_notes = resultSet.getString("comp_notes");
             String additive_group = resultSet.getString("comp_group");
+            String additive_type = resultSet.getString("comp_type");
             ja.put(id);
+            ja.put(additive_type);
             ja.put(additive_for);
             ja.put(additive_code);
             ja.put(additive_name);
@@ -732,7 +856,7 @@ public class DbHelper {
         JSONArray ja = new JSONArray();
         String id = String.valueOf(resultSet.getInt("comp_id"));
         String additive_name = resultSet.getString("comp_name");
-        Integer additive_code = resultSet.getInt("comp_e_code");
+        String additive_code = resultSet.getString("comp_e_code");
         String additive_info = resultSet.getString("comp_info");
         String additive_perm = resultSet.getString("comp_perm");
         Integer additive_color = resultSet.getInt("comp_color");
@@ -787,7 +911,48 @@ public class DbHelper {
     }
     public void addFile(PrintWriter out){System.out.println("addFile");}
 
-    //    public void parse(String name) throws SQLException {
+
+
+//    public void createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String type) throws SQLException {
+//        //создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
+//        List<String> names = Arrays.asList(additiveName.split(";"));
+//        String mainId;
+//
+//        String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type) VALUE (?,?,?,?,?,?,?,?,?)";
+//        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+//        preparedStatement.setString(1, names.get(0));
+//        preparedStatement.setString(2, additiveNamber);
+//        preparedStatement.setString(3, additiveInfo);
+//        preparedStatement.setString(4, additivePermission);
+//        preparedStatement.setString(5, additiveColor);
+//        preparedStatement.setString(6, additiveCBox);
+//        preparedStatement.setString(7, additiveFor);
+//        preparedStatement.setString(8, additiveNotes);
+//        preparedStatement.setString(9, type);
+//        preparedStatement.execute();
+//
+//        String query = "SELECT LAST_INSERT_ID() as last_id from component;";
+//        Statement stmt = connection.createStatement();
+//        ResultSet resultSet = stmt.executeQuery(query);
+//        resultSet.next();
+//        mainId = resultSet.getString("last_id");
+//
+//        for (int i = 1; i < names.size(); i++) {
+//            statement = "INSERT INTO component(comp_name, comp_group, comp_cbox, comp_e_code, comp_color) VALUE (?,?,?,?,?)";
+//            preparedStatement = connection.prepareStatement(statement);
+//            preparedStatement.setString(1, names.get(i).trim());
+//            preparedStatement.setString(2, mainId);
+//            preparedStatement.setString(3, additiveCBox);
+//            preparedStatement.setString(4, additiveNamber);
+//            preparedStatement.setString(5, additiveColor);
+//            preparedStatement.execute();
+//        }
+////
+////        if(connection!=null)
+////            connection.close();
+//    }
+
+//    public void parse(String name) throws SQLException {
 //
 //        InputStream in = null;
 //        HSSFWorkbook wb = null;
@@ -822,26 +987,26 @@ public class DbHelper {
 //                        result = String.valueOf(cell.getNumericCellValue());
 //                        break;
 //                    default:
-//                        result = "";
+//                        result = "space";
 //                        break;
 //                }
 ////                System.out.println(result);
 //                switch (count){
-//                    case 1: d.type = result;
+//                    case 1: d.type = result.trim();
 //                        break;
-//                    case 2: d.naznac = result;
+//                    case 2: d.naznac = result.trim();
 //                        break;
-//                    case 3: d.nomerE = result;
+//                    case 3: d.nomerE = result.trim();
 //                        break;
-//                    case 4: d.nazvRu = result;
+//                    case 4: d.nazvRu = result.trim();
 //                        break;
-//                    case 5: d.nazvEN = result;
+//                    case 5: d.nazvEN = result.trim();
 //                        break;
-//                    case 6: d.forWhat = result;
+//                    case 6: d.forWhat = result.trim();
 //                        break;
-//                    case 7: d.zaProtiv = result;
+//                    case 7: d.zaProtiv = result.trim();
 //                        break;
-//                    case 8: d.primecanie = result;
+//                    case 8: d.primecanie = result.trim();
 //                        break;
 //                    case 9:  if(result.equals("1.0")) d.ogran.add("1");
 //                        break;
@@ -867,62 +1032,52 @@ public class DbHelper {
 //                }
 //            }
 //            if( null!=d.nazvRu &&  !d.nazvRu.equals("")){
-////                String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes) VALUE (?,?,?,?,?,?,?,?)";
-////                PreparedStatement preparedStatement = connection.prepareStatement(statement);
-////                preparedStatement.setString(1, d.nazvRu);
-////                preparedStatement.setString(2, d.nomerE);
-////                preparedStatement.setString(3, d.forWhat);
-////                preparedStatement.setString(4, d.zaProtiv);
-////                preparedStatement.setString(5, d.color);
-////                preparedStatement.setString(6, d.ogranicenie);
-////                preparedStatement.setString(7, d.naznac);
-////                preparedStatement.setString(8, d.primecanie);
-////                preparedStatement.execute();
-//////
-////                if(connection!=null)
-////                    connection.close();
-//                System.out.println(d);
+////                System.out.println(d);
+//                String ogran = d.ogran.toString().substring(1, d.ogran.toString().length()-1).replace(" ", "");
+//                String names = d.nazvRu+"; "+d.nazvEN;
+//                System.out.println(ogran);
+//                createComponent(d.nomerE, names, d.color, d.forWhat, d.zaProtiv, ogran, d.naznac, d.primecanie, d.type);
 //            }
 //            count = 0;
 //        }
 //        System.out.println("in end");
 //    }
-    class Dobavka{
-        String type;
-        String naznac;
-        String nomerE;
-        String nazvRu;
-        String nazvEN;
-        String forWhat;
-        String zaProtiv;
-        String primecanie;
-        ArrayList<String> ogran = new ArrayList<String>();
-        String color;
-
-        String getOgranicenie(){
-
-            String s = ogran.toString().replace(" ", "");
-            String ogranicenie = s.substring(1, s.length()-1);
-            return ogranicenie;
-        }
-
-        @Override
-        public String toString() {
-            return "Dobavka{" +
-                    "type='" + type + '\'' +
-                    ", naznac='" + naznac + '\'' +
-                    ", nomerE='" + nomerE + '\'' +
-                    ", nazvRu='" + nazvRu + '\'' +
-                    ", nazvEN='" + nazvEN + '\'' +
-                    ", forWhat='" + forWhat + '\'' +
-                    ", zaProtiv='" + zaProtiv + '\'' +
-                    ", primecanie='" + primecanie + '\'' +
-                    ", ogran='" + ogran + '\'' +
-                    ", ogranicenie=" + getOgranicenie() +
-                    ", color='" + color + '\'' +
-                    '}';
-        }
-    }
+//    class Dobavka{
+//        String type;
+//        String naznac;
+//        String nomerE;
+//        String nazvRu;
+//        String nazvEN;
+//        String forWhat;
+//        String zaProtiv;
+//        String primecanie;
+//        ArrayList<String> ogran = new ArrayList<String>();
+//        String color;
+//
+//        String getOgranicenie(){
+//
+//            String s = ogran.toString().replace(" ", "");
+//            String ogranicenie = s.substring(1, s.length()-1);
+//            return ogranicenie;
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return "Dobavka{" +
+//                    "type='" + type + '\'' +
+//                    ", naznac='" + naznac + '\'' +
+//                    ", nomerE='" + nomerE + '\'' +
+//                    ", nazvRu='" + nazvRu + '\'' +
+//                    ", nazvEN='" + nazvEN + '\'' +
+//                    ", forWhat='" + forWhat + '\'' +
+//                    ", zaProtiv='" + zaProtiv + '\'' +
+//                    ", primecanie='" + primecanie + '\'' +
+//                    ", ogran='" + ogran + '\'' +
+////                    ", ogranicenie=" + getOgranicenie() +
+//                    ", color='" + color + '\'' +
+//                    '}';
+//        }
+//    }
 
 }
 //****************************************************Additive==Component

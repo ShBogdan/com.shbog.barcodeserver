@@ -18,38 +18,10 @@
 </head>
 <body>
 <h1>Info</h1>
-<script>
-    var fd;
-    var fileInput;
-    function dynamicUpload(){
-        fd = new FormData();
-        fileInput = $("#attachfile")[0];
-        fd.append('file', fileInput.files[0] );
-        fd.append('myname', 99 ); //how to read value?
-
-        $.ajax({
-            url: '../FileUploadServlet',
-            data: fd,
-            processData: false,
-            contentType: false,
-            type: 'POST',
-            success: function(data){
-                console.log(data);
-            }
-        });
-    }
-</script>
 <form enctype="multipart/form-data" method="post" action="" id="attachfileform" name="attachfileform" >
     <input type="file" id="attachfile" class="regi_textbox"/>
     <input type="button" class="update_but"  value="Upload File" onclick="dynamicUpload()"/>
 </form>
-
-
-<%--<form method="POST" action="../FileUploadServlet" enctype="multipart/form-data" class="myform" name = "myform">--%>
-    <%--<input type="file" name="file"/> <br/>--%>
-    <%--<button class="upload">go</button>--%>
-    <%--&lt;%&ndash;<input type="submit" value="Upload" />&ndash;%&gt;--%>
-<%--</form>--%>
 </body>
 </html>
 

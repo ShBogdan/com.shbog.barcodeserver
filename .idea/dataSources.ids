@@ -22,205 +22,240 @@
       <table id="11" parent="1" name="exclude"/>
       <table id="12" parent="1" name="users"/>
       <table id="13" parent="1" name="frkgroup"/>
-      <column id="14" parent="7" name="cat_id">
+      <table id="14" parent="1" name="newproducts"/>
+      <column id="15" parent="7" name="cat_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="15" parent="7" name="cat_name">
+      <column id="16" parent="7" name="cat_name">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="16" parent="7" name="section_id_frk">
+      <column id="17" parent="7" name="section_id_frk">
         <data-type>int(11)|0</data-type>
       </column>
-      <index id="17" parent="7" name="categories_catalog_catalog_id_fk">
+      <index id="18" parent="7" name="categories_catalog_catalog_id_fk">
         <columns>section_id_frk</columns>
         <desc-columns></desc-columns>
       </index>
-      <index id="18" parent="7" name="categories_cat_name_uindex">
+      <index id="19" parent="7" name="categories_cat_name_uindex">
         <columns>cat_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="19" parent="7" name="PRIMARY">
+      <key id="20" parent="7" name="PRIMARY">
         <columns>cat_id</columns>
         <primary>1</primary>
       </key>
-      <key id="20" parent="7" name="categories_cat_name_uindex">
+      <key id="21" parent="7" name="categories_cat_name_uindex">
         <columns>cat_name</columns>
         <underlying-index>categories_cat_name_uindex</underlying-index>
       </key>
-      <foreign-key id="21" parent="7" name="categories_catalog_catalog_id_fk">
+      <foreign-key id="22" parent="7" name="categories_catalog_catalog_id_fk">
         <columns>section_id_frk</columns>
         <ref-key>~.section.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <column id="22" parent="8" name="prod_id">
+      <column id="23" parent="8" name="prod_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="23" parent="8" name="cat_id_frk">
+      <column id="24" parent="8" name="cat_id_frk">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="24" parent="8" name="prod_maker">
+      <column id="25" parent="8" name="prod_maker">
         <mandatory>1</mandatory>
         <data-type>varchar(50)|0</data-type>
       </column>
-      <column id="25" parent="8" name="prod_name">
+      <column id="26" parent="8" name="prod_name">
         <mandatory>1</mandatory>
         <data-type>varchar(50)|0</data-type>
       </column>
-      <column id="26" parent="8" name="prod_code">
+      <column id="27" parent="8" name="prod_code">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <index id="27" parent="8" name="product_categories__fk">
+      <index id="28" parent="8" name="product_categories__fk">
         <columns>cat_id_frk</columns>
         <desc-columns></desc-columns>
       </index>
-      <key id="28" parent="8" name="PRIMARY">
+      <index id="29" parent="8" name="product_prod_code_uindex">
+        <columns>prod_code</columns>
+        <desc-columns></desc-columns>
+        <unique>1</unique>
+      </index>
+      <key id="30" parent="8" name="PRIMARY">
         <columns>prod_id</columns>
         <primary>1</primary>
       </key>
-      <foreign-key id="29" parent="8" name="product_categories__fk">
+      <key id="31" parent="8" name="product_prod_code_uindex">
+        <columns>prod_code</columns>
+        <underlying-index>product_prod_code_uindex</underlying-index>
+      </key>
+      <foreign-key id="32" parent="8" name="product_categories__fk">
         <columns>cat_id_frk</columns>
         <ref-key>~.categories.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <column id="30" parent="9" name="comp_id">
+      <column id="33" parent="9" name="comp_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="31" parent="9" name="comp_for">
-        <data-type>varchar(100)|0</data-type>
+      <column id="34" parent="9" name="comp_for">
+        <data-type>text|0</data-type>
       </column>
-      <column id="32" parent="9" name="comp_name">
+      <column id="35" parent="9" name="comp_name">
         <mandatory>1</mandatory>
         <data-type>varchar(150)|0</data-type>
       </column>
-      <column id="33" parent="9" name="comp_e_code">
-        <data-type>varchar(10)|0</data-type>
+      <column id="36" parent="9" name="comp_e_code">
+        <data-type>varchar(20)|0</data-type>
       </column>
-      <column id="34" parent="9" name="comp_info">
+      <column id="37" parent="9" name="comp_info">
         <data-type>text|0</data-type>
       </column>
-      <column id="35" parent="9" name="comp_perm">
-        <data-type>varchar(150)|0</data-type>
+      <column id="38" parent="9" name="comp_perm">
+        <data-type>varchar(255)|0</data-type>
       </column>
-      <column id="36" parent="9" name="comp_color">
+      <column id="39" parent="9" name="comp_color">
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="37" parent="9" name="comp_cbox">
+      <column id="40" parent="9" name="comp_cbox">
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="38" parent="9" name="comp_group">
+      <column id="41" parent="9" name="comp_group">
         <data-type>varchar(255)|0</data-type>
       </column>
-      <column id="39" parent="9" name="comp_notes">
-        <data-type>varchar(255)|0</data-type>
+      <column id="42" parent="9" name="comp_notes">
+        <data-type>text|0</data-type>
       </column>
-      <index id="40" parent="9" name="component_comp_id_uindex">
+      <column id="43" parent="9" name="comp_type">
+        <data-type>varchar(100)|0</data-type>
+      </column>
+      <index id="44" parent="9" name="component_comp_id_uindex">
         <columns>comp_id</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <index id="41" parent="9" name="component_comp_name_uindex">
+      <index id="45" parent="9" name="component_comp_name_uindex">
         <columns>comp_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="42" parent="9" name="PRIMARY">
+      <key id="46" parent="9" name="PRIMARY">
         <columns>comp_id</columns>
         <primary>1</primary>
       </key>
-      <key id="43" parent="9" name="component_comp_id_uindex">
+      <key id="47" parent="9" name="component_comp_id_uindex">
         <columns>comp_id</columns>
         <underlying-index>component_comp_id_uindex</underlying-index>
       </key>
-      <key id="44" parent="9" name="component_comp_name_uindex">
+      <key id="48" parent="9" name="component_comp_name_uindex">
         <columns>comp_name</columns>
         <underlying-index>component_comp_name_uindex</underlying-index>
       </key>
-      <column id="45" parent="10" name="section_id">
+      <column id="49" parent="10" name="section_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="46" parent="10" name="section_name">
+      <column id="50" parent="10" name="section_name">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <index id="47" parent="10" name="catalog_catalog_name_uindex">
+      <index id="51" parent="10" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="48" parent="10" name="PRIMARY">
+      <key id="52" parent="10" name="PRIMARY">
         <columns>section_id</columns>
         <primary>1</primary>
       </key>
-      <key id="49" parent="10" name="catalog_catalog_name_uindex">
+      <key id="53" parent="10" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <underlying-index>catalog_catalog_name_uindex</underlying-index>
       </key>
-      <column id="50" parent="11" name="ogran_id">
+      <column id="54" parent="11" name="ogran_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="51" parent="11" name="ogran_name">
+      <column id="55" parent="11" name="ogran_name">
         <mandatory>1</mandatory>
         <data-type>varchar(100)|0</data-type>
       </column>
-      <key id="52" parent="11" name="PRIMARY">
+      <key id="56" parent="11" name="PRIMARY">
         <columns>ogran_id</columns>
         <primary>1</primary>
       </key>
-      <column id="53" parent="12" name="user_id">
+      <column id="57" parent="12" name="user_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="54" parent="12" name="user_name">
+      <column id="58" parent="12" name="user_name">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="55" parent="12" name="user_pass">
+      <column id="59" parent="12" name="user_pass">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="56" parent="12" name="user_permit">
+      <column id="60" parent="12" name="user_permit">
         <mandatory>1</mandatory>
         <data-type>varchar(1)|0</data-type>
       </column>
-      <index id="57" parent="12" name="users_user_id_uindex">
+      <index id="61" parent="12" name="users_user_id_uindex">
         <columns>user_id</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="58" parent="12" name="PRIMARY">
+      <key id="62" parent="12" name="PRIMARY">
         <columns>user_id</columns>
         <primary>1</primary>
       </key>
-      <key id="59" parent="12" name="users_user_id_uindex">
+      <key id="63" parent="12" name="users_user_id_uindex">
         <columns>user_id</columns>
         <underlying-index>users_user_id_uindex</underlying-index>
       </key>
-      <column id="60" parent="13" name="cat">
+      <column id="64" parent="13" name="cat">
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="61" parent="13" name="prod">
+      <column id="65" parent="13" name="prod">
         <data-type>int(11)|0</data-type>
       </column>
-      <column id="62" parent="13" name="compon">
+      <column id="66" parent="13" name="compon">
         <data-type>int(11)|0</data-type>
       </column>
+      <column id="67" parent="14" name="prod_id">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="68" parent="14" name="cat_id_frk">
+        <mandatory>1</mandatory>
+        <data-type>int(11)|0</data-type>
+      </column>
+      <column id="69" parent="14" name="prod_code">
+        <mandatory>1</mandatory>
+        <data-type>varchar(25)|0</data-type>
+      </column>
+      <index id="70" parent="14" name="newproducts_categories_cat_id_fk">
+        <columns>cat_id_frk</columns>
+        <desc-columns></desc-columns>
+      </index>
+      <foreign-key id="71" parent="14" name="newproducts_categories_cat_id_fk">
+        <columns>cat_id_frk</columns>
+        <ref-key>~.categories.PRIMARY</ref-key>
+        <cascade-update-rule>restrict</cascade-update-rule>
+        <cascade-delete-rule>restrict</cascade-delete-rule>
+      </foreign-key>
     </database-model>
   </data-source>
 </component>

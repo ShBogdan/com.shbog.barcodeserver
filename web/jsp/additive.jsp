@@ -197,6 +197,7 @@
     <thead>
     <tr>
         <th>id</th>
+        <th>Тип добавки</th>
         <th>Назначение</th>
         <th>Номер</th>
         <th>Название</th>
@@ -212,6 +213,7 @@
     <tfoot>
     <tr>
         <th>id</th>
+        <th class="searchable">Тип добавки</th>
         <th class="searchable">Назначени</th>
         <th class="searchable">Номер</th>
         <th class="searchable">Название</th>
@@ -228,24 +230,29 @@
     </tbody>
 </table>
 
-<div class="dialog_create_additive" title="Создать добавку" hidden>
-    <table align="center" border="0" cellpadding="2" cellspacing="2">
+<div class="dialog_create_additive" hidden title="Создать добавку">
+    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
-            <td align="center">
-                <input  class="e_namber" placeholder="Номер" type="text" style="width: 80px"/>
-                <input  class="e_name" placeholder="Название" type="text" style="width: 750px"/>
-                <select style="width: 100px" class="e_color">
+            <td align="center" width="50%">
+            </td>
+            <td align="center" width="50%"><b>Запрет/разрешение</b>
+                <hr /></td>
+        </tr>
+        <tr>
+            <td align="center" width="50%" valign="top">
+                <input class="e_namber" placeholder="Номер" style="width: 100%" type="text" />
+                <input class="e_name" placeholder="Название" style="width: 100%" type="text" />
+                <input class="e_for" placeholder="Назначение" style="width: 100%" type="text" />
+                <input class="e_type" placeholder="Тип добавки" style="width: 100%" type="text" />
+                <select class="e_color" style="width: 100%">
                     <option value="0">Зеленый</option>
                     <option value="1">Желтый</option>
                     <option value="2">Крассный</option>
                 </select>
             </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <input  class="e_for" placeholder="Назначение" type="text" style="width: 150px"/>
-                <input  class="permission" placeholder="Запрет/разрешение" type="text" style="width: 790px" />
+            <td align="center" width="50%">
+                <textarea class="permission" cols="40" rows="7" style="width: 460px"></textarea>
             </td>
         </tr>
         </tbody>
@@ -254,35 +261,38 @@
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
-            <td width="50%" align="center"><b>Описание</b><hr></td>
-            <td width="50%" align="center"><b>Примечание</b><hr></td>
+            <td align="center" width="50%"><b>Описание</b>
+
+                <hr /></td>
+            <td align="center" width="50%"><b>Примечание</b>
+                <hr /></td>
         </tr>
         <tr>
-            <td valign="top"><textarea rows="10" cols="40" class="info" style="width: 460px"></textarea></td>
-            <td valign="top"><textarea rows="10" cols="40" class="e_notes" style="width: 460px"></textarea></td>
+            <td valign="top"><textarea class="info" cols="40" rows="10" style="width: 460px"></textarea></td>
+            <td valign="top"><textarea class="e_notes" cols="40" rows="10" style="width: 460px"></textarea></td>
         </tr>
         </tbody>
     </table>
+
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
-            <td width="50%" align="center"><b>Соотвецтвует Компоненту</b><hr></td>
-            <td width="50%" align="center"><b>Ограничение</b><hr></td>
+            <td align="center" width="50%"><b>Соотвецтвует Компоненту</b>
+
+                <hr /></td>
+            <td align="center" width="50%"><b>Ограничение</b>
+                <hr /></td>
         </tr>
         <tr>
-            <td class = "components"  height="300px" valign="top"></td>
-            <td class = "exclude"  height="300px" valign="top">
+            <td class="components" height="300px" valign="top">&nbsp;</td>
+            <td class="exclude" height="300px" valign="top">&nbsp;</td>
         </tr>
-
         <tr>
             <td align="center" width="50%">
-                <div class="divInput" align="center">
-                    <input class = "getInputComponent" placeholder="Новый компонент" type="text"  style="display:table-cell; width:60%" list="components"><button class="addComponent" style="display:table-cell; width:36%">Добавить</button>
-                    <datalist id="components"></datalist>
-                </div>
+                <div align="center" class="divInput"><input class="getInputComponent" list="components" placeholder="Новый компонент" style="display:table-cell; width:60%" type="text" /><button class="addComponent" style="display:table-cell; width:36%">Добавить</button> <datalist id="components"></datalist></div>
             </td>
         </tr>
-       </tbody>
+        </tbody>
     </table>
 </div>
 </body>

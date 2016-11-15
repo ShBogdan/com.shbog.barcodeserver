@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.*;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,8 +39,8 @@ public class FileUploadServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Create path components to save the file
-        final String fileId = request.getParameter("myname");
-        final String path = (request.getServletContext().getRealPath("")) + "/images";
+        final String fileId = request.getParameter("imageId");
+        final String path = (request.getServletContext().getRealPath("")) + "/image/images";
         final Part filePart = request.getPart("file");
         final String fileName = getFileName(filePart);
 
@@ -106,8 +107,12 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        System.out.println("FileUploadServlet doGet");
-        processRequest(request, response);
+        if(request.getParameter("removeFile")!=null){
+            System.out.println("present");
+        }else{
+            System.out.println("empty");
+            processRequest(request, response);
+        }
     }
 
     /**
@@ -122,7 +127,13 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if(request.getParameter("removeFile")!=null){
+            System.out.println("present");
+            removeImage(request.getServletContext().getRealPath("") + request.getParameter("removeFile"));
+        }else{
+            System.out.println("empty");
         processRequest(request, response);
+        }
     }
 
     /**
@@ -133,5 +144,20 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Servlet that uploads files to a user-defined destination";
+    }
+
+    protected void removeImage(String url){
+        System.out.print(url);
+        try {
+            Path path = Paths.get(url);
+            Files.delete(path);
+        } catch (NoSuchFileException x) {
+            System.out.format("%s: no such" + " file or directory%n", url);
+        } catch (DirectoryNotEmptyException x) {
+            System.out.format("%s not empty%n", url);
+        } catch (IOException x) {
+            // File permission problems are caught here.
+            System.err.println(x);
+        }
     }
 }

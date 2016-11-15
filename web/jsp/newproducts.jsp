@@ -229,20 +229,23 @@
         el.wrap('<form>').closest('form').get(0).reset();
         el.unwrap();
     }
+    function swipe(imgId) {
+        console.log(imgId);
+        var largeImage = document.getElementById(imgId);
+        var url=largeImage.getAttribute('src');
+        window.open(url,'Image','width=largeImage.stylewidth,height=largeImage.style.height,resizable=1');
+    }
 
 </script>
 <div class="temp">
     <button id = "button" class="remove">Удалить выделенное</button>
-    <button id = "button_create_product" class="button_create_product">Добавить продукт</button>
 </div>
 <hr>
-<table id="products_table" class="display" cellspacing="0" width="100%">
+<table id="newprod_table" class="display" cellspacing="0" width="100%">
     <thead>
     <tr>
         <th>id</th>
         <th>Категория</th>
-        <th>Производитель</th>
-        <th>Название</th>
         <th>Штрихкод</th>
         <th></th>
         <th></th>
@@ -252,8 +255,6 @@
     <tr>
         <th>id</th>
         <th class="searchable">Каталог</th>
-        <th class="searchable">Производитель</th>
-        <th class="searchable">Название</th>
         <th class="searchable">Штрихкод</th>
         <th></th>
         <th></th>
@@ -263,132 +264,56 @@
     </tbody>
 </table>
 
-<div class="dialog_create_product" title="Создать продукт" hidden>
+<div class="dialog_edit_product" title="Создать продукт" hidden>
     <table style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">
         <tbody>
-        <tr>
-            <td align="center" width="50%">
-                <form action="" enctype="multipart/form-data" method="post" name="attachfileform">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><img class="inputImg" id="inputImg" style="max-width: 100%; height: 130px;" alt=""/></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="x" hidden onclick="closeImage()" >[X]</span>
-                                <input type="button" class="loadFileXml" value="loadXml" onclick="document.getElementsByClassName('image')[0].click();" />
-                                <input type="file" name="attachfile" onchange="previewFile();" class="image" style="display:none;">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-
-            </td>
-            <td align="center" width="40%" valign="top">
-                <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
+        <td align="center" width="35%" valign="top">
+            <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
+                <tbody>
+                    <td><div><img class ="upload_inputImg_1" id = "largeImage_1" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                    <td><div><img class ="upload_inputImg_2" id = "largeImage_2" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                </tbody>
+            </table>
+        </td>
+        <td align="center" width="25%" valign="top">
+            <form action="" enctype="multipart/form-data" method="post" name="attachfileform">
+                <table>
                     <tbody>
                     <tr>
+                        <td><img class="inputImg" id ="edit_inputImg" style="max-width: 100%; height: 130px;" alt=""/></td>
+                    </tr>
+                    <tr>
                         <td>
-                            <select class="selectCategory" style="width: 100%">
-                            </select>
+                            <span class="x" hidden onclick="closeImage()" >[X]</span>
+                            <input type="button" class="loadFileXml" value="loadXml" onclick="document.getElementsByClassName('image')[0].click();" />
+                            <input type="file" name="attachfile" onchange="previewFile();" class="image" style="display:none;">
                         </td>
-                    </tr>
-                    <tr>
-                        <td><input class="prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
-                    </tr>
-                    <tr>
-                        <td><input class="prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
-                    </tr>
-                    <tr>
-                        <td><input class="prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>
                     </tr>
                     </tbody>
                 </table>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 1000px">
-        <tbody>
-        <tr>
-            <td width="50%" align="center"><b>Состав</b><hr></td>
-            <td width="50%" align="center"><b>Все компоненты категории</b><hr></td>
-        </tr>
-        <tr>
-            <td class = "components"  height="200px" valign="top"></td>
-            <td class = "compound"  height="200px" valign="top"></td>
-        </tr>
-        <tr>
-            <td align="center" width="50%">
-                <div class="divInput" align="center">
-                    <input class = "getInputComponent" placeholder="Новый компонент" type="text" style="display:table-cell; width:60%" maxlength="50" list="components"><button class="addComponent" style="display:table-cell; width:36%">Добавить</button>
-                    <datalist id="components"></datalist>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <hr class= "margin">
-    <table  align="center" border="0" cellpadding="2" cellspacing="2" style="width: 1000px">
-        <tbody>
-        <tr>
-            <td width="50%" align="center"><b>Добавки</b></td>
-            <td width="50%" align="center"><b>Ограничения</b></td>
-        </tr>
-        <tr>
-            <td class = "dobavki" valign="top"></td>
-            <td class = "ogranicenija" valign="top"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div class="dialog_edit_product" title="Изменить продукт" hidden>
-    <table style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">
-        <tbody>
-        <tr>
-            <td align="center" width="50%">
-                <form action="" enctype="multipart/form-data" method="post" name="attachfileform">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><img class="inputImg" id ="edit_inputImg" style="max-width: 100%; height: 130px;" alt=""/></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="x" hidden onclick="closeImage()" >[X]</span>
-                                <input type="button" class="loadFileXml" value="loadXml" onclick="document.getElementsByClassName('image')[0].click();" />
-                                <input type="file" name="attachfile" onchange="previewFile();" class="image" style="display:none;">
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-
-            </td>
-            <td align="center" width="40%" valign="top">
-                <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <select class="edit_selectCategory" style="width: 100%">
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input class="edit_prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
-                    </tr>
-                    <tr>
-                        <td><input class="edit_prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
-                    </tr>
-                    <tr>
-                        <td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
+            </form>
+        </td>
+        <td align="center" width="40%" valign="top">
+            <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
+                <tbody>
+                <tr>
+                    <td>
+                        <select class="edit_selectCategory" style="width: 100%">
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><input class="edit_prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
+                </tr>
+                <tr>
+                    <td><input class="edit_prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
+                </tr>
+                <tr>
+                    <td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
         </tbody>
     </table>
     <table class="edit_sostav" style="width: 1000px;" border="0" cellspacing="2" cellpadding="2" align="center">

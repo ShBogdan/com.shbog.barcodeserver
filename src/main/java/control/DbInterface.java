@@ -47,7 +47,8 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additiveCBox"),
                                   req.getParameter("additiveNotes"),
                                   req.getParameter("additiveFor"),
-                                  out
+                                  out,
+                                   req.getParameter("additiveType")
                 );
             }
             if (null != req.getParameter("addExclude")) {
@@ -63,7 +64,8 @@ public class DbInterface extends HttpServlet {
                                   req.getParameter("additivePermission"),
                                   req.getParameter("additiveCBox"),
                                   req.getParameter("additiveFor"),
-                                  req.getParameter("additiveNotes")
+                                  req.getParameter("additiveNotes"),
+                                  req.getParameter("additiveType")
                 );
             }
             if (null != req.getParameter("getCBox")) {
@@ -76,7 +78,8 @@ public class DbInterface extends HttpServlet {
                                  req.getParameter("prodName"),
                                  req.getParameter("prodCode"),
                                  req.getParameter("componets_array_ID"),
-                                 req.getParameter("varButton")
+                                 req.getParameter("varButton"),
+                                 out
                 );
             }
             if (null != req.getParameter("addSection")) {
@@ -124,8 +127,11 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("getProducts")) {
                 db.getProducts(out);
             }
-            if (null != req.getParameter("getAdditive")) {
-                db.getAdditive(out);
+            if (null != req.getParameter("getNewProducts")) {
+                db.getNewProducts(out);
+            }
+            if (null != req.getParameter("getComponents")) {
+                db.getComponents(out);
             }
             if (null != req.getParameter("getComponenNames")) {
                 db.getComponenNames(out);
@@ -133,6 +139,10 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("removeProduct")) {
                 String prod_id = req.getParameter("prod_id");
                 db.removeProduct(prod_id);
+            }
+            if (null != req.getParameter("removeTempProducts")) {
+                String prod_id = req.getParameter("prod_id");
+                db.removeTempProducts(prod_id);
             }
             if (null != req.getParameter("removeComponent")) {
                 String additive_id = req.getParameter("additive_id");
