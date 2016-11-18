@@ -113,6 +113,6 @@
     </tbody>
 </table>
 <div class="addExclude" title="Добавить" hidden><input class = "placeholder_addExclude" placeholder="название ограничение" type="text"></div>
-<div class="renameExclude" title="Перейменовать" hidden><input class = "placeholder_renameExclude" placeholder="название ограничение" type="text"></div>
+<div class="renameExclude" title="Переименовать" hidden><input class = "placeholder_renameExclude" placeholder="название ограничение" type="text"></div>
 </body>
 </html>

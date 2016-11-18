@@ -105,7 +105,7 @@
 </body>
 <hr>
 <p>Нельзя удалить родительский элемент если есть дочерний</p>
-<div id="rename" title="Перейменовать" hidden><input class = "placeholder_rename" placeholder="название каталога" type="text"></div>
+<div id="rename" title="Переименовать" hidden><input class = "placeholder_rename" placeholder="название каталога" type="text"></div>
 <div id="addCategory" title="Добавить" hidden><input class = "placeholder_addCategory" placeholder="название категории" type="text"></div>
-<div id="renameCat" title="Перейменовать" hidden><input class = "placeholder_renameCat" placeholder="название категории" type="text"></div>
+<div id="renameCat" title="Переименовать" hidden><input class = "placeholder_renameCat" placeholder="название категории" type="text"></div>
 </html>

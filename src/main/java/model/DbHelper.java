@@ -14,7 +14,7 @@ import java.util.*;
 
 
 
-
+//
 //import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 //import org.apache.poi.ss.usermodel.Cell;
 //import org.apache.poi.ss.usermodel.Row;
@@ -229,7 +229,6 @@ public class DbHelper {
         preparedStatement.setString(7, additiveFor);
         preparedStatement.setString(8, additiveNotes);
         preparedStatement.setString(9, additiveType);
-
         preparedStatement.execute();
 
         String query = "SELECT LAST_INSERT_ID() as last_id from component;";
@@ -241,15 +240,20 @@ public class DbHelper {
         out.flush();
 
         for (int i = 1; i < names.size(); i++) {
-            statement = "INSERT INTO component(comp_name, comp_group, comp_cbox, comp_e_code, comp_color) VALUE (?,?,?,?,?)";
+            statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, names.get(i));
-            preparedStatement.setString(2, mainId);
-            preparedStatement.setString(3, additiveCBox);
-            preparedStatement.setString(4, additiveNamber);
+            preparedStatement.setString(2, additiveNamber);
+            preparedStatement.setString(3, additiveInfo);
+            preparedStatement.setString(4, additivePermission);
             preparedStatement.setString(5, additiveColor);
+            preparedStatement.setString(6, additiveCBox);
+            preparedStatement.setString(7, additiveFor);
+            preparedStatement.setString(8, additiveNotes);
+            preparedStatement.setString(9, additiveType);
+            preparedStatement.setString(10, mainId);
             preparedStatement.execute();
-        }
+         }
 
         if(connection!=null)
             connection.close();
@@ -309,15 +313,21 @@ public class DbHelper {
         while (resultSet.next()){
             if(names.contains(resultSet.getString("comp_name"))){
                 copyNames.remove(resultSet.getString("comp_name"));
-                String _statement = "UPDATE component SET comp_name=?, comp_group=?, comp_cbox=?, comp_e_code=?, comp_color=? WHERE comp_id=?";
+                String _statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ?, comp_group=? WHERE comp_id = ?";
                 PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
                 _preparedStatement.setString(1, resultSet.getString("comp_name"));
-                _preparedStatement.setString(2, additiveId);
-                _preparedStatement.setString(3, additiveCBox);
-                _preparedStatement.setString(4, additiveNamber);
+                _preparedStatement.setString(2, additiveNamber);
+                _preparedStatement.setString(3, additiveInfo);
+                _preparedStatement.setString(4, additivePermission);
                 _preparedStatement.setString(5, additiveColor);
-                _preparedStatement.setString(6, resultSet.getString("comp_id"));
+                _preparedStatement.setString(6, additiveCBox);
+                _preparedStatement.setString(7, additiveFor);
+                _preparedStatement.setString(8, additiveNotes);
+                _preparedStatement.setString(9, additiveType);
+                _preparedStatement.setString(10, additiveId);
+                _preparedStatement.setString(11, resultSet.getString("comp_id"));
                 _preparedStatement.execute();
+                System.out.println("Изменяем");
             } else {
                 String tempStatement = "DELETE FROM component WHERE comp_id = ?";
                 PreparedStatement tempPreparedStatement = connection.prepareStatement(tempStatement);
@@ -330,13 +340,18 @@ public class DbHelper {
 
         //Создаем новые
         for (int i = 0; i < copyNames.size(); i++) {
-            statement = "INSERT INTO component(comp_name, comp_group, comp_cbox, comp_e_code, comp_color) VALUE (?,?,?,?,?)";
+            statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
             preparedStatement = connection.prepareStatement(statement);
             preparedStatement.setString(1, copyNames.get(i));
-            preparedStatement.setString(2, additiveId);
-            preparedStatement.setString(3, additiveCBox);
-            preparedStatement.setString(4, additiveNamber);
+            preparedStatement.setString(2, additiveNamber);
+            preparedStatement.setString(3, additiveInfo);
+            preparedStatement.setString(4, additivePermission);
             preparedStatement.setString(5, additiveColor);
+            preparedStatement.setString(6, additiveCBox);
+            preparedStatement.setString(7, additiveFor);
+            preparedStatement.setString(8, additiveNotes);
+            preparedStatement.setString(9, additiveType);
+            preparedStatement.setString(10, additiveId);
             preparedStatement.execute();
         }
         if(connection!=null)
@@ -957,7 +972,7 @@ public class DbHelper {
 ////        if(connection!=null)
 ////            connection.close();
 //    }
-
+//
 //    public void parse(String name) throws SQLException {
 //
 //        InputStream in = null;
@@ -1040,7 +1055,7 @@ public class DbHelper {
 //            if( null!=d.nazvRu &&  !d.nazvRu.equals("")){
 ////                System.out.println(d);
 //                String ogran = d.ogran.toString().substring(1, d.ogran.toString().length()-1).replace(" ", "");
-//                String names = d.nazvRu+"; "+d.nazvEN;
+//                String names = d.nazvRu+"; "+d.nomerE+"; "+d.nazvEN;
 //                System.out.println(ogran);
 //                createComponent(d.nomerE, names, d.color, d.forWhat, d.zaProtiv, ogran, d.naznac, d.primecanie, d.type);
 //            }
@@ -1084,7 +1099,7 @@ public class DbHelper {
 //                    '}';
 //        }
 //    }
-
+//
 }
 //****************************************************Additive==Component
 //    public void createForeigners(int cat, int prod, int comp) throws SQLException {

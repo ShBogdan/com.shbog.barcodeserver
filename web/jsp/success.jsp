@@ -16,6 +16,9 @@
 <head>
     <title>Success Page</title>
     <style type="text/css">
+        .warning {
+            background-color: #F99 !important;
+        }
         .button {
             background-color: #e7e7e7; /* Green */
             color: black; /*text color*/
@@ -42,13 +45,12 @@
         .adminButton{ color: #2b2b2b; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px;}
         .adminButton:hover{ color: #e34b4e; text-shadow: 0 12 16px rgba(0,0,0,0.24); letter-spacing:1px;}
     </style>
-    <script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <%--<script src="/js/js.cookie.js"></script>--%>
+    <script src="//code.jquery.com/jquery-1.12.3.js"></script>
+    <%--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--%>
+    <script src="/js/dataTables.js"></script>
     <script src="/js/barcoder.js"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
     <script>
         $(document).ready(function () {
             window.imageId = 0;
@@ -72,8 +74,8 @@
             var componentGroup = [];
             var dictionaryAutoCompCompon = {};
             var cBoxs = [];
-
-//            Cookies.set('session', '1');
+            var cell;
+            var listBarcode = [];
             var permission = '${permission}';
             if (permission == '1') {
                 $('.menuItem').append('' +
@@ -93,8 +95,8 @@
                         '</p>')
             }
             $(document).click(function(event){
-            <%--console.log(${sessionScope.username});--%>
-            <%--console.log('<%= session.getAttribute("username") %>');--%>
+                <%--console.log(${sessionScope.username});--%>
+                <%--console.log('<%= session.getAttribute("username") %>');--%>
             });
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
@@ -426,6 +428,10 @@
                     });
                     $(".divInput").on("click", ".addComponent", function () {
                         var input = $(".getInputComponent").val().trim();
+                        var reg = /^[EeЕе][0-9]/i.exec(input)
+                        if(reg){
+                            input = "Е" + input.substring(1);
+                        }
                         comp_index = varButton.indexOf(input);
                         if (input == "") {
                             console.log("Its empty divInput")
@@ -434,7 +440,6 @@
                         if (comp_index > -1) {
                             console.log("over in the array")
                             alert("Данный компонент присутствует в составе продукта")
-
                             return;
                         }
                         if (!(input in dictionaryAutoCompCompon)) {
@@ -468,10 +473,10 @@
                             console.log("Its empty divInputEdit")
                             return;
                         }
-//                        if (input.search(/,/i) > -1) {
-//                            alert("Недопустимый символ ','")
-//                            return
-//                        }
+                        var reg = /^[EeЕе][0-9]/i.exec(input)
+                        if(reg){
+                            input = "Е" + input.substring(1);
+                        }
                         if (comp_index > -1) {
                             console.log("over in the array")
                             return;
@@ -514,6 +519,7 @@
                         "pageLength": 25,
                         "lengthMenu": [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"]],
                         "deferRender": true,
+                        order: [[ 0, 'desc' ]],
                         "columnDefs": [
                             {"targets": 0, "visible": false},
                             {"targets": 1, "visible": true},
@@ -697,6 +703,7 @@
             });
             $(document).on('click', '#btn6', function () {
                 $('#menu').load("newproducts.jsp", function () {
+                    fillBarcodeList();
                     newprod_table = $('#newprod_table').DataTable({
                         processing: true,
                         ajax: {
@@ -726,8 +733,17 @@
                                 "width": "1%",
                                 "data": null,
                                 "defaultContent": "<button id = 'edit_newproducts'>&#8601;</button>"
-                            }]
+                            }],
+
+                        "createdRow": function ( row, data, index ) {
+                            var inList = listBarcode.indexOf(data[2])
+                            if( inList > -1){
+                                $(row).children().eq(1).css('background-color', '#E3A9B8');
+                                return;
+                            }
+                        },
                     });
+
 //                  Поиск по колонкам
                     $('#newprod_table .searchable').each(function () {
                         var title = $(this).text();
@@ -842,10 +858,10 @@
                             console.log("Its empty divInputEdit")
                             return;
                         }
-//                        if (input.search(/,/i) > -1) {
-//                            alert("Недопустимый символ ','")
-//                            return
-//                        }
+                        var reg = /^[EeЕе][0-9]/i.exec(input)
+                        if(reg){
+                            input = "Е" + input.substring(1);
+                        }
                         if (comp_index > -1) {
                             console.log("over in the array")
                             return;
@@ -1054,6 +1070,8 @@
             $(document).on('click', '#edit_newproducts', function () {
                 edit_tableRow = newprod_table.row($(this).parents('tr')).data();
                 dell_edit_tableRow = newprod_table.row($(this).parents('tr'));
+                var rowTable  = dell_edit_tableRow.row( $(this).parents('tr')[0] ).data()[0];
+                cell = newprod_table.cell({ row: rowTable-1, column: 2 }).node();
                 create_newProduct();
             });
 
@@ -1333,7 +1351,8 @@
                                 success: function (data) {
                                     if(parseInt(data, 10) != -1){
                                         dynamicUpload(parseInt(data, 10));
-//                                        newprod_table.row(dell_edit_tableRow).remove().draw(false);
+                                        console.log("cell в" + cell)
+                                        cell.style.backgroundColor = '#E3A9B8'
                                         $(".dialog_edit_product").dialog("close")
                                     }else{
                                         alert('Такой код уже есть в базе')
@@ -1358,7 +1377,6 @@
                                     $(".upload_inputImg_1").attr("src",blank);
                                 });
 
-
                         var uploadImg_2 = "/image/phoneimg/"+edit_tableRow[2]+"_2.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_2,
                                 function () {
@@ -1366,6 +1384,34 @@
                                 }, function () {
                                     var blank="/image/bgr.jpg";
                                     $(".upload_inputImg_2").attr("src",blank)
+                                });
+
+                        var uploadImg_3 = "/image/phoneimg/"+edit_tableRow[2]+"_3.jpg"+ "?t=" + new Date().getTime();
+                        doesFileExist(uploadImg_3,
+                                function () {
+                                    $(".upload_inputImg_3").attr("src",uploadImg_3);
+                                }, function () {
+                                    var blank="/image/bgr.jpg";
+                                    $(".upload_inputImg_3").attr("src",blank);
+                                });
+
+
+                        var uploadImg_4 = "/image/phoneimg/"+edit_tableRow[2]+"_4.jpg"+ "?t=" + new Date().getTime();
+                        doesFileExist(uploadImg_4,
+                                function () {
+                                    $(".upload_inputImg_4").attr("src",uploadImg_4);
+                                }, function () {
+                                    var blank="/image/bgr.jpg";
+                                    $(".upload_inputImg_4").attr("src",blank)
+                                });
+
+                        var uploadImg_5 = "/image/phoneimg/"+edit_tableRow[2]+"_5.jpg"+ "?t=" + new Date().getTime();
+                        doesFileExist(uploadImg_5,
+                                function () {
+                                    $(".upload_inputImg_5").attr("src",uploadImg_5);
+                                }, function () {
+                                    var blank="/image/bgr.jpg";
+                                    $(".upload_inputImg_5").attr("src",blank)
                                 });
 
                         imageUrl = "/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();
@@ -1580,6 +1626,7 @@
                         edit_e_tableRow[8] == 1 ? $('.e_color option:contains("Желтый")').prop('selected', true) : null;
                         edit_e_tableRow[8] == 2 ? $('.e_color option:contains("Крассный")').prop('selected', true) : null;
 
+                        $(".e_type").val(edit_e_tableRow[1])
                         $(".e_name").val(edit_e_tableRow[4]);
                         $(".e_namber").val(edit_e_tableRow[3]);
                         $(".e_for").val(edit_e_tableRow[2]);
@@ -1749,6 +1796,7 @@
                 $(".e_color").val('0');
                 $(".info").val('');
                 $(".permission").val('');
+                $(".e_type").val('')
                 $(".getInputComponent").val('');
                 if ($(".dialog_create_additive").dialog("isOpen")) {
                     $(".dialog_create_additive").dialog("destroy");
@@ -1792,7 +1840,8 @@
                                         var obj = JSON.parse(data);
                                         if ( obj.component[2] != 0 && obj.component[2] != null ) {
                                             console.log(obj.component[2]+" ")
-                                            $(".dobavki").append("<p>" + obj.component[2] + " - " + obj.component[1] + "</p>");
+                                            $(".dobavki").append("<p>" + obj.component[1] + "</p>");
+//                                            $(".dobavki").append("<p>" + obj.component[2] + " - " + obj.component[1] + "</p>");
                                         }
                                         var ogran = obj.component[6];
                                         var tempOgtArr = [];
@@ -1834,28 +1883,22 @@
                 })
             }
 
-//            function fillBarcodeList() {
-//                //втставка
-////                                var inList = listBarcode.indexOf($(".edit_prodCode").val())
-////                                if( inList > -1){
-////                                    alert("Продукт с таким кодом уже есть")
-////                                    return;
-////                                }
-//                listBarcode = [];
-//                $.ajax({
-//                    url: "/DbInterface",
-//                    data: {getProducts: "getProducts"},
-//                    dataSrc: "products",
-//                    type: "POST",
-//                    success: function (data) {
-//                        var obj = JSON.parse(data);
-//                        var i;
-//                        for(i=0; obj.products.length > i; i++){
-//                            listBarcode.push(obj.products[i][4]);
-//                        }
-//                    }
-//                });
-//            }
+            function fillBarcodeList() {
+                listBarcode = [];
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {getProducts: "getProducts"},
+                    dataSrc: "products",
+                    type: "POST",
+                    success: function (data) {
+                        var obj = JSON.parse(data);
+                        var i;
+                        for(i=0; obj.products.length > i; i++){
+                            listBarcode.push(obj.products[i][4]);
+                        }
+                    }
+                });
+            }
 
             function dynamicUpload(_imageId){
                 imageId = _imageId;

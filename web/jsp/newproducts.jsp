@@ -18,6 +18,9 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <style type="text/css">
+        .warning {
+            background-color: #F99 !important;
+        }
         .ui-autocomplete { position: absolute; cursor: default;z-index:30 !important; color: #1c94c4; background: #670d10;}
         tfoot input {
             width: 100%;
@@ -32,43 +35,11 @@
             margin-top: 10px;
             width: 1000px;
         }
-
-        /*textarea {*/
-        /*display: inline-block;*/
-        /*width: 100%;*/
-        /*margin-bottom: 10px;*/
-        /*}*/
-        /*.ui-widget {*/
-        /*font-family: Verdana,Arial,sans-serif;*/
-        /*font-size: .8em;*/
-        /*}*/
-
         .ui-widget-content {
             background: #F9F9F9;
             /*border: 1px solid #90d93f;*/
             /*color: #222222;*/
         }
-
-        /*.ui-dialog {*/
-        /*left: 0;*/
-        /*outline: 0 none;*/
-        /*padding: 0 !important;*/
-        /*position: absolute;*/
-        /*top: 0;*/
-        /*}*/
-
-        /*#success {*/
-        /*padding: 0;*/
-        /*margin: 0;*/
-        /*}*/
-
-        /*.ui-dialog .ui-dialog-content {*/
-        /*background: none repeat scroll 0 0 transparent;*/
-        /*border: 0 none;*/
-        /*overflow: auto;*/
-        /*position: relative;*/
-        /*padding: 0 !important;*/
-        /*}*/
 
         .ui-widget-header {
             background:#e7e7e7;
@@ -77,20 +48,6 @@
             font-weight: bold;
         }
 
-        /*.ui-dialog .ui-dialog-titlebar {*/
-        /*padding: 0.1em .5em;*/
-        /*position: relative;*/
-        /*font-size: 1em;*/
-        /*}*/
-        /*.ui-dialog .ui-dialog-titlebar-close{*/
-        /*position: absolute;*/
-        /*right: .3em;*/
-        /*top: 50%;*/
-        /*width: 20px;*/
-        /*margin: -10px 0 0 0;*/
-        /*padding: 1px;*/
-        /*height: 20px;*/
-        /*}*/
         .components, .compound {
             white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
             white-space: -pre-wrap;      /* Opera 4-6 */
@@ -100,20 +57,7 @@
             word-break: break-all;
             white-space: normal;
         }
-        /*.varButton, .btnCompound{*/
-        /*!*border: 1px solid black;*!*/
-        /*!*background-color: lightblue;*!*/
-        /*margin-top: 5px;*/
-        /*margin-right: 5px;*/
-        /*margin-bottom: 5px;*/
-        /*margin-left: 5px;*/
-        /*}*/
-        /*.varButton{*/
-        /*background-color: lightblue;*/
-        /**/
-        /*}*/
-
-        .varButton, .btnCompound, .varACCButton  {
+        .varButton, .btnCompound, .varACCButton {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
             background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
             background:-webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
@@ -139,7 +83,7 @@
             margin-bottom: 5px;
             margin-left: 5px;
         }
-        .varButton:hover, .btnCompound:hover, .varACCButton:hover  {
+        .varButton:hover, .btnCompound:hover, .varACCButton:hover {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
             background:-moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
             background:-webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
@@ -154,7 +98,7 @@
             top:1px;
         }
 
-        .remove, .button_create_product, .addComponent, .addComponentEdit{
+        .remove, .button_create_product, .addComponent, .addComponentEdit, .loadFileXml{
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
             background:-moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
             background:-webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -177,7 +121,7 @@
             text-decoration:none;
             margin-left: 5px;
         }
-        .remove:hover , .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover{
+        .remove:hover , .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover, .loadFileXml:hover {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
             background:-moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
             background:-webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -188,7 +132,7 @@
             background-color:#e9e9e9;
             margin-left: 5px;
         }
-        .remove:active, .button_create_product:active, .addComponent:active {
+        .remove:active, .button_create_product:active, .addComponent:active, .loadFileXml:active  {
             position:relative;
             top:1px;
             margin-left: 5px;
@@ -243,7 +187,7 @@
 <hr>
 <table id="newprod_table" class="display" cellspacing="0" width="100%">
     <thead>
-    <tr>
+    <tr class="hello1">
         <th>id</th>
         <th>Категория</th>
         <th>Штрихкод</th>
@@ -254,7 +198,7 @@
     <tfoot>
     <tr>
         <th>id</th>
-        <th class="searchable">Каталог</th>
+        <th class="searchable">Категория</th>
         <th class="searchable">Штрихкод</th>
         <th></th>
         <th></th>
@@ -270,8 +214,15 @@
         <td align="center" width="35%" valign="top">
             <table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
                 <tbody>
+                <tr>
                     <td><div><img class ="upload_inputImg_1" id = "largeImage_1" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
                     <td><div><img class ="upload_inputImg_2" id = "largeImage_2" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                    <td><div><img class ="upload_inputImg_3" id = "largeImage_3" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                    </tr>
+                <tr></tr>
+                    <td><div><img class ="upload_inputImg_4" id = "largeImage_4" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                    <td><div><img class ="upload_inputImg_5" id = "largeImage_5" style = "height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div></td>
+                </tr>
                 </tbody>
             </table>
         </td>
@@ -285,7 +236,7 @@
                     <tr>
                         <td>
                             <span class="x" hidden onclick="closeImage()" >[X]</span>
-                            <input type="button" class="loadFileXml" value="loadXml" onclick="document.getElementsByClassName('image')[0].click();" />
+                            <input type="button" class="loadFileXml" value="Загрузить фото" onclick="document.getElementsByClassName('image')[0].click();" />
                             <input type="file" name="attachfile" onchange="previewFile();" class="image" style="display:none;">
                         </td>
                     </tr>

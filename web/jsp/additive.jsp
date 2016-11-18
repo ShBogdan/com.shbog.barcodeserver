@@ -277,7 +277,7 @@
     <table align="center" border="0" cellpadding="2" cellspacing="2" style="width: 940px">
         <tbody>
         <tr>
-            <td align="center" width="50%"><b>Соотвецтвует Компоненту</b>
+            <td align="center" width="50%"><b>Другие Названия</b>
 
                 <hr /></td>
             <td align="center" width="50%"><b>Ограничение</b>
