@@ -95,7 +95,6 @@
     <tr>
         <th>id</th>
         <th>Название</th>
-        <th>Иконка</th>
         <th></th>
         <th></th>
     </tr>
@@ -104,7 +103,6 @@
     <tr>
         <th>id</th>
         <th class="searchable">Название</th>
-        <th></th>
         <th></th>
         <th></th>
     </tr>

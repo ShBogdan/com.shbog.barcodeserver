@@ -14,9 +14,7 @@
 %>
 <html>
 <head>
-    <%--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">--%>
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-
     <style>
         #main_section {
             font-family: arial, sans-serif;
@@ -88,10 +86,6 @@
             top:1px;
             margin-left: 5px;
         }
-
-
-
-
     </style>
     <title>Title</title>
 </head>

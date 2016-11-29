@@ -23,42 +23,11 @@
             box-sizing: border-box;
             font-weight: bold;
         }
-        /*textarea {*/
-        /*display: inline-block;*/
-        /*width: 100%;*/
-        /*margin-bottom: 10px;*/
-        /*}*/
-        /*.ui-widget {*/
-        /*font-family: Verdana,Arial,sans-serif;*/
-        /*font-size: .8em;*/
-        /*}*/
 
         .ui-widget-content {
             background: #F9F9F9;
-            /*border: 1px solid #90d93f;*/
-            /*color: #222222;*/
+
         }
-
-        /*.ui-dialog {*/
-        /*left: 0;*/
-        /*outline: 0 none;*/
-        /*padding: 0 !important;*/
-        /*position: absolute;*/
-        /*top: 0;*/
-        /*}*/
-
-        /*#success {*/
-        /*padding: 0;*/
-        /*margin: 0;*/
-        /*}*/
-
-        /*.ui-dialog .ui-dialog-content {*/
-        /*background: none repeat scroll 0 0 transparent;*/
-        /*border: 0 none;*/
-        /*overflow: auto;*/
-        /*position: relative;*/
-        /*padding: 0 !important;*/
-        /*}*/
 
         .ui-widget-header {
             background:#e7e7e7;
@@ -67,20 +36,6 @@
             font-weight: bold;
         }
 
-        /*.ui-dialog .ui-dialog-titlebar {*/
-        /*padding: 0.1em .5em;*/
-        /*position: relative;*/
-        /*font-size: 1em;*/
-        /*}*/
-        /*.ui-dialog .ui-dialog-titlebar-close{*/
-        /*position: absolute;*/
-        /*right: .3em;*/
-        /*top: 50%;*/
-        /*width: 20px;*/
-        /*margin: -10px 0 0 0;*/
-        /*padding: 1px;*/
-        /*height: 20px;*/
-        /*}*/
         .components, .compound {
             white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
             white-space: -pre-wrap;      /* Opera 4-6 */
@@ -90,19 +45,6 @@
             word-break: break-all;
             white-space: normal;
         }
-        /*.varButton, .btnCompound{*/
-        /*!*border: 1px solid black;*!*/
-        /*!*background-color: lightblue;*!*/
-        /*margin-top: 5px;*/
-        /*margin-right: 5px;*/
-        /*margin-bottom: 5px;*/
-        /*margin-left: 5px;*/
-        /*}*/
-        /*.varButton{*/
-        /*background-color: lightblue;*/
-        /**/
-        /*}*/
-
         .varButton, .btnCompound  {
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
             background:-moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);

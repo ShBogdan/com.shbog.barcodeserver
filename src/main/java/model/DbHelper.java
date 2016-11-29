@@ -10,16 +10,18 @@ import java.io.*;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 
-//
+
 //import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 //import org.apache.poi.ss.usermodel.Cell;
 //import org.apache.poi.ss.usermodel.Row;
 //import org.apache.poi.ss.usermodel.Sheet;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -42,14 +44,12 @@ public class DbHelper {
 
     public static void main(String[] args) throws SQLException, ParseException, JSONException, IOException {
         DbHelper db = new DbHelper();
-//
-//        org.json.simple.parser.JSONParser parser = new JSONParser();
-//        String json = "{\"name_0:\" \"131,13\", \"name_1:\" \"12,223\"}";
-//        org.json.simple.JSONObject jsonObject = null;
-//        jsonObject = (org.json.simple.JSONObject) parser.parse(json);
-//        for (int i = 0; i < jsonObject.size(); i++) {
-//            System.out.println(jsonObject.get("name_"+i+":"));
-//        }
+
+//        Date dNow = new Date( );
+//        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd");
+//        System.out.println(ft.format(dNow));
+
+
 
 //        db.parse("C:\\test2.xls");
 
@@ -161,12 +161,15 @@ public class DbHelper {
             System.out.println("Список компонентов продукта после: " +input_components_ID);
 
             //создаем продукт до обновления input_components_ID
-            String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code) VALUE (?,?,?,?);";
+            String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, prod_date) VALUE (?,?,?,?,?);";
             prepSat = connection.prepareStatement(statement);
             prepSat.setString(1, prodCategory_id);
             prepSat.setString(2, prodProvider);
             prepSat.setString(3, prodName);
             prepSat.setString(4, prodCode);
+            Date dNow = new Date( );
+            SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy");
+            prepSat.setString(5, ft.format(dNow));
             prepSat.execute();
 
             String prodId;
@@ -253,7 +256,7 @@ public class DbHelper {
             preparedStatement.setString(9, additiveType);
             preparedStatement.setString(10, mainId);
             preparedStatement.execute();
-         }
+        }
 
         if(connection!=null)
             connection.close();
@@ -542,7 +545,6 @@ public class DbHelper {
             e.printStackTrace();
         }
         out.println(array);
-//        out.println(result);
         out.flush();
         if(connection!=null)
             connection.close();
@@ -554,9 +556,10 @@ public class DbHelper {
         String cat_name;
         String prod_name;
         String prod_maker;
-        String prod_components;
+        ArrayList<String> prod_components = new ArrayList<String>();
+        JSONObject result = new JSONObject();
 
-        String query = "SELECT prod_id, cat_id_frk, prod_name, prod_maker, components FROM product WHERE prod_code="+barcode;
+        String query = "SELECT prod_id, cat_id_frk, prod_name, prod_maker FROM product WHERE prod_code="+barcode;
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(query);
         resultSet.next();
@@ -564,7 +567,6 @@ public class DbHelper {
         cat_id_frk = resultSet.getString("cat_id_frk");
         prod_name = resultSet.getString("prod_name");
         prod_maker = resultSet.getString("prod_maker");
-        prod_components = resultSet.getString("components");
 
         query = "SELECT cat_name FROM categories WHERE cat_id="+cat_id_frk;
         stmt = connection.createStatement();
@@ -572,15 +574,50 @@ public class DbHelper {
         resultSet.next();
         cat_name = resultSet.getString("cat_name");
 
+        query = "SELECT compon FROM frkgroup WHERE prod="+prod_id;
+        stmt = connection.createStatement();
+        resultSet = stmt.executeQuery(query);
+        while (resultSet.next()){
+            prod_components.add(resultSet.getString("compon"));
+        }
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < prod_components.size(); i++) {
+            try{
+                query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_group FROM component WHERE comp_id=" + prod_components.get(i);
+                stmt = connection.createStatement();
+                resultSet = stmt.executeQuery(query);
+                resultSet.next();
+                JSONArray ja = new JSONArray();
+                String id = String.valueOf(resultSet.getInt("comp_id"));
+                String additive_name = resultSet.getString("comp_name");
+                String additive_code = resultSet.getString("comp_e_code");
+                String additive_info = resultSet.getString("comp_info");
+                String additive_perm = resultSet.getString("comp_perm");
+                Integer additive_color = resultSet.getInt("comp_color");
+                String additive_cbox = resultSet.getString("comp_cbox");
+                String additive_group = resultSet.getString("comp_group");
+                ja.put(id);
+                ja.put(additive_name);
+                ja.put(additive_code);
+                ja.put(additive_info);
+                ja.put(additive_perm);
+                ja.put(additive_color);
+                ja.put(additive_cbox);
+                ja.put(additive_group);
+                array.put(ja);
+            }catch (SQLException e){
+                System.err.println("getBarcodeInfo: Component not found");
+            }
+        }
 
-        JSONObject result = new JSONObject();
         JSONArray ja = new JSONArray();
         ja.put(prod_id);
         ja.put(cat_name);
         ja.put(prod_name);
         ja.put(prod_maker);
-        ja.put(prod_components);
+        ja.put(prod_components.toString());
         try {
+            result.put("component",array);
             result.put("barcode",ja);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -704,6 +741,29 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter getBarcodes(PrintWriter out) throws SQLException{
+        String query = "SELECT prod_code FROM product";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        while (resultSet.next()){
+            JSONArray ja = new JSONArray();
+            String prod_code = resultSet.getString("prod_code");
+            ja.put(prod_code);
+            array.put(ja);
+        }
+        try {
+            result.put("barcodes", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
     public PrintWriter getNewProducts(PrintWriter out) throws SQLException{
         String query = "SELECT prod_id, cat_name,  prod_code FROM newproducts INNER JOIN categories ON cat_id_frk=cat_id";
         Statement stmt = connection.createStatement();
@@ -743,7 +803,6 @@ public class DbHelper {
             String ogran_name = resultSet.getString("ogran_name");
             ja.put(id);
             ja.put(ogran_name);
-            ja.put("free");
             array.put(ja);
         }
         try {
@@ -902,6 +961,83 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter getProdGroupDate(PrintWriter out) throws SQLException{
+        String query = "SELECT prod_date FROM product GROUP BY prod_date ORDER BY prod_id DESC;";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        while (resultSet.next()){
+            JSONArray ja = new JSONArray();
+            String prod_date = resultSet.getString("prod_date");
+            ja.put(prod_date);
+            array.put(ja);
+            System.out.println(prod_date);
+
+        }
+        try {
+            result.put("prodDates", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+
+        return out;
+    }
+    public PrintWriter getProdGroupByDate(PrintWriter out, String date) throws SQLException{
+        if(date.equals("empty")){
+            out.println("empty");
+            out.flush();
+            return out;
+        }
+        Statement stmt;
+        ResultSet resultSet;
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        if(date.equals("all")){
+            String query = "SELECT cat_name, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id GROUP BY cat_id_frk;";
+            stmt = connection.createStatement();
+            resultSet = stmt.executeQuery(query);
+            while (resultSet.next()){
+                JSONArray ja = new JSONArray();
+                String cat_name = resultSet.getString("cat_name");
+                String count = resultSet.getString("count");
+                System.out.println(cat_name + " " + count);
+                ja.put(cat_name);
+                ja.put(count);
+                array.put(ja);
+            }
+        }else{
+            String query = "SELECT cat_name, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date = '" + date + "' GROUP BY cat_id_frk;";
+            stmt = connection.createStatement();
+            resultSet = stmt.executeQuery(query);
+            while (resultSet.next()){
+                JSONArray ja = new JSONArray();
+                String cat_name = resultSet.getString("cat_name");
+                String count = resultSet.getString("count");
+                System.out.println(cat_name + " " + count);
+                ja.put(cat_name);
+                ja.put(count);
+                array.put(ja);
+            }
+        }
+
+        try {
+            result.put("prodGroupByDate", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+
+        return out;
+    }
+
     public ArrayList getUsers() throws SQLException{
         String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";
         Statement stmt = connection.createStatement();
@@ -959,20 +1095,25 @@ public class DbHelper {
 //        mainId = resultSet.getString("last_id");
 //
 //        for (int i = 1; i < names.size(); i++) {
-//            statement = "INSERT INTO component(comp_name, comp_group, comp_cbox, comp_e_code, comp_color) VALUE (?,?,?,?,?)";
+//            statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
 //            preparedStatement = connection.prepareStatement(statement);
 //            preparedStatement.setString(1, names.get(i).trim());
-//            preparedStatement.setString(2, mainId);
-//            preparedStatement.setString(3, additiveCBox);
-//            preparedStatement.setString(4, additiveNamber);
-//            preparedStatement.setString(5, additiveColor);
+//            preparedStatement.setString(2, additiveNamber.trim());
+//            preparedStatement.setString(3, additiveInfo.trim());
+//            preparedStatement.setString(4, additivePermission.trim());
+//            preparedStatement.setString(5, additiveColor.trim());
+//            preparedStatement.setString(6, additiveCBox.trim());
+//            preparedStatement.setString(7, additiveFor.trim());
+//            preparedStatement.setString(8, additiveNotes.trim());
+//            preparedStatement.setString(9, type.trim());
+//            preparedStatement.setString(10, mainId.trim());
 //            preparedStatement.execute();
 //        }
-////
-////        if(connection!=null)
-////            connection.close();
-//    }
 //
+//        if(connection!=null)
+//            connection.close();
+//    }
+
 //    public void parse(String name) throws SQLException {
 //
 //        InputStream in = null;
@@ -1011,7 +1152,6 @@ public class DbHelper {
 //                        result = "space";
 //                        break;
 //                }
-////                System.out.println(result);
 //                switch (count){
 //                    case 1: d.type = result.trim();
 //                        break;
@@ -1052,14 +1192,13 @@ public class DbHelper {
 //                        break;
 //                }
 //            }
+//            System.out.println(d.toString());
 //            if( null!=d.nazvRu &&  !d.nazvRu.equals("")){
-////                System.out.println(d);
 //                String ogran = d.ogran.toString().substring(1, d.ogran.toString().length()-1).replace(" ", "");
 //                String names = d.nazvRu+"; "+d.nomerE+"; "+d.nazvEN;
 //                System.out.println(ogran);
 //                createComponent(d.nomerE, names, d.color, d.forWhat, d.zaProtiv, ogran, d.naznac, d.primecanie, d.type);
 //            }
-//            count = 0;
 //        }
 //        System.out.println("in end");
 //    }
@@ -1094,12 +1233,11 @@ public class DbHelper {
 //                    ", zaProtiv='" + zaProtiv + '\'' +
 //                    ", primecanie='" + primecanie + '\'' +
 //                    ", ogran='" + ogran + '\'' +
-////                    ", ogranicenie=" + getOgranicenie() +
 //                    ", color='" + color + '\'' +
 //                    '}';
 //        }
 //    }
-//
+
 }
 //****************************************************Additive==Component
 //    public void createForeigners(int cat, int prod, int comp) throws SQLException {

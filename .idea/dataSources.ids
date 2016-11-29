@@ -181,78 +181,82 @@
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <index id="55" parent="12" name="product_categories__fk">
+      <column id="55" parent="12" name="prod_date">
+        <mandatory>1</mandatory>
+        <data-type>varchar(25)|0</data-type>
+      </column>
+      <index id="56" parent="12" name="product_categories__fk">
         <columns>cat_id_frk</columns>
         <desc-columns></desc-columns>
       </index>
-      <index id="56" parent="12" name="product_prod_code_uindex">
+      <index id="57" parent="12" name="product_prod_code_uindex">
         <columns>prod_code</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="57" parent="12" name="PRIMARY">
+      <key id="58" parent="12" name="PRIMARY">
         <columns>prod_id</columns>
         <primary>1</primary>
       </key>
-      <key id="58" parent="12" name="product_prod_code_uindex">
+      <key id="59" parent="12" name="product_prod_code_uindex">
         <columns>prod_code</columns>
         <underlying-index>product_prod_code_uindex</underlying-index>
       </key>
-      <foreign-key id="59" parent="12" name="product_categories__fk">
+      <foreign-key id="60" parent="12" name="product_categories__fk">
         <columns>cat_id_frk</columns>
         <ref-key>~.categories.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <column id="60" parent="13" name="section_id">
+      <column id="61" parent="13" name="section_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="61" parent="13" name="section_name">
+      <column id="62" parent="13" name="section_name">
         <mandatory>1</mandatory>
         <data-type>varchar(100)|0</data-type>
       </column>
-      <index id="62" parent="13" name="catalog_catalog_name_uindex">
+      <index id="63" parent="13" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="63" parent="13" name="PRIMARY">
+      <key id="64" parent="13" name="PRIMARY">
         <columns>section_id</columns>
         <primary>1</primary>
       </key>
-      <key id="64" parent="13" name="catalog_catalog_name_uindex">
+      <key id="65" parent="13" name="catalog_catalog_name_uindex">
         <columns>section_name</columns>
         <underlying-index>catalog_catalog_name_uindex</underlying-index>
       </key>
-      <column id="65" parent="14" name="user_id">
+      <column id="66" parent="14" name="user_id">
         <mandatory>1</mandatory>
         <data-type>int(11)|0</data-type>
         <sequence-identity>1</sequence-identity>
       </column>
-      <column id="66" parent="14" name="user_name">
+      <column id="67" parent="14" name="user_name">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="67" parent="14" name="user_pass">
+      <column id="68" parent="14" name="user_pass">
         <mandatory>1</mandatory>
         <data-type>varchar(25)|0</data-type>
       </column>
-      <column id="68" parent="14" name="user_permit">
+      <column id="69" parent="14" name="user_permit">
         <mandatory>1</mandatory>
         <data-type>varchar(1)|0</data-type>
       </column>
-      <index id="69" parent="14" name="users_user_id_uindex">
+      <index id="70" parent="14" name="users_user_id_uindex">
         <columns>user_id</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="70" parent="14" name="PRIMARY">
+      <key id="71" parent="14" name="PRIMARY">
         <columns>user_id</columns>
         <primary>1</primary>
       </key>
-      <key id="71" parent="14" name="users_user_id_uindex">
+      <key id="72" parent="14" name="users_user_id_uindex">
         <columns>user_id</columns>
         <underlying-index>users_user_id_uindex</underlying-index>
       </key>

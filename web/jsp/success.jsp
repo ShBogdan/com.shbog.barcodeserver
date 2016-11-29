@@ -100,6 +100,7 @@
             });
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
+
             });
             $(document).on('click', '#btn2', function () {
                 $('#menu').load("catalog.jsp", function () {
@@ -141,7 +142,6 @@
                             }
                         })
                     }
-
                     //обрабатываем кнопки в таблице
                     $("#main_section").on("click", "td", (function () {
                         var _id = $(this).parent().parent().attr("id")
@@ -640,9 +640,8 @@
                         "columnDefs": [
                             {"targets": 0, "visible": false},
                             {"targets": 1},
-                            {"targets": 2, "visible": false, "wodht": "5%"},
                             {
-                                "targets": 4,
+                                "targets": 3,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
@@ -650,7 +649,7 @@
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
                             },
                             {
-                                "targets": 3,
+                                "targets": 2,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
@@ -1073,6 +1072,13 @@
                 var rowTable  = dell_edit_tableRow.row( $(this).parents('tr')[0] ).data()[0];
                 cell = newprod_table.cell({ row: rowTable-1, column: 2 }).node();
                 create_newProduct();
+            });
+            $(document).on('change', '.selectProdDate', function (){
+                var selId;
+                $("select option:selected").each(function () {
+                    selId = $(this).val()
+                });
+                fillProdGroupByDate(selId);
             });
 
             var create_product = function () {
@@ -1887,14 +1893,14 @@
                 listBarcode = [];
                 $.ajax({
                     url: "/DbInterface",
-                    data: {getProducts: "getProducts"},
-                    dataSrc: "products",
+                    data: {getBarcodes: "getBarcodes"},
+                    dataSrc: "barcodes",
                     type: "POST",
                     success: function (data) {
                         var obj = JSON.parse(data);
                         var i;
-                        for(i=0; obj.products.length > i; i++){
-                            listBarcode.push(obj.products[i][4]);
+                        for(i=0; obj.barcodes.length > i; i++){
+                            listBarcode.push(obj.barcodes[i][0]);
                         }
                     }
                 });
@@ -1957,7 +1963,42 @@
                 });
             }
 
+            function fillProdGroupDate() {
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {
+                        getProdGroupDate: "getProdGroupDate",
+                    },
+                    type: 'POST',
+                    success: function (data) {
+                        $('.selectProdDate').append($("<option></option>").attr("value", 'empty').text('Пусто'));
+                        $('.selectProdDate').append($("<option></option>").attr("value", 'all').text('За все время'));
+                        var obj = JSON.parse(data).prodDates;
+                        for(var i=0; obj.length > i; i++){
+                            $('.selectProdDate').append($("<option></option>").attr("value", obj[i][0]).text(obj[i][0]));
+                        }
+                    }
+                })
+            }
 
+            function fillProdGroupByDate(date) {
+                document.getElementsByClassName("catTab")[0].innerHTML = "";
+                $.ajax({
+                    url: "/DbInterface",
+                    data: {
+                        getProdGroupByDate: "getProdGroupByDate",
+                        date : date,
+                    },
+                    type: 'POST',
+                    success: function (data) {
+                        var obj = JSON.parse(data).prodGroupByDate;
+                        $('.catTab').append("<table class=\"main_section\" style=\"width: 100%\" border=\"0\" ></table>")
+                        for(var i=0; obj.length > i; i++){
+                            $('.main_section').append('<tr><td>'+obj[i][0]+'</td><td>'+obj[i][1]+'</td></tr>');
+                        }
+                    }
+                })
+            }
         });
     </script>
 </head>

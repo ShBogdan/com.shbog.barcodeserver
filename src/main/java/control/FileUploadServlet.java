@@ -109,6 +109,7 @@ public class FileUploadServlet extends HttpServlet {
             throws ServletException, IOException {
         if(request.getParameter("removeFile")!=null){
             System.out.println("present");
+            removeImage(request.getServletContext().getRealPath("") + request.getParameter("removeFile"));
         }else{
             System.out.println("empty");
             processRequest(request, response);

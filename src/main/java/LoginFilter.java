@@ -20,7 +20,7 @@ public class LoginFilter implements javax.servlet.Filter {
             return;
         }
         if (path.equals("/barcodeinfo")){
-            RequestDispatcher dispatcher = servletRequest.getRequestDispatcher("/jsp/barcodeinfo.jsp");
+            RequestDispatcher dispatcher = servletRequest.getRequestDispatcher("/DbInterface");
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }
