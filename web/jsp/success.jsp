@@ -47,11 +47,12 @@
     </style>
     <script src="//code.jquery.com/jquery-1.12.3.js"></script>
     <%--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--%>
-    <script src="/js/dataTables.js"></script>
-    <script src="/js/barcoder.js"></script>
+    <script src="${pageContext.request.contextPath}/js/dataTables.js"></script>
+    <script src="${pageContext.request.contextPath}/js/barcoder.js"></script>
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script>
+        var urlDb = "${pageContext.request.contextPath}/DbInterface";
         $(document).ready(function () {
             window.imageId = 0;
             window.isEdit = false;
@@ -108,7 +109,7 @@
                     fill_main_section();
                     $(".addSection").on("click", "#addSection", (function () {
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {
                                 addSection: "addSection",
                                 sectionName: $("#getInputSection").val()
@@ -128,7 +129,7 @@
                     //заполнить таблицу
                     function fill_main_section() {
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {
                                 getSection: "getSection"
                             },
@@ -138,7 +139,6 @@
                                 $("#main_section").append(data);
                             },
                             error: function (request, status, error) {
-                                alert("Error: Лажа");
                             }
                         })
                     }
@@ -151,7 +151,7 @@
                         }
                         if (this.className === "remove-" + _id) {
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeSection: "removeSection",
                                     sectionId: _id
@@ -174,7 +174,7 @@
                                     OK: function () {
                                         $(this).dialog("destroy"),
                                                 $.ajax({
-                                                    url: "/DbInterface",
+                                                    url: urlDb,
                                                     data: {
                                                         renameSection: "renameSection",
                                                         newName: $(".placeholder_rename").val(),
@@ -207,7 +207,7 @@
                                     OK: function () {
                                         $(this).dialog("destroy"),
                                                 $.ajax({
-                                                    url: "/DbInterface",
+                                                    url: urlDb,
                                                     data: {
                                                         addCategory: "addCategory",
                                                         catName: $(".placeholder_addCategory").val(),
@@ -234,7 +234,7 @@
                         }
                         if (this.className === "removeCat") {
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeCat: "removeCat",
                                     catId: _id_cat
@@ -257,7 +257,7 @@
                                     OK: function () {
                                         $(this).dialog("destroy"),
                                                 $.ajax({
-                                                    url: "/DbInterface",
+                                                    url: urlDb,
                                                     data: {
                                                         renameCat: "renameCat",
                                                         newName: $(".placeholder_renameCat").val(),
@@ -292,7 +292,7 @@
                     table = $('#products_table').DataTable({
                         processing: true,
                         ajax: {
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getProducts: "getProducts"},
                             dataSrc: "products",
                             type: "POST"
@@ -347,7 +347,7 @@
                             imageUrl = "/image/images/"+ prodId +".jpg";
 
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeProduct: "removeProduct",
                                     prod_id: prodId
@@ -361,7 +361,7 @@
                                 }
                             });
                             $.ajax({
-                                url: '../FileUploadServlet',
+                                url: '${pageContext.request.contextPath}/FileUploadServlet',
                                 data: {removeFile : imageUrl},
                                 type: 'POST',
                                 success: function(data){
@@ -511,7 +511,7 @@
                     e_table = $('#additive_table').DataTable({
                         processing: true,
                         ajax: {
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getComponents: "getComponents"},
                             dataSrc: "additive",
                             type: "POST"
@@ -572,7 +572,7 @@
                         while (i < 100) {
                             i++;
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeComponent: "removeComponent",
                                     additive_id: e_table.row('.selected').data()[0]
@@ -629,7 +629,7 @@
                     exclude = $('#exclude_table').DataTable({
                         processing: true,
                         ajax: {
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getExclude: "getExclude"},
                             dataSrc: "exclude",
                             type: "POST"
@@ -681,7 +681,7 @@
                         while (i < 100) {
                             i++;
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeExclude: "removeExclude",
                                     exclude_id: exclude.row('.selected').data()[0]
@@ -706,7 +706,7 @@
                     newprod_table = $('#newprod_table').DataTable({
                         processing: true,
                         ajax: {
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getNewProducts: "getNewProducts"},
                             dataSrc: "newproducts",
                             type: "POST"
@@ -767,7 +767,7 @@
                             i++;
 
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     removeTempProducts: "removeTempProducts",
                                     prod_id: newprod_table.row('.selected').data()[0]
@@ -782,7 +782,7 @@
                             });
 
                             $.ajax({
-                                url: '../FileUploadServlet',
+                                url: '${pageContext.request.contextPath}/FileUploadServlet',
                                 data: {removeFile : "/image/phoneimg/"+newprod_table.row('.selected').data()[2]+"_1.jpg"},
                                 type: 'POST',
                                 success: function(data){
@@ -790,7 +790,7 @@
                             });
 
                             $.ajax({
-                                url: '../FileUploadServlet',
+                                url: '${pageContext.request.contextPath}/FileUploadServlet',
                                 data: {removeFile : "/image/phoneimg/"+newprod_table.row('.selected').data()[2]+"_2.jpg"},
                                 type: 'POST',
                                 success: function(data){
@@ -898,7 +898,7 @@
             });
             $(document).on('click', '.saveAdmin', function () {
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         changeUserPass: "changeUserPass",
                         userID: "1",
@@ -917,7 +917,7 @@
             })
             $(document).on('click', '.saveOper', function () {
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         changeUserPass: "changeUserPass",
                         userID: "2",
@@ -987,7 +987,7 @@
                     buttons: {
                         OK: function () {
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     addExclude: "addExclude",
                                     excludeName: $(".placeholder_addExclude").val(),
@@ -1030,7 +1030,7 @@
                     buttons: {
                         OK: function () {
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     renameExclude: "renameExclude",
                                     excludeName: $(".placeholder_renameExclude").val(),
@@ -1069,8 +1069,8 @@
             $(document).on('click', '#edit_newproducts', function () {
                 edit_tableRow = newprod_table.row($(this).parents('tr')).data();
                 dell_edit_tableRow = newprod_table.row($(this).parents('tr'));
-                var rowTable  = dell_edit_tableRow.row( $(this).parents('tr')[0] ).data()[0];
-                cell = newprod_table.cell({ row: rowTable-1, column: 2 }).node();
+                var rowTable  = dell_edit_tableRow.row( $(this).parents('tr')[0] );
+                cell = newprod_table.cell({ row: rowTable[0][0], column: 2 }).node();
                 create_newProduct();
             });
             $(document).on('change', '.selectProdDate', function (){
@@ -1102,7 +1102,7 @@
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     createProduct: "createProduct",
                                     prodName: $(".prodName").val(),
@@ -1142,7 +1142,7 @@
                     open: function (event, ui) {
                         console.log("open");
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {
                                 getCategory: "getCategory",
                             },
@@ -1161,7 +1161,7 @@
                             }
                         });
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
@@ -1214,7 +1214,7 @@
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     changeProduct: "changeProduct",
                                     prod_id: edit_tableRow[0],
@@ -1256,18 +1256,17 @@
                         imageUrl = "/image/images/"+edit_tableRow[0]+".jpg";
                         var reloadImage = imageUrl + "?t=" + new Date().getTime();
                         doesFileExist(imageUrl,
-                                function(){console.log("true")
+                                function(){
                                     $(".inputImg").attr("src",reloadImage);
                                     $(".x").show();
-                                    console.log("show " + imageUrl);
-                                }, function () {
+                                   }, function () {
                                     console.log("false")
                                     var blank="/image/bgr.jpg";
                                     $(".inputImg").attr("src",blank);
                                     $(".x").hide();
                                 })
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {
                                 getCategory: "getCategory",
                             },
@@ -1294,7 +1293,7 @@
                             }
                         });
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
@@ -1342,7 +1341,7 @@
 //                                return;
 //                            }
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     createProduct: "createProduct",
                                     prodName: $(".edit_prodName").val(),
@@ -1357,7 +1356,6 @@
                                 success: function (data) {
                                     if(parseInt(data, 10) != -1){
                                         dynamicUpload(parseInt(data, 10));
-                                        console.log("cell в" + cell)
                                         cell.style.backgroundColor = '#E3A9B8'
                                         $(".dialog_edit_product").dialog("close")
                                     }else{
@@ -1382,6 +1380,7 @@
                                     var blank="/image/bgr.jpg";
                                     $(".upload_inputImg_1").attr("src",blank);
                                 });
+
 
                         var uploadImg_2 = "/image/phoneimg/"+edit_tableRow[2]+"_2.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_2,
@@ -1432,7 +1431,7 @@
                                 });
 
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {
                                 getCategory: "getCategory",
                             },
@@ -1457,7 +1456,7 @@
                             }
                         });
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
@@ -1513,7 +1512,7 @@
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     createComponent: "createComponent",
                                     additiveNamber: $(".e_namber").val(),
@@ -1584,7 +1583,7 @@
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
-                                url: "/DbInterface",
+                                url: urlDb,
                                 data: {
                                     changeComponent: "changeComponent",
                                     additiveId: edit_e_tableRow[0],
@@ -1642,7 +1641,7 @@
                         getCBox(edit_e_tableRow[9])
                         getComponentNames();
                         $.ajax({
-                            url: "/DbInterface",
+                            url: urlDb,
                             data: {getComponenNames: "getComponenNames"},
                             dataSrc: "additive",
                             type: "POST",
@@ -1672,7 +1671,7 @@
                 $(".compound button").remove();
                 $(".components button").remove();
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         getCompound: "getCompound",
                         catId: catId
@@ -1690,7 +1689,7 @@
 
             function fillProductCompound(_compoundProductID) {
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         getProductCompound: "getProductCompound",
                         compoundProductID: _compoundProductID
@@ -1727,7 +1726,7 @@
                 console.log("array = " + cBoxs.sort())
 
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {getCBox: 'getCBox'},
                     type: 'POST',
                     success: function (data) {
@@ -1811,7 +1810,7 @@
 
             function getComponentNames() {
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {getComponenNames: "getComponenNames"},
                     dataSrc: "additive",
                     type: "POST",
@@ -1835,7 +1834,7 @@
                     for (i = 0; i < componets_array_ID.length; i++) {
                         deferreds.push(
                                 $.ajax({
-                                    url: "/DbInterface",
+                                    url: urlDb,
                                     data: {
                                         getAdditiveByID: "getAdditiveByID",
                                         additiveID: componets_array_ID[i],
@@ -1871,7 +1870,7 @@
                 }
                 $.when.apply(null, fillArray()).done(function () {
                     $.ajax({
-                        url: "/DbInterface",
+                        url: urlDb,
                         data: {getCBox: 'getCBox'},
                         type: 'POST',
                         success: function (data) {
@@ -1892,7 +1891,7 @@
             function fillBarcodeList() {
                 listBarcode = [];
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {getBarcodes: "getBarcodes"},
                     dataSrc: "barcodes",
                     type: "POST",
@@ -1913,11 +1912,10 @@
                 var fileInput = $("[name='attachfile']")[0];
                 fd.append('file', fileInput.files[0] );
                 fd.append('imageId', imageId );
-                console.log(fileInput.files[0])
                 if(fileInput.files[0]){
                     console.log("save")
                     $.ajax({
-                        url: '../FileUploadServlet',
+                        url: '${pageContext.request.contextPath}/FileUploadServlet',
                         data: fd,
                         processData: false,
                         contentType: false,
@@ -1932,7 +1930,7 @@
                             console.log("remove")
                             fd.append('removeFile', imageUrl );
                             $.ajax({
-                                url: '../FileUploadServlet',
+                                url: '${pageContext.request.contextPath}/FileUploadServlet',
                                 data: fd,
                                 processData: false,
                                 contentType: false,
@@ -1959,13 +1957,13 @@
                 $.ajax({
                     url: urlToFile,
                     error: error,
-                    success: success
+                    success: success,
                 });
             }
 
             function fillProdGroupDate() {
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         getProdGroupDate: "getProdGroupDate",
                     },
@@ -1984,7 +1982,7 @@
             function fillProdGroupByDate(date) {
                 document.getElementsByClassName("catTab")[0].innerHTML = "";
                 $.ajax({
-                    url: "/DbInterface",
+                    url: urlDb,
                     data: {
                         getProdGroupByDate: "getProdGroupByDate",
                         date : date,
@@ -2007,7 +2005,7 @@
     <tbody>
     <tr>
         <td class="menuItem"></td>
-        <td style="text-align: right;"><text class="adminButton">${username}&nbsp</text><a href="../LogoutServlet"><button class="button">Выход</button></a></td>
+        <td style="text-align: right;"><text class="adminButton">${username}&nbsp</text><a href="${pageContext.request.contextPath}/LogoutServlet"><button class="button">Выход</button></a></td>
     </tr>
     </tbody>
 </table>

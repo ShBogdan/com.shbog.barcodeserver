@@ -37,10 +37,11 @@
         }
     </style>
     <script>
+        var urlDb = "${pageContext.request.contextPath}/DbInterface";
         fillProdGroupDate();
         function fillProdGroupDate() {
             $.ajax({
-                url: "/DbInterface",
+                url: urlDb,
                 data: {
                     getProdGroupDate: "getProdGroupDate",
                 },

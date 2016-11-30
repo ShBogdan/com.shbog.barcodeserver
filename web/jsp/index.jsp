@@ -84,9 +84,9 @@
 
 <div class="login">
     <h1>Login!</h1>
-    <form action="../LoginServlet" method="post">
-        <input type="text" name="username" placeholder="Username" required="required" value="admin"/>
-        <input type="password" name="password" placeholder="Password" required="required" value="admin"/>
+    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
+        <input type="text" name="username" placeholder="Username" required="required"/>
+        <input type="password" name="password" placeholder="Password" required="required"/>
         <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
     </form>
     <h5>${message}</h5>

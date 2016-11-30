@@ -24,7 +24,11 @@ public class LoginFilter implements javax.servlet.Filter {
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }
+        try{
         filterChain.doFilter(servletRequest,servletResponse);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     public void destroy() {
     }

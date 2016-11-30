@@ -19,16 +19,15 @@ public class DbInterface extends HttpServlet {
         resp.setContentType("text;charset=UTF-8");
         PrintWriter out = resp.getWriter();
         DbHelper db = new DbHelper();
-        System.out.println("DbInterface doPost");
 
         try {
             if (null != req.getParameter("getBarcodes")) {
-                resp.setContentType("application/json;charset=UTF-8");
+//                resp.setContentType("application/json;charset=UTF-8");
                 db.getBarcodes(out);
                 return;
             }
             if (null != req.getParameter("getCategory")) {
-                resp.setContentType("application/json;charset=UTF-8");
+//                resp.setContentType("application/json;charset=UTF-8");
                 db.getCategory(out);
                 return;
             }

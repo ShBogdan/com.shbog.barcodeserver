@@ -13,7 +13,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
-
+        String url = req.getContextPath();
         String user = req.getParameter("username");
         String pass = req.getParameter("password");
         String perm = "0";
@@ -42,11 +42,7 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("username", user);
                 req.getSession().setAttribute("password", pass);
                 req.getSession().setAttribute("permission", perm);
-//                req.getSession().setAttribute("adminname", usersArray.get(0)[1]);
-//                req.getSession().setAttribute("adminpassword", usersArray.get(0)[2]);
-//                req.getSession().setAttribute("opername", usersArray.get(1)[1]);
-//                req.getSession().setAttribute("operpassword", usersArray.get(1)[2]);
-                resp.sendRedirect("/jsp/success.jsp");
+                resp.sendRedirect(url+"/jsp/success.jsp");
             } else {
                 RequestDispatcher rs = req.getRequestDispatcher("/jsp/index.jsp");
                 req.setAttribute("message", "Не верный пароль");

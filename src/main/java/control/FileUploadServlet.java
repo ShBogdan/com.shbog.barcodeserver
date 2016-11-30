@@ -47,7 +47,7 @@ public class FileUploadServlet extends HttpServlet {
         OutputStream out = null;
         InputStream filecontent = null;
         final PrintWriter writer = response.getWriter();
-
+        System.out.println("Путь к файлу: "+ path +"=>"+ File.separator +"=>" + fileId+"=>"+".jpg");
         try {
 
             out = new FileOutputStream(new File(path + File.separator + fileId+".jpg"));
@@ -108,7 +108,6 @@ public class FileUploadServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if(request.getParameter("removeFile")!=null){
-            System.out.println("present");
             removeImage(request.getServletContext().getRealPath("") + request.getParameter("removeFile"));
         }else{
             System.out.println("empty");
@@ -129,7 +128,8 @@ public class FileUploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if(request.getParameter("removeFile")!=null){
-            System.out.println("present");
+//            String s = request.getParameter("removeFile");
+//            removeImage(request.getServletContext().getRealPath("") + s.substring(s.indexOf("/image/images")));
             removeImage(request.getServletContext().getRealPath("") + request.getParameter("removeFile"));
         }else{
             System.out.println("empty");
