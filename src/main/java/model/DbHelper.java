@@ -35,41 +35,12 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-//    private  final String PASSWORD = "";
     private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
+
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
 //    private  final String NAME = "gbua_productsdb";
 //    private  final String PASSWORD = "df14a9c2xvn";
-
-    public static void main(String[] args) throws SQLException, ParseException, JSONException, IOException {
-//        DbHelper db = new DbHelper();
-
-
-//        db.parse("C:\\test2.xls");
-
-//        FileReader input = new FileReader("C:\\\\cat.txt");
-//        BufferedReader bufRead = new BufferedReader(input);
-//        String myLine = null;
-//        String count = "";
-//        while ( (myLine = bufRead.readLine()) != null)
-//        {
-//            if(!myLine.contains("\t")){
-//                db.createSection(myLine.trim());
-//                System.out.println(myLine.trim());
-//                String query = "SELECT LAST_INSERT_ID() as last_id from section;";
-//                Statement stmt = db.connection.createStatement();
-//                ResultSet resultSet = stmt.executeQuery(query);
-//                resultSet.next();
-//                count = resultSet.getString("last_id");
-//            }else{
-//                db.createCategory(myLine.trim(), count);
-//                System.out.println(myLine.trim());
-//            }
-//
-//        }
-
-    }
 
     public DbHelper() {
         try{
@@ -143,7 +114,7 @@ public class DbHelper {
                 prepSat.setString(2, s);
                 prepSat.execute();
             }
-            System.out.println("Список компонентов продукта до: " +input_components_ID);
+//            System.out.println("Список компонентов продукта до: " +input_components_ID);
 
             //получаем id добавленных компонентов
             for (String s : input_components_name) {
@@ -153,7 +124,7 @@ public class DbHelper {
                 resultSet.next();
                 input_components_ID.add(resultSet.getString("comp_id"));
             }
-            System.out.println("Список компонентов продукта после: " +input_components_ID);
+//            System.out.println("Список компонентов продукта после: " +input_components_ID);
 
             //создаем продукт до обновления input_components_ID
             String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, prod_date) VALUE (?,?,?,?,?);";
@@ -190,7 +161,7 @@ public class DbHelper {
         } catch (SQLException   e) {
             e.printStackTrace();
         } finally {
-            System.out.println("Запись:" + prodName + " добавлен");
+//            System.out.println("Запись:" + prodName + " добавлен");
             if(connection!=null)
                 try {
                     connection.close();
@@ -325,7 +296,7 @@ public class DbHelper {
                 _preparedStatement.setString(10, additiveId);
                 _preparedStatement.setString(11, resultSet.getString("comp_id"));
                 _preparedStatement.execute();
-                System.out.println("Изменяем");
+//                System.out.println("Изменяем");
             } else {
                 String tempStatement = "DELETE FROM component WHERE comp_id = ?";
                 PreparedStatement tempPreparedStatement = connection.prepareStatement(tempStatement);
@@ -333,8 +304,8 @@ public class DbHelper {
                 tempPreparedStatement.execute();
             }
         }
-        System.out.println(names.toString());
-        System.out.println(copyNames.toString());
+//        System.out.println(names.toString());
+//        System.out.println(copyNames.toString());
 
         //Создаем новые
         for (int i = 0; i < copyNames.size(); i++) {
@@ -487,7 +458,7 @@ public class DbHelper {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, exclude_id);
         preparedStatement.execute();
-        System.out.println("Запись:" + exclude_id +" удалена");
+//        System.out.println("Запись:" + exclude_id +" удалена");
         if(connection!=null)
             connection.close();
     }
@@ -497,7 +468,7 @@ public class DbHelper {
         preparedStatement.setString(1, catName);
         preparedStatement.setString(2, cat_id);
         preparedStatement.execute();
-        System.out.println("Запись:" + catName +" переименована");
+//        System.out.println("Запись:" + catName +" переименована");
         if(connection!=null)
             connection.close();
     }
@@ -516,7 +487,7 @@ public class DbHelper {
         preparedStatement.setString(1, secName);
         preparedStatement.setString(2, sectionId);
         preparedStatement.execute();
-        System.out.println("Запись:" + secName +" переименована");
+//        System.out.println("Запись:" + secName +" переименована");
         if(connection!=null)
             connection.close();
     }
@@ -689,7 +660,7 @@ public class DbHelper {
                 componArrId.add(resultSet.getString("compon"));
             }
         } catch (SQLException e) {
-            System.out.println("нет компонентов");
+            System.err.println("нет компонентов");
         }
         String listId = componArrId.toString().substring(1, componArrId.toString().length()-1).replaceAll("\\s+","");
         if(listId.length()>0){
@@ -967,7 +938,7 @@ public class DbHelper {
             String prod_date = resultSet.getString("prod_date");
             ja.put(prod_date);
             array.put(ja);
-            System.out.println(prod_date);
+//            System.out.println(prod_date);
 
         }
         try {
@@ -1000,7 +971,7 @@ public class DbHelper {
                 JSONArray ja = new JSONArray();
                 String cat_name = resultSet.getString("cat_name");
                 String count = resultSet.getString("count");
-                System.out.println(cat_name + " " + count);
+//                System.out.println(cat_name + " " + count);
                 ja.put(cat_name);
                 ja.put(count);
                 array.put(ja);
@@ -1013,7 +984,7 @@ public class DbHelper {
                 JSONArray ja = new JSONArray();
                 String cat_name = resultSet.getString("cat_name");
                 String count = resultSet.getString("count");
-                System.out.println(cat_name + " " + count);
+//                System.out.println(cat_name + " " + count);
                 ja.put(cat_name);
                 ja.put(count);
                 array.put(ja);
@@ -1051,7 +1022,7 @@ public class DbHelper {
         return userArray;
     }
     public void changeUserPass(String id, String user_name, String user_pass) throws SQLException {
-        System.out.println("changeUserPass");
+//        System.out.println("changeUserPass");
         String query = "UPDATE users SET user_name=?, user_pass=? WHERE user_id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, user_name);

@@ -904,7 +904,7 @@
                         alert("Данные изменены")
                     },
                     error: function (request, status, error) {
-                        alert("Error: Could not back1");
+                        alert("Error: Could not back");
                     }
                 });
             })
@@ -923,7 +923,7 @@
                         alert("Данные изменены")
                     },
                     error: function (request, status, error) {
-                        alert("Error: Could not back1");
+                        alert("Error: Could not back");
                     }
                 });
             })
@@ -936,7 +936,6 @@
                 edit_product();
             });
             $(document).on('change', '.selectCategory', function () {
-//                alert("run")
                 var selId;
                 $("select option:selected").each(function () {
                     selId = $(this).val()

@@ -22,7 +22,7 @@ public class DbInterface extends HttpServlet {
 
         try {
             if (null != req.getParameter("getBarcodes")) {
-//                resp.setContentType("application/json;charset=UTF-8");
+//                resp.setContentType("application/json;charset=UTF-8"); //будет глючит success
                 db.getBarcodes(out);
                 return;
             }
