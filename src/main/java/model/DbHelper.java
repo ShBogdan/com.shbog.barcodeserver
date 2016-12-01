@@ -35,8 +35,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-    private  final String PASSWORD = "";
-//    private  final String PASSWORD = "bitnami";
+//    private  final String PASSWORD = "";
+    private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
 //    private  final String NAME = "gbua_productsdb";
@@ -44,11 +44,6 @@ public class DbHelper {
 
     public static void main(String[] args) throws SQLException, ParseException, JSONException, IOException {
 //        DbHelper db = new DbHelper();
-
-//        Date dNow = new Date( );
-//        SimpleDateFormat ft = new SimpleDateFormat ("yyyy/MM/dd");
-//        System.out.println(ft.format(dNow));
-
 
 
 //        db.parse("C:\\test2.xls");
@@ -1069,7 +1064,7 @@ public class DbHelper {
     public void addFile(PrintWriter out){System.out.println("addFile");}
 
 
-
+//parsing
 //    public void createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String type) throws SQLException {
 //        //создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
 //        List<String> names = Arrays.asList(additiveName.split(";"));
@@ -1237,49 +1232,4 @@ public class DbHelper {
 //                    '}';
 //        }
 //    }
-
 }
-//****************************************************Additive==Component
-//    public void createForeigners(int cat, int prod, int comp) throws SQLException {
-//        String statement = "INSERT INTO foreigners(cat_frk, prod_frk, com_frk) VALUE (?, ?, ?)";
-//        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-//        preparedStatement.setInt(1, cat);
-//        preparedStatement.setInt(2, prod);
-//        preparedStatement.setInt(3, comp);
-//        preparedStatement.execute();
-//        System.out.println("Запись ключи добавлена");
-//    }
-//
-//    public void removeForeigners(int cat, int prod, int comp) throws SQLException {
-//        String statement = "DELETE FROM foreigners WHERE cat_frk = ? AND prod_frk = ? AND com_frk = ?";
-//        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-//        preparedStatement.setInt(1, cat);
-//        preparedStatement.setInt(2, prod);
-//        preparedStatement.setInt(3, comp);
-//        preparedStatement.execute();
-//        System.out.println("Запись ключи удалена ");
-//    }
-////////////////help
-
-//        Statement statement = connection.createStatement();
-//        statement.execute("DELETE FROM categories WHERE cat_name = " + cat);
-
-//            ResultSet resultSet = statement.executeQuery();//select
-//            while (resultSet.next()){
-// первая строчка и дальше
-//                resultSet.get...(1); //вернет первую колонку не строку! можно гет стринг и имя колонки
-//                resultSet.get...(2); //вернет первую колонку не строку!
-//            }
-
-//           int i = statement.executeUpdate(); //insert update delete
-
-//            statement.addBatch(); // несколько запросов по очереди ->
-//            statement.executeBatch()
-//            statement.clearBatch();//почистить запросы потом добавить новые
-
-//            final String PREPARE_STAT = "INSERT INTO mytab VALUE (?,?,?,?)";
-//            PreparedStatement preparedStatement = connection.prepareStatement(PREPARE_STAT);
-//            preparedStatement.setInt("Номер/имя столбика", "значение");
-//            preparedStatement.setBlob(1, new FileInputStream("имя файла png")); //в бвзе поле longblob
-//            preparedStatement.execute();
-

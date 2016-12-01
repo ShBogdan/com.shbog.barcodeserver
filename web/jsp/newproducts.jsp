@@ -166,7 +166,7 @@
         $(".x").show().css("margin-right","10px");
     }
     function closeImage(){
-        var blank="/image/bgr.jpg";
+        var blank="${pageContext.request.contextPath}/image/bgr.jpg";
         $(".inputImg").attr("src",blank);
         $(".x").hide();
         var el = $('.image');

@@ -146,7 +146,7 @@
         }
         var file = document.getElementsByClassName('image')[0].files[0];
         var reader  = new FileReader();
-        console.log(file)
+//        console.log(file)
         if(file.size > 1200000){
             alert("фото не может весить больше 1 мегабайта");
             closeImage();
@@ -161,7 +161,7 @@
         $(".x").show().css("margin-right","10px");
     }
     function closeImage(){
-        var blank="/image/bgr.jpg";
+        var blank="${pageContext.request.contextPath}/image/bgr.jpg";
         $(".inputImg").attr("src",blank);
         $(".x").hide();
         var el = $('.image');

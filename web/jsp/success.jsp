@@ -13,7 +13,9 @@
     }
 %>
 <html>
+
 <head>
+
     <title>Success Page</title>
     <style type="text/css">
         .warning {
@@ -344,7 +346,7 @@
                         while (i < 100) {
                             i++;
                             var prodId = table.row('.selected').data()[0];
-                            imageUrl = "/image/images/"+ prodId +".jpg";
+                            imageUrl = "${pageContext.request.contextPath}/image/images/"+ prodId +".jpg";
 
                             $.ajax({
                                 url: urlDb,
@@ -783,20 +785,11 @@
 
                             $.ajax({
                                 url: '${pageContext.request.contextPath}/FileUploadServlet',
-                                data: {removeFile : "/image/phoneimg/"+newprod_table.row('.selected').data()[2]+"_1.jpg"},
+                                data: {removeNewFile : "${pageContext.request.contextPath}/image/phoneimg/"+newprod_table.row('.selected').data()[2]},
                                 type: 'POST',
                                 success: function(data){
                                 }
                             });
-
-                            $.ajax({
-                                url: '${pageContext.request.contextPath}/FileUploadServlet',
-                                data: {removeFile : "/image/phoneimg/"+newprod_table.row('.selected').data()[2]+"_2.jpg"},
-                                type: 'POST',
-                                success: function(data){
-                                }
-                            });
-
                             newprod_table.row('.selected').remove().draw(false);
 
                         }
@@ -1253,7 +1246,7 @@
                         }
                     },
                     open: function (event, ui) {
-                        imageUrl = "/image/images/"+edit_tableRow[0]+".jpg";
+                        imageUrl = "${pageContext.request.contextPath}/image/images/"+edit_tableRow[0]+".jpg";
                         var reloadImage = imageUrl + "?t=" + new Date().getTime();
                         doesFileExist(imageUrl,
                                 function(){
@@ -1261,7 +1254,7 @@
                                     $(".x").show();
                                    }, function () {
                                     console.log("false")
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".inputImg").attr("src",blank);
                                     $(".x").hide();
                                 })
@@ -1372,60 +1365,60 @@
                         }
                     },
                     open: function (event, ui) {
-                        var uploadImg_1 = "/image/phoneimg/"+edit_tableRow[2]+"_1.jpg"+ "?t=" + new Date().getTime();
+                        var uploadImg_1 = "${pageContext.request.contextPath}/image/phoneimg/"+edit_tableRow[2]+"_1.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_1,
                                 function () {
                                     $(".upload_inputImg_1").attr("src",uploadImg_1);
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".upload_inputImg_1").attr("src",blank);
                                 });
 
 
-                        var uploadImg_2 = "/image/phoneimg/"+edit_tableRow[2]+"_2.jpg"+ "?t=" + new Date().getTime();
+                        var uploadImg_2 = "${pageContext.request.contextPath}/image/phoneimg/"+edit_tableRow[2]+"_2.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_2,
                                 function () {
                                     $(".upload_inputImg_2").attr("src",uploadImg_2);
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".upload_inputImg_2").attr("src",blank)
                                 });
 
-                        var uploadImg_3 = "/image/phoneimg/"+edit_tableRow[2]+"_3.jpg"+ "?t=" + new Date().getTime();
+                        var uploadImg_3 = "${pageContext.request.contextPath}/image/phoneimg/"+edit_tableRow[2]+"_3.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_3,
                                 function () {
                                     $(".upload_inputImg_3").attr("src",uploadImg_3);
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".upload_inputImg_3").attr("src",blank);
                                 });
 
 
-                        var uploadImg_4 = "/image/phoneimg/"+edit_tableRow[2]+"_4.jpg"+ "?t=" + new Date().getTime();
+                        var uploadImg_4 = "${pageContext.request.contextPath}/image/phoneimg/"+edit_tableRow[2]+"_4.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_4,
                                 function () {
                                     $(".upload_inputImg_4").attr("src",uploadImg_4);
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".upload_inputImg_4").attr("src",blank)
                                 });
 
-                        var uploadImg_5 = "/image/phoneimg/"+edit_tableRow[2]+"_5.jpg"+ "?t=" + new Date().getTime();
+                        var uploadImg_5 = "${pageContext.request.contextPath}/image/phoneimg/"+edit_tableRow[2]+"_5.jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(uploadImg_5,
                                 function () {
                                     $(".upload_inputImg_5").attr("src",uploadImg_5);
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".upload_inputImg_5").attr("src",blank)
                                 });
 
-                        imageUrl = "/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();
+                        imageUrl = "${pageContext.request.contextPath}/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();
                         doesFileExist(imageUrl,
                                 function () {
                                     $(".inputImg").attr("src",imageUrl);
                                     $(".x").show();
                                 }, function () {
-                                    var blank="/image/bgr.jpg";
+                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".inputImg").attr("src",blank);
                                     $(".x").hide();
                                 });
@@ -1759,7 +1752,7 @@
                 $(".prodCode").val('');
                 $(".selectCategory").find('option').remove();
 
-                var blank="/image/bgr.jpg";
+                var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                 $("#inputImg").attr("src",blank);
                 $("#x").hide();
 
@@ -1925,9 +1918,8 @@
                         }
                     });
                 }else {
-                    if($(".inputImg").attr('src') == "/image/bgr.jpg"){
+                    if($(".inputImg").attr('src') == "${pageContext.request.contextPath}/image/bgr.jpg"){
                         doesFileExist(imageUrl,function () {
-                            console.log("remove")
                             fd.append('removeFile', imageUrl );
                             $.ajax({
                                 url: '${pageContext.request.contextPath}/FileUploadServlet',
@@ -1945,7 +1937,7 @@
             }
 
             function closeImage(){
-                var blank="/image/bgr.jpg";
+                var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                 $(".inputImg").attr("src",blank);
                 $(".x").hide();
                 var el = $('.image');
