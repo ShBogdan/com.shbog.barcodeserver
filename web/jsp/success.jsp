@@ -1083,11 +1083,11 @@
                     position:['middle',10],
                     buttons: {
                         OK: function () {
-//                            if (Barcoder.validate( $(".prodCode").val() )) {
-//                            } else {
-//                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
-//                                return;
-//                            }
+                            if (Barcoder.validate( $(".prodCode").val() )) {
+                            } else {
+                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
+                                return;
+                            }
                             var obj = new Object();
                             for (var i = 0, len = varButton.length; i < len; i++){
                                 obj['name_'+i]=varButton[i];
@@ -1195,11 +1195,11 @@
                     position:['middle',10],
                     buttons: {
                         OK: function () {
-//                            if (Barcoder.validate( $(".edit_prodCode").val() )) {
-//                            } else {
-//                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
-//                                return;
-//                            }
+                            if (Barcoder.validate( $(".edit_prodCode").val() )) {
+                            } else {
+                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
+                                return;
+                            }
                             var obj = new Object();
                             for (var i = 0, len = varButton.length; i < len; i++){
                                 obj['name_'+i]=varButton[i];
@@ -1327,11 +1327,11 @@
                     position:['middle',10],
                     buttons: {
                         OK: function () {
-                            //                            if (Barcoder.validate( $(".prodCode").val() )) {
-//                            } else {
-//                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
-//                                return;
-//                            }
+                        if (Barcoder.validate( $(".prodCode").val() )) {
+                            } else {
+                                alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
+                                return;
+                            }
                             $.ajax({
                                 url: urlDb,
                                 data: {
