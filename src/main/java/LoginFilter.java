@@ -24,6 +24,12 @@ public class LoginFilter implements javax.servlet.Filter {
             dispatcher.forward(servletRequest, servletResponse);
             return;
         }
+        if (path.equals("/FileUploadServlet")){
+            System.out.println("filter FileUploadServlet");
+            RequestDispatcher dispatcher = servletRequest.getRequestDispatcher("/FileUploadServlet");
+            dispatcher.forward(servletRequest, servletResponse);
+            return;
+        }
         try{
         filterChain.doFilter(servletRequest,servletResponse);
         }catch (Exception e){

@@ -35,7 +35,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-    private  final String PASSWORD = "bitnami";
+    private  final String PASSWORD = "";
+//    private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
@@ -511,6 +512,31 @@ public class DbHelper {
             e.printStackTrace();
         }
         out.println(array);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
+    public PrintWriter getCategoryJSONobj(PrintWriter out) throws SQLException {
+        String query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        while (resultSet.next()){
+            JSONArray ja = new JSONArray();
+            String id = String.valueOf(resultSet.getInt("cat_id"));
+            String cat_name = resultSet.getString("cat_name");
+            ja.put(id);
+            ja.put(cat_name);
+            array.put(ja);
+        }
+        try {
+            result.put("category", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
         out.flush();
         if(connection!=null)
             connection.close();

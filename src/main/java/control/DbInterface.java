@@ -27,8 +27,11 @@ public class DbInterface extends HttpServlet {
                 return;
             }
             if (null != req.getParameter("getCategory")) {
-//                resp.setContentType("application/json;charset=UTF-8");
                 db.getCategory(out);
+                return;
+            }
+            if (null != req.getParameter("getCategoryJSONobj")) {
+                db.getCategoryJSONobj(out);
                 return;
             }
             if (null != req.getParameter("getSection")) {
