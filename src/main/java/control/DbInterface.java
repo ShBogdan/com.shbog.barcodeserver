@@ -198,8 +198,10 @@ public class DbInterface extends HttpServlet {
                 db.getProdGroupByDate(out, req.getParameter("date"));
                 return;
             }
-            if (null != req.getParameter("addFile")) {
-                db.addFile(out);
+            if (null != req.getParameter("createProdPhone")) {
+                if(req.getParameter("pass").equals("androidapppass")){
+                db.createProdPhone(req.getParameter("cat"), req.getParameter("code"));
+                }
                 return;
             }
         } catch (SQLException e) {
