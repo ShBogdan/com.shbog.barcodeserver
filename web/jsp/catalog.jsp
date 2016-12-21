@@ -102,4 +102,5 @@
 <div id="rename" title="Переименовать" hidden><input class = "placeholder_rename" placeholder="название каталога" type="text"></div>
 <div id="addCategory" title="Добавить" hidden><input class = "placeholder_addCategory" placeholder="название категории" type="text"></div>
 <div id="renameCat" title="Переименовать" hidden><input class = "placeholder_renameCat" placeholder="название категории" type="text"></div>
+<div id="remove" title="Удалить запись?" hidden><p id = "removeName"></p></div>
 </html>

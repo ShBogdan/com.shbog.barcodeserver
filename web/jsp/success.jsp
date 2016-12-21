@@ -148,30 +148,49 @@
                     $("#main_section").on("click", "td", (function () {
                         var _id = $(this).parent().parent().attr("id")
                         var _id_cat = $(this).parent().attr("id")
+                        var rName = $(this).parent("tr").children("td:first").text();
+                        var element = document.getElementById("removeName");
+                        element.innerHTML = rName;
+
                         if (this.className === "parent") {
                             $(".child-" + _id).toggle()
                         }
                         if (this.className === "remove-" + _id) {
-                            $.ajax({
-                                url: urlDb,
-                                data: {
-                                    removeSection: "removeSection",
-                                    sectionId: _id
+                            $("#remove").dialog({
+                                autoOpen: true,
+                                modal: true,
+                                buttons: {
+                                    OK: function () {
+                                        $(this).dialog("destroy");
+                                        $.ajax({
+                                            url: urlDb,
+                                            data: {
+                                                removeSection: "removeSection",
+                                                sectionId: _id
+                                            },
+                                            type: 'POST',
+                                            dataType: 'text',
+                                            success: function (output) {
+                                                $("#main_section tbody").remove(),
+                                                        fill_main_section()
+                                            },
+                                            error: function (request, status, error) {
+                                                alert("Error: Could not back");
+                                            }
+                                        })
+
+                                    },
+                                    CANSEL: function () {
+                                        $(this).dialog("close")
+                                    }
                                 },
-                                type: 'POST',
-                                dataType: 'text',
-                                success: function (output) {
-                                    $("#main_section tbody").remove(),
-                                            fill_main_section()
-                                },
-                                error: function (request, status, error) {
-                                    alert("Error: Could not back");
-                                }
+                                width: 300
                             })
                         }
                         if (this.className === "rename-" + _id) {
                             $("#rename").dialog({
                                 autoOpen: true,
+                                modal: true,
                                 buttons: {
                                     OK: function () {
                                         $(this).dialog("destroy"),
@@ -205,6 +224,7 @@
                         if (this.className === "addCategory-" + _id) {
                             $("#addCategory").dialog({
                                 autoOpen: true,
+                                modal: true,
                                 buttons: {
                                     OK: function () {
                                         $(this).dialog("destroy"),
@@ -235,26 +255,40 @@
                             })
                         }
                         if (this.className === "removeCat") {
-                            $.ajax({
-                                url: urlDb,
-                                data: {
-                                    removeCat: "removeCat",
-                                    catId: _id_cat
+                            $("#remove").dialog({
+                                autoOpen: true,
+                                modal: true,
+                                buttons: {
+                                    OK: function () {
+                                        $(this).dialog("destroy");
+                                        $.ajax({
+                                            url: urlDb,
+                                            data: {
+                                                removeCat: "removeCat",
+                                                catId: _id_cat
+                                            },
+                                            type: 'POST',
+                                            dataType: 'text',
+                                            success: function (output) {
+                                                $("#main_section tbody").remove(),
+                                                        fill_main_section()
+                                            },
+                                            error: function (request, status, error) {
+                                                alert("Error: Could not back");
+                                            }
+                                        })
+                                   },
+                                    CANSEL: function () {
+                                        $(this).dialog("close")
+                                    }
                                 },
-                                type: 'POST',
-                                dataType: 'text',
-                                success: function (output) {
-                                    $("#main_section tbody").remove(),
-                                            fill_main_section()
-                                },
-                                error: function (request, status, error) {
-                                    alert("Error: Could not back");
-                                }
+                                width: 300
                             })
                         }
                         if (this.className === "renameCat") {
                             $("#renameCat").dialog({
                                 autoOpen: true,
+                                modal: true,
                                 buttons: {
                                     OK: function () {
                                         $(this).dialog("destroy"),
@@ -1091,6 +1125,7 @@
                             var obj = new Object();
                             for (var i = 0, len = varButton.length; i < len; i++){
                                 obj['name_'+i]=varButton[i];
+                                console.log(varButton[i]);
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
@@ -1251,7 +1286,7 @@
                                 function(){
                                     $(".inputImg").attr("src",reloadImage);
                                     $(".x").show();
-                                   }, function () {
+                                }, function () {
                                     console.log("false")
                                     var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".inputImg").attr("src",blank);
@@ -1327,11 +1362,18 @@
                     position:['middle',10],
                     buttons: {
                         OK: function () {
-                        if (Barcoder.validate( $(".edit_prodCode").val() )) {
+                            if (Barcoder.validate( $(".edit_prodCode").val() )) {
                             } else {
                                 alert("Код не соответствует стандарту:  EAN8, EAN12, EAN13, EAN14, EAN18, GTIN12, GTIN13, GTIN14")
                                 return;
                             }
+                            var obj = new Object();
+                            for (var i = 0, len = varButton.length; i < len; i++){
+                                obj['name_'+i]=varButton[i];
+                                console.log(varButton[i]);
+                            }
+                            var jsonString= JSON.stringify(obj);
+
                             $.ajax({
                                 url: urlDb,
                                 data: {
@@ -1341,7 +1383,7 @@
                                     prodCode: $(".edit_prodCode").val(),
                                     prodCategory: $(".edit_selectCategory").val(),
                                     componets_array_ID: componets_array_ID.toString(),
-                                    varButton: varButton.toString()
+                                    varButton: jsonString.toString()
                                 },
                                 type: 'POST',
                                 dataType: 'text',

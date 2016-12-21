@@ -35,8 +35,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-//    private  final String PASSWORD = "";
-    private  final String PASSWORD = "bitnami";
+    private  final String PASSWORD = "";
+//    private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
