@@ -103,6 +103,8 @@
             });
             $(document).on('click', '#btn1', function () {
                 $('#menu').load("info.jsp");
+                fillBarcodeList();
+
 
             });
             $(document).on('click', '#btn2', function () {
@@ -1221,7 +1223,7 @@
             };
 
             var edit_product = function () {
-                var oldCodeValue;
+//                var oldCodeValue;
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
@@ -1313,7 +1315,7 @@
                                 $(".edit_prodProvider").val(edit_tableRow[2]);
                                 $(".edit_prodName").val(edit_tableRow[3]);
                                 $(".edit_prodCode").val(edit_tableRow[4]);
-                                oldCodeValue = $(".edit_prodCode").val();
+//                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1353,7 +1355,7 @@
             };
 
             var create_newProduct = function () {
-                var oldCodeValue;
+//                var oldCodeValue;
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
@@ -1453,16 +1455,16 @@
                                     $(".upload_inputImg_5").attr("src",blank)
                                 });
 
-                        imageUrl = "${pageContext.request.contextPath}/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();
-                        doesFileExist(imageUrl,
-                                function () {
-                                    $(".inputImg").attr("src",imageUrl);
-                                    $(".x").show();
-                                }, function () {
-                                    var blank="${pageContext.request.contextPath}/image/bgr.jpg";
-                                    $(".inputImg").attr("src",blank);
-                                    $(".x").hide();
-                                });
+                        <%--imageUrl = "${pageContext.request.contextPath}/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();--%>
+                        <%--doesFileExist(imageUrl,--%>
+                                <%--function () {--%>
+                                    <%--$(".inputImg").attr("src",imageUrl);--%>
+                                    <%--$(".x").show();--%>
+                                <%--}, function () {--%>
+                                    <%--var blank="${pageContext.request.contextPath}/image/bgr.jpg";--%>
+                                    <%--$(".inputImg").attr("src",blank);--%>
+                                    <%--$(".x").hide();--%>
+                                <%--});--%>
 
                         $.ajax({
                             url: urlDb,
@@ -1479,11 +1481,10 @@
 //                                    $('.edit_selectCategory option:contains(temp)').prop('selected',true);
 
                                 })
-                                fillProductCompound(edit_tableRow[0])
                                 $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 $(".edit_prodCode").val(edit_tableRow[2]);
-                                oldCodeValue = $(".edit_prodCode").val();
+//                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
