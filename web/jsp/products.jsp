@@ -180,8 +180,9 @@
     <tr>
         <th>id</th>
         <th>Категория</th>
-        <th>Производитель</th>
+        <th>Тип</th>
         <th>Название</th>
+        <th>Производитель</th>
         <th>Штрихкод</th>
         <th></th>
         <th></th>
@@ -191,8 +192,9 @@
     <tr>
         <th>id</th>
         <th class="searchable">Категория</th>
-        <th class="searchable">Производитель</th>
+        <th class="searchable">Тип</th>
         <th class="searchable">Название</th>
+        <th class="searchable">Производитель</th>
         <th class="searchable">Штрихкод</th>
         <th></th>
         <th></th>
@@ -235,10 +237,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><input class="prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
+                        <td><input class="prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип" list="prod_type"/>
+                            <datalist id="prod_type"></datalist>
+                        </td>
                     </tr>
                     <tr>
-                        <td><input class="prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
+                        <td><textarea class="prodName" rows="2" style="width: 100%;" maxlength="155" type="text" placeholder="Название"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><input class="prodProvider" style="width: 100%;" maxlength="155" type="text" placeholder="Производитель" /></td>
                     </tr>
                     <tr>
                         <td><input class="prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>
@@ -316,10 +323,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><input class="edit_prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
+                        <td><input class="edit_prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип" list="edit_prod_type"/>
+                            <datalist id="edit_prod_type"></datalist></td>
                     </tr>
                     <tr>
-                        <td><input class="edit_prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
+                        <td><textarea class="edit_prodName" rows="2" style="width: 100%;" maxlength="155" type="text" placeholder="Название" ></textarea></td>
+                    </tr>
+                    <tr>
+                        <td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text" placeholder="Производитель" /></td>
                     </tr>
                     <tr>
                         <td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>

@@ -254,10 +254,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><input class="edit_prodName" style="width: 100%;" maxlength="50" type="text" placeholder="Название" /></td>
+                    <td><input class="edit_prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип" list="edit_prod_type"/>
+                        <datalist id="edit_prod_type"></datalist>
+                    </td>
                 </tr>
                 <tr>
-                    <td><input class="edit_prodProvider" style="width: 100%;" maxlength="50" type="text" placeholder="Производитель" /></td>
+                    <td><textarea class="edit_prodName" rows="2" style="width: 100%;" maxlength="155" type="text" placeholder="Название" ></textarea></td>
+                </tr>
+                <tr>
+                    <td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text" placeholder="Производитель" /></td>
                 </tr>
                 <tr>
                     <td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text" placeholder="штрих-код" /></td>

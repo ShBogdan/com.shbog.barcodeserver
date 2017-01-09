@@ -74,6 +74,7 @@
             var comp_index;
             var varBtn_index;
             var autocompleteInpComponents = [];
+            var autocompleteInpTypes = [];
             var componentGroup = [];
             var dictionaryAutoCompCompon = {};
             var cBoxs = [];
@@ -341,22 +342,24 @@
                         "columnDefs": [
                             {"targets": 0, "visible": false},
                             {"targets": 4, "wodht": "20%"},
+                            {"targets": 5, "wodht": "20%"},
                             {
                                 "targets": 6,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
                                 "data": null,
-                                "defaultContent": "<button id = 'select'>&#10003;</button>"
+                                "defaultContent": "<button id = 'edit'>&#8601;</button>"
                             },
                             {
-                                "targets": 5,
+                                "targets": 7,
                                 "orderable": false,
                                 "searchable": false,
                                 "width": "1%",
                                 "data": null,
-                                "defaultContent": "<button id = 'edit'>&#8601;</button>"
-                            }]
+                                "defaultContent": "<button id = 'select'>&#10003;</button>"
+                            }
+                           ]
 
                     });
 //                  Поиск по колонкам
@@ -977,6 +980,8 @@
                     selId = $(this).val()
                 });
                 fillCompound(selId);
+                fillProdType(selId, "prod_type");
+
             });
             $(document).on('change', '.edit_selectCategory', function () {
                 var selId;
@@ -984,6 +989,8 @@
                     selId = $(this).val()
                 });
                 fillCompound(selId)
+                fillProdType(selId, "edit_prod_type");
+
             });
             $(document).on('click', "#button_create_additive", function () {
                 $('.dialog_create_additive').prop('title', 'Создать добавку');
@@ -1135,6 +1142,7 @@
                                 data: {
                                     createProduct: "createProduct",
                                     prodName: $(".prodName").val(),
+                                    prodType: $(".prodType").val(),
                                     prodProvider: $(".prodProvider").val(),
                                     prodCode: $(".prodCode").val(),
                                     prodCategory: $(".selectCategory").val(),
@@ -1149,13 +1157,15 @@
                                         table.row.add([
                                             parseInt(data, 10),
                                             $(".selectCategory option:selected").text(),
-                                            $(".prodProvider").val(),
+                                            $(".prodType").val(),
                                             $(".prodName").val(),
+                                            $(".prodProvider").val(),
                                             $(".prodCode").val()
                                         ]).draw(false);
                                         $(".dialog_create_product").dialog("close")
 //                                        listBarcode.push($(".prodCode").val());
                                     }else{
+                                        //так же выбрасывает если не верно задана таблица в jsp
                                         alert('Такой код уже есть в базе')
                                     }
                                 },
@@ -1184,6 +1194,7 @@
                                             .text(element[1]));
                                 })
                                 fillCompound($(".selectCategory").val())
+                                fillProdType($(".selectCategory").val(), "prod_type");
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1212,6 +1223,29 @@
                                 document.getElementById('components').innerHTML = options;
                             }
                         });
+//                        $.ajax({
+//                            url: urlDb,
+//                            data: {getComponenNames: "getComponenNames"},
+//                            dataSrc: "additive",
+//                            type: "POST",
+//                            success: function (data) {
+//                                var compName;
+//                                var compId;
+//                                var obj = JSON.parse(data).additive;
+//                                for (var i = 0, len = obj.length; i < len; i++) {
+//                                    compName = obj[i][3];
+//                                    compId = obj[i][0];
+//                                    dictionaryAutoCompCompon[compName] = compId;
+//                                    autocompleteInpTypes.push(compName);
+//                                };
+//                                autocompleteInpTypes.sort();
+//                                var options = '';
+//                                for (var i = 0; i < autocompleteInpTypes.length; i++) {
+//                                    options += '<option value="' + autocompleteInpTypes[i] + '" />'
+//                                }
+//                                document.getElementById('prod_type').innerHTML = options;
+//                            }
+//                        });
                     },
                     close: function (event, ui) {
                         $(".dialog_create_product").dialog("close")
@@ -1248,6 +1282,7 @@
                                     changeProduct: "changeProduct",
                                     prod_id: edit_tableRow[0],
                                     prodName: $(".edit_prodName").val(),
+                                    prodType: $(".edit_prodType").val(),
                                     prodProvider: $(".edit_prodProvider").val(),
                                     prodCode: $(".edit_prodCode").val(),
                                     prodCategory: $(".edit_selectCategory").val(),
@@ -1262,8 +1297,9 @@
                                         table.row.add([
                                             edit_tableRow[0],
                                             $(".edit_selectCategory option:selected").text(),
-                                            $(".edit_prodProvider").val(),
+                                            $(".edit_prodType").val(),
                                             $(".edit_prodName").val(),
+                                            $(".edit_prodProvider").val(),
                                             $(".edit_prodCode").val()
                                         ]).draw(false);
                                         table.row(dell_edit_tableRow).remove().draw(false);
@@ -1312,9 +1348,11 @@
                                 fillProductCompound(edit_tableRow[0])
                                 $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
-                                $(".edit_prodProvider").val(edit_tableRow[2]);
+                                fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
+                                $(".edit_prodType").val(edit_tableRow[2]);
                                 $(".edit_prodName").val(edit_tableRow[3]);
-                                $(".edit_prodCode").val(edit_tableRow[4]);
+                                $(".edit_prodProvider").val(edit_tableRow[4]);
+                                $(".edit_prodCode").val(edit_tableRow[5]);
 //                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
@@ -1355,7 +1393,6 @@
             };
 
             var create_newProduct = function () {
-//                var oldCodeValue;
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
@@ -1381,6 +1418,7 @@
                                 data: {
                                     createProduct: "createProduct",
                                     prodName: $(".edit_prodName").val(),
+                                    prodType: $(".edit_prodType").val(),
                                     prodProvider: $(".edit_prodProvider").val(),
                                     prodCode: $(".edit_prodCode").val(),
                                     prodCategory: $(".edit_selectCategory").val(),
@@ -1455,17 +1493,6 @@
                                     $(".upload_inputImg_5").attr("src",blank)
                                 });
 
-                        <%--imageUrl = "${pageContext.request.contextPath}/image/images/"+edit_tableRow[0]+".jpg"+ "?t=" + new Date().getTime();--%>
-                        <%--doesFileExist(imageUrl,--%>
-                                <%--function () {--%>
-                                    <%--$(".inputImg").attr("src",imageUrl);--%>
-                                    <%--$(".x").show();--%>
-                                <%--}, function () {--%>
-                                    <%--var blank="${pageContext.request.contextPath}/image/bgr.jpg";--%>
-                                    <%--$(".inputImg").attr("src",blank);--%>
-                                    <%--$(".x").hide();--%>
-                                <%--});--%>
-
                         $.ajax({
                             url: urlDb,
                             data: {
@@ -1484,6 +1511,7 @@
                                 $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 $(".edit_prodCode").val(edit_tableRow[2]);
+                                fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
 //                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
@@ -1705,6 +1733,8 @@
                 componets_array_ID = [];
                 $(".compound button").remove();
                 $(".components button").remove();
+                $(".dobavki p").remove();
+                $(".ogranicenija p").remove();
                 $.ajax({
                     url: urlDb,
                     data: {
@@ -1792,6 +1822,7 @@
                 $(".prodName").val('');
                 $(".prodProvider").val('');
                 $(".prodCode").val('');
+                $(".prodType").val('');
                 $(".selectCategory").find('option').remove();
 
                 var blank="${pageContext.request.contextPath}/image/bgr.jpg";
@@ -1815,6 +1846,7 @@
                 $(".edit_prodName").val('');
                 $(".edit_prodProvider").val('');
                 $(".edit_prodCode").val('');
+                $(".edit_prodType").val('');
                 $(".edit_selectCategory").find('option').remove();
                 if ($(".dialog_edit_product").dialog("isOpen")) {
                     $(".dialog_edit_product").dialog("destroy");
@@ -2011,6 +2043,34 @@
                         }
                     }
                 })
+            }
+
+            function fillProdType(catId, prod_type) {
+                autocompleteInpTypes = [];
+                $(".edit_prodType").val('');
+                $(".prodType").val('');
+                $.ajax({
+                    url: urlDb,
+                    data: {getProdType: "getProdType",
+                           setCategory: catId },
+                    dataSrc: "prodtype",
+                    type: "POST",
+                    success: function (data) {
+                        var typeName;
+                        var obj = JSON.parse(data).prodtype;
+                        for (var i = 0, len = obj.length; i < len; i++) {
+                            typeName = obj[i][0];
+                            autocompleteInpTypes.push(typeName);
+                        };
+                        autocompleteInpTypes.sort();
+                        var options = '';
+                        for (var i = 0; i < autocompleteInpTypes.length; i++) {
+                            options += '<option value="' + autocompleteInpTypes[i] + '" />'
+                            console.log(autocompleteInpTypes[i]);
+                        }
+                        document.getElementById(prod_type).innerHTML = options;
+                    }
+                });
             }
 
             function fillProdGroupByDate(date) {

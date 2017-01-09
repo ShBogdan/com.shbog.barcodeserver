@@ -49,7 +49,8 @@ public class DbInterface extends HttpServlet {
                                  req.getParameter("prodCode"),
                                  req.getParameter("componets_array_ID"),
                                  req.getParameter("varButton"),
-                                 out
+                                 out,
+                                 req.getParameter("prodType")
                 );
                 return;
             }
@@ -98,7 +99,8 @@ public class DbInterface extends HttpServlet {
                                  req.getParameter("prodCode"),
                                  req.getParameter("componets_array_ID"),
                                  req.getParameter("varButton"),
-                                 out);
+                                 out,
+                                 req.getParameter("prodType"));
                 return;
             }
             if (null != req.getParameter("addSection")) {
@@ -168,6 +170,10 @@ public class DbInterface extends HttpServlet {
             }
             if (null != req.getParameter("getComponenNames")) {
                 db.getComponenNames(out);
+                return;
+            }
+            if (null != req.getParameter("getProdType")) {
+                db.getProdType(out, req.getParameter("setCategory"));
                 return;
             }
             if (null != req.getParameter("removeProduct")) {
