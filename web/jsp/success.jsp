@@ -48,6 +48,7 @@
         .adminButton:hover{ color: #e34b4e; text-shadow: 0 12 16px rgba(0,0,0,0.24); letter-spacing:1px;}
     </style>
     <script src="//code.jquery.com/jquery-1.12.3.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <%--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--%>
     <script src="${pageContext.request.contextPath}/js/dataTables.js"></script>
     <script src="${pageContext.request.contextPath}/js/barcoder.js"></script>
@@ -1346,7 +1347,12 @@
 
                                 })
                                 fillProductCompound(edit_tableRow[0])
-                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
+//                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] +'")').prop('selected', true);
+                                var selectedCat = edit_tableRow[1];
+                                $('.edit_selectCategory option:contains("'+selectedCat+'")')
+                                        .filter((i, el) => el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim())
+                                .prop('selected', true);
+
                                 fillCompound($(".edit_selectCategory").val())
                                 fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
                                 $(".edit_prodType").val(edit_tableRow[2]);
@@ -1508,7 +1514,11 @@
 //                                    $('.edit_selectCategory option:contains(temp)').prop('selected',true);
 
                                 })
-                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
+//                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
+                                var selectedCat = edit_tableRow[1];
+                                $('.edit_selectCategory option:contains("'+selectedCat+'")')
+                                        .filter((i, el) => el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim())
+                                .prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 $(".edit_prodCode").val(edit_tableRow[2]);
                                 fillProdType($(".edit_selectCategory").val(), "edit_prod_type");

@@ -38,8 +38,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-    private  final String PASSWORD = "";
-//    private  final String PASSWORD = "bitnami";
+//    private  final String PASSWORD = "";
+    private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
@@ -177,7 +177,7 @@ public class DbHelper {
                 prepSat.execute();
             }
             //удаляем излишки типов
-            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM  product);";
+            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL);";
             stmt = connection.createStatement();
             stmt.executeUpdate(statement_remove);
 
@@ -436,7 +436,7 @@ public class DbHelper {
             }
 
             //удаляем излишки типов
-            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM  product);";
+            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL)";
             stmt = connection.createStatement();
             stmt.executeUpdate(statement_remove);
 
@@ -905,7 +905,7 @@ public class DbHelper {
         return out;
     }
     public PrintWriter getProdType(PrintWriter out, String catId) throws SQLException{
-        String query = "SELECT type_name FROM prodtype INNER JOIN product ON product.prod_type = prodtype.id WHERE cat_id_frk = ?";
+        String query = "SELECT DISTINCT type_name FROM prodtype INNER JOIN product ON product.prod_type = prodtype.id WHERE cat_id_frk = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, catId);
         ResultSet resultSet = preparedStatement.executeQuery();
