@@ -281,7 +281,7 @@
                                                 alert("Error: Could not back");
                                             }
                                         })
-                                   },
+                                    },
                                     CANSEL: function () {
                                         $(this).dialog("close")
                                     }
@@ -360,7 +360,7 @@
                                 "data": null,
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
                             }
-                           ]
+                        ]
 
                     });
 //                  Поиск по колонкам
@@ -1350,9 +1350,8 @@
 //                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] +'")').prop('selected', true);
                                 var selectedCat = edit_tableRow[1];
                                 $('.edit_selectCategory option:contains("'+selectedCat+'")')
-                                        .filter((i, el) => el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim())
-                                .prop('selected', true);
-
+                                        .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
+                                        .prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
                                 $(".edit_prodType").val(edit_tableRow[2]);
@@ -1517,8 +1516,8 @@
 //                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] + '")').prop('selected', true);
                                 var selectedCat = edit_tableRow[1];
                                 $('.edit_selectCategory option:contains("'+selectedCat+'")')
-                                        .filter((i, el) => el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim())
-                                .prop('selected', true);
+                                        .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
+                                        .prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 $(".edit_prodCode").val(edit_tableRow[2]);
                                 fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
@@ -2062,7 +2061,7 @@
                 $.ajax({
                     url: urlDb,
                     data: {getProdType: "getProdType",
-                           setCategory: catId },
+                        setCategory: catId },
                     dataSrc: "prodtype",
                     type: "POST",
                     success: function (data) {
