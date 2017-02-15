@@ -42,6 +42,19 @@ public class DbInterface extends HttpServlet {
                 db.createCategory(req.getParameter("catName"), req.getParameter("sectionId"));
                 return;
             }
+            if (null != req.getParameter("createType")) {
+                db.createType(req.getParameter("typeName"),
+                        req.getParameter("catName"), out);
+                return;
+            }
+            if (null != req.getParameter("renameType")) {
+                db.renameType(
+                        req.getParameter("type_id"),
+                        req.getParameter("type_name"),
+                        req.getParameter("prodCategory_id"),
+                        out);
+                return;
+            }
             if (null != req.getParameter("createProduct")) {
                 db.createProduct(req.getParameter("prodCategory"),
                                  req.getParameter("prodProvider"),
@@ -160,6 +173,10 @@ public class DbInterface extends HttpServlet {
                 db.getProducts(out);
                 return;
             }
+            if (null != req.getParameter("getTypes")) {
+                db.getTypes(out);
+                return;
+            }
             if (null != req.getParameter("getNewProducts")) {
                 db.getNewProducts(out);
                 return;
@@ -179,6 +196,11 @@ public class DbInterface extends HttpServlet {
             if (null != req.getParameter("removeProduct")) {
                 String prod_id = req.getParameter("prod_id");
                 db.removeProduct(prod_id);
+                return;
+            }
+            if (null != req.getParameter("removeType")) {
+                String type_id = req.getParameter("type_id");
+                db.removeType(type_id);
                 return;
             }
             if (null != req.getParameter("removeTempProducts")) {

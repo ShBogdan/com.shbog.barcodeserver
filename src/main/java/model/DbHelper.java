@@ -39,7 +39,7 @@ public class DbHelper {
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
     private  final String PASSWORD = "";
-//    private  final String PASSWORD = "bitnami";
+    //    private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
@@ -133,18 +133,26 @@ public class DbHelper {
             //создать тип и получить id
             String prodTypeId = null;
             if(!prodType.trim().equals("")) {
-                String statement_createProdType = "INSERT INTO prodtype (type_name) VALUE (?) ON DUPLICATE KEY UPDATE type_name = ?";
+//                String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) VALUE (?, ?) ON DUPLICATE KEY UPDATE type_name = ?";
+                String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk = ? ) LIMIT 1;";
                 prepSat = connection.prepareStatement(statement_createProdType);
                 prepSat.setString(1, prodType);
-                prepSat.setString(2, prodType);
+                prepSat.setString(2, prodCategory_id);
+                prepSat.setString(3, prodType);
+                prepSat.setString(4, prodCategory_id);
+//                prepSat.setString(3, prodType);
                 prepSat.execute();
-                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
+//                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
+//                String queryLastId = "SELECT LAST_INSERT_ID() as last_id from prodtype;";
+                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ? AND cat_id_frk =?";
                 prepSat = connection.prepareStatement(queryLastId);
                 prepSat.setString(1, prodType);
+                prepSat.setString(2, prodCategory_id);
                 resultSet = prepSat.executeQuery();
                 resultSet.next();
+//                prodTypeId = resultSet.getString("last_id");
                 prodTypeId = resultSet.getString("id");
-               }
+            }
 
             //создаем продукт до обновления input_components_ID
             String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, prod_date, prod_type) VALUE (?,?,?,?,?,?);";
@@ -183,6 +191,8 @@ public class DbHelper {
 
         } catch (MySQLIntegrityConstraintViolationException e){
             out.println("-1");
+            System.err.println("createProduct");
+            e.printStackTrace();
             out.flush();
         } catch (SQLException   e) {
             e.printStackTrace();
@@ -268,6 +278,50 @@ public class DbHelper {
         out.println(resultSet.getString("last_id"));
         out.flush();
 
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
+    public PrintWriter createType(String prodType, String prodCategory_id,PrintWriter out) throws SQLException {
+        String statement;
+        PreparedStatement prepSat;
+        ResultSet resultSet;
+        String queryLastId;
+        if(prodCategory_id.equals("0")){
+            //если дубль возвращает 0
+            //проверка на наличие повторений если нет то сразу вставляет
+            statement = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, NULL) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk is NULL ) LIMIT 1;";
+            prepSat = connection.prepareStatement(statement);
+            prepSat.setString(1, prodType);
+            prepSat.setString(2, prodType);
+            prepSat.execute();
+            //последний потому что с NULL может быть сколько угодно
+            String query = "SELECT LAST_INSERT_ID() as last_id from component;";
+            Statement stmt = connection.createStatement();
+            resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            out.println(resultSet.getString("last_id"));
+            System.out.println(resultSet.getString("last_id"));
+
+            out.flush();
+        }else {
+            //если дубль возвращает 0
+            statement = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk = ? ) LIMIT 1;";
+            prepSat = connection.prepareStatement(statement);
+            prepSat.setString(1, prodType);
+            prepSat.setString(2, prodCategory_id);
+            prepSat.setString(3, prodType);
+            prepSat.setString(4, prodCategory_id);
+            prepSat.execute();
+            queryLastId = "SELECT LAST_INSERT_ID() as last_id from component;";
+            prepSat = connection.prepareStatement(queryLastId);
+            resultSet = prepSat.executeQuery();
+            resultSet.next();
+            String lastID = resultSet.getString("last_id");
+            System.out.println(lastID);
+            out.println(lastID);
+            out.flush();
+        }
         if(connection!=null)
             connection.close();
         return out;
@@ -391,20 +445,38 @@ public class DbHelper {
             }
 
             //создать тип и получить id
+//            String prodTypeId = null;
+//            if(!prodType.trim().equals("")) {
+//                String statement_createProdType = "INSERT INTO prodtype (type_name) VALUE (?) ON DUPLICATE KEY UPDATE type_name = ?";
+//                prepSat = connection.prepareStatement(statement_createProdType);
+//                prepSat.setString(1, prodType);
+//                prepSat.setString(2, prodType);
+//                prepSat.execute();
+//                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
+//                prepSat = connection.prepareStatement(queryLastId);
+//                prepSat.setString(1, prodType);
+//                resultSet = prepSat.executeQuery();
+//                resultSet.next();
+//                prodTypeId = resultSet.getString("id");
+//
+//            }
             String prodTypeId = null;
             if(!prodType.trim().equals("")) {
-                String statement_createProdType = "INSERT INTO prodtype (type_name) VALUE (?) ON DUPLICATE KEY UPDATE type_name = ?";
+                String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk = ? ) LIMIT 1;";
                 prepSat = connection.prepareStatement(statement_createProdType);
                 prepSat.setString(1, prodType);
-                prepSat.setString(2, prodType);
+                prepSat.setString(2, prodCategory_id);
+                prepSat.setString(3, prodType);
+                prepSat.setString(4, prodCategory_id);
                 prepSat.execute();
-                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
+                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ? AND cat_id_frk =?";
                 prepSat = connection.prepareStatement(queryLastId);
                 prepSat.setString(1, prodType);
+                prepSat.setString(2, prodCategory_id);
                 resultSet = prepSat.executeQuery();
                 resultSet.next();
                 prodTypeId = resultSet.getString("id");
-
+                System.out.println("Added id: " + prodTypeId);
             }
             //
 
@@ -436,9 +508,9 @@ public class DbHelper {
             }
 
             //удаляем излишки типов
-            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL)";
-            stmt = connection.createStatement();
-            stmt.executeUpdate(statement_remove);
+//            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL)";
+//            stmt = connection.createStatement();
+//            stmt.executeUpdate(statement_remove);
 
         } catch (MySQLIntegrityConstraintViolationException e){
             e.printStackTrace();
@@ -486,6 +558,20 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
+    public void removeType(String type_id) throws SQLException {
+        String _statement = "UPDATE product SET prod_type = NULL WHERE prod_type = ?";
+        PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
+        _preparedStatement.setString(1, type_id);
+        _preparedStatement.execute();
+
+        String statement = "DELETE FROM prodtype WHERE id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, type_id);
+        preparedStatement.execute();
+
+        if(connection!=null)
+            connection.close();
+    }
     public void removeTempProducts(String prod_id) throws SQLException {
         String statement = "DELETE FROM newproducts WHERE prod_id = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -522,6 +608,39 @@ public class DbHelper {
 //        System.out.println("Запись:" + catName +" переименована");
         if(connection!=null)
             connection.close();
+    }
+    public PrintWriter renameType(String type_id, String type_name, String prodCategory_id, PrintWriter out) throws SQLException {
+        //если совпадения то возвращаем 0
+        String _statement = "SELECT EXISTS(SELECT * FROM prodtype WHERE type_name=? and cat_id_frk=?)";
+        PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
+        _preparedStatement.setString(1, type_name);
+        if(prodCategory_id.equals("0")){
+            _preparedStatement.setNull(2, Types.NULL);
+        }else{
+            _preparedStatement.setString(2, prodCategory_id);
+        }
+        ResultSet resultSet = _preparedStatement.executeQuery();
+        resultSet.next();
+        if(resultSet.getInt(1)==1){
+            out.println(0);
+            out.flush();
+            return out;
+        }
+
+
+        String statement = "UPDATE prodtype SET type_name=?, cat_id_frk=? WHERE id=?";
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        preparedStatement.setString(1, type_name);
+        if(prodCategory_id.equals("0")){
+            preparedStatement.setNull(2, Types.NULL);
+        }else{
+            preparedStatement.setString(2, prodCategory_id);
+        }
+        preparedStatement.setString(3, type_id);
+        preparedStatement.execute();
+        if(connection!=null)
+            connection.close();
+        return out;
     }
     public void renameExclude(String exclude_id, String excludeName) throws SQLException {
         String statement = "UPDATE exclude SET ogran_name=? WHERE ogran_id=?";
@@ -786,6 +905,34 @@ public class DbHelper {
             connection.close();
         return out;
     }
+    public PrintWriter getTypes(PrintWriter out) throws SQLException{
+        String query = "SELECT id, type_name, cat_name FROM prodtype LEFT JOIN categories ON cat_id_frk<=>categories.cat_id";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(query);
+        JSONObject result = new JSONObject();
+        JSONArray array = new JSONArray();
+        while (resultSet.next()){
+            JSONArray ja = new JSONArray();
+            String id = String.valueOf(resultSet.getInt("id"));
+            String type_name = resultSet.getString("type_name");
+            String cat_id_frk = resultSet.getString("cat_name");
+
+            ja.put(id);
+            ja.put(type_name);
+            ja.put(cat_id_frk);
+            array.put(ja);
+        }
+        try {
+            result.put("types", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(result);
+        out.flush();
+        if(connection!=null)
+            connection.close();
+        return out;
+    }
     public PrintWriter getBarcodes(PrintWriter out) throws SQLException{
         String query = "SELECT prod_code FROM product";
         Statement stmt = connection.createStatement();
@@ -905,7 +1052,8 @@ public class DbHelper {
         return out;
     }
     public PrintWriter getProdType(PrintWriter out, String catId) throws SQLException{
-        String query = "SELECT DISTINCT type_name FROM prodtype INNER JOIN product ON product.prod_type = prodtype.id WHERE cat_id_frk = ?";
+//        String query = "SELECT DISTINCT type_name FROM prodtype INNER JOIN product ON product.prod_type = prodtype.id WHERE cat_id_frk = ?";
+        String query = "SELECT * FROM prodtype WHERE cat_id_frk =  ?";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, catId);
         ResultSet resultSet = preparedStatement.executeQuery();

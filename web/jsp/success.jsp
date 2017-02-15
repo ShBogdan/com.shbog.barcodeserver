@@ -65,6 +65,9 @@
             var table;
             var e_table;
             var newprod_table;
+            var type_table;
+            var edit_type_table;
+            var dell_edit_type_table;
             var exclude;
             var edit_tableRow;
             var dell_edit_tableRow;
@@ -88,8 +91,9 @@
                         '<button class="button" id="btn2">Каталог</button>' +
                         '<button class="button" id="btn3">Продукты</button>' +
                         '<button class="button" id="btn4">Добавки</button>' +
-                        '<button class="button" id="btn5">Ограничения</button>' +
-                        '<button class="button" id="btn6">Загрузки</button>' +
+                        '<button class="button" id="btn5">Типы</button>' +
+                        '<button class="button" id="btn6">Ограничения</button>' +
+                        '<button class="button" id="btn7">Загрузки</button>' +
                         '</p>')
             } else {
                 $('.menuItem').append(' ' +
@@ -667,6 +671,87 @@
                 })
             });
             $(document).on('click', '#btn5', function () {
+                $('#menu').load("types.jsp", function () {
+                    type_table = $('#type_table').DataTable({
+                        processing: true,
+                        ajax: {
+                            url: urlDb,
+                            data: {getTypes: "getTypes"},
+                            dataSrc: "types",
+                            type: "POST"
+                        },
+                        "pageLength": 25,
+                        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                        "deferRender": true,
+                        "columnDefs": [
+                            {"targets": 0, "visible": false},
+                            {"targets": 1, "wodht": "20%"},
+                            {"targets": 2, "wodht": "20%"},
+                            {
+                                "targets": 3,
+                                "orderable": false,
+                                "searchable": false,
+                                "width": "1%",
+                                "data": null,
+                                "defaultContent": "<button id = 'button_edit_type'>&#8601;</button>"
+                            },
+                            {
+                                "targets": 4,
+                                "orderable": false,
+                                "searchable": false,
+                                "width": "1%",
+                                "data": null,
+                                "defaultContent": "<button id = 'select'>&#10003;</button>"
+                            }
+                        ]
+
+                    });
+//                  Поиск по колонкам
+                    $('#type_table .searchable').each(function () {
+                        var title = $(this).text();
+                        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+                    });
+                    type_table.columns().every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change', function () {
+                            if (that.search() !== this.value) {
+                                that
+                                        .search(this.value)
+                                        .draw();
+                            }
+                        });
+                    });
+//                  удаляем выделенные елементы 100 штук
+                    $('#button').click(function () {
+                        var i = 0;
+                        while (i < 100) {
+                            i++;
+                            var typeId = type_table.row('.selected').data()[0];
+                            $.ajax({
+                                url: urlDb,
+                                data: {
+                                    removeType: "removeType",
+                                    type_id: typeId
+                                },
+                                type: 'POST',
+                                dataType: 'text',
+                                success: function (output) {
+                                },
+                                error: function (request, status, error) {
+                                    alert("Error: Could not back");
+                                }
+                            });
+                            type_table.row('.selected').remove().draw(false);
+                        }
+                    });
+//                  нажатие кнопки выделить row
+                    $('#type_table tbody').on('click', '#select', function () {
+                        $($(this).parents('tr')).toggleClass('selected');
+                    });
+                });
+            });
+            $(document).on('click', '#btn6', function () {
                 $('#menu').load("limitations.jsp", function () {
                     exclude = $('#exclude_table').DataTable({
                         processing: true,
@@ -742,7 +827,7 @@
 
                 });
             });
-            $(document).on('click', '#btn6', function () {
+            $(document).on('click', '#btn7', function () {
                 $('#menu').load("newproducts.jsp", function () {
                     fillBarcodeList();
                     newprod_table = $('#newprod_table').DataTable({
@@ -1057,6 +1142,174 @@
                     width: 600
                 })
             });
+            $(document).on('click', '#button_create_type', function () {
+                $(".dialog_create_type").dialog({
+                    autoOpen: true,
+                    modal: true,
+                    buttons: {
+                        OK: function () {
+                            if ($(".typeName").val().trim() == ""){
+                                alert("Добавьте название")
+                                return;
+                            }
+                            var selId;
+                            $("select option:selected").each(function () {
+                                selId = $(this).val()
+                            });
+                            $.ajax({
+                                url: urlDb,
+                                data: {
+                                    createType: "createType",
+                                    typeName: $(".typeName").val(),
+                                    catName:  selId,
+                                },
+                                type: 'POST',
+                                dataType: 'text',
+                                success: function (data) {
+                                    if(parseInt(data, 10) != 0){
+                                        type_table.row.add([
+                                            parseInt(data, 10),
+                                            $(".typeName").val(),
+                                            $(".selectCategoryForType option:selected").text(),
+                                        ]).draw(false);
+                                        $(".dialog_create_type").dialog("close")
+                                    }else{
+                                        alert("Такой тип уже есть в базе");
+                                    }},
+                                error: function (request, status, error) {
+                                    alert("Error: Could not back");
+                                }
+                            });
+                        },
+                        CANSEL: function () {
+                            $('.dialog_create_type').dialog("close")
+                        }
+                    },
+                    open: function (event, ui) {
+                        $.ajax({
+                            url: urlDb,
+                            data: {
+                                getCategory: "getCategory",
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('.selectCategoryForType').append($("<option></option>")
+                                        .attr("value", 0)
+                                        .text(''));
+                                $.each(data, function (index, element) {
+                                    $('.selectCategoryForType').append($("<option></option>")
+                                            .attr("value", element[0])
+                                            .text(element[1]));
+                                })
+                            },
+                            error: function (request, status, error) {
+                                alert("Error: Could not back");
+                            }
+                        });
+                    },
+                    close: function (event, ui) {
+                        $(".dialog_create_type").dialog("close")
+                    },
+                    beforeClose: function (event, ui) {
+                        $(".typeName").val('')
+                        $(".selectCategoryForType").find('option').remove();
+
+                        $(".dialog_create_type").dialog("destroy")
+                    },
+                    width: 600
+                })
+            });
+            $(document).on('click', '#button_edit_type', function () {
+                edit_type_table = type_table.row($(this).parents('tr')).data();
+                dell_edit_type_table = type_table.row($(this).parents('tr'));
+                $(".dialog_edit_type").dialog({
+                    autoOpen: true,
+                    modal: true,
+                    buttons: {
+                        OK: function () {
+                            if ($(".edit_typeName").val().trim() == ""){
+                                alert("Добавьте название")
+                                return;
+                            }
+                            //индекс выбранной категории
+                            var selId;
+                            $("select option:selected").each(function () {
+                                selId = $(this).val()
+                            });
+
+                            $.ajax({
+                                url: urlDb,
+                                data: {
+                                    renameType: "renameType",
+                                    type_id: edit_type_table[0],
+                                    type_name:  $(".edit_typeName").val(),
+                                    prodCategory_id:  selId,
+                                },
+                                type: 'POST',
+                                dataType: 'text',
+                                success: function (data) {
+                                    if(parseInt(data, 10) != 0){
+                                        type_table.row.add([
+                                            edit_type_table[0],
+                                            $(".edit_typeName").val(),
+                                            $(".edit_selectCategoryForType option:selected").text(),
+                                        ]).draw(false);
+                                        type_table.row(dell_edit_type_table).remove().draw(false);
+                                        $(".dialog_edit_type").dialog("close")
+                                    }else{
+                                        alert("Такой тип уже есть в базе")
+                                    };
+                                },
+                                error: function (request, status, error) {
+                                    alert("Error: Could not back");
+                                }
+                            });
+                        },
+                        CANSEL: function () {
+                            $('.dialog_edit_type').dialog("close")
+                        }
+                    },
+                    open: function (event, ui) {
+                        $.ajax({
+                            url: urlDb,
+                            data: {
+                                getCategory: "getCategory",
+                            },
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('.edit_selectCategoryForType').append($("<option></option>")
+                                        .attr("value", 0)
+                                        .text(''));
+                                $.each(data, function (index, element) {
+                                    $('.edit_selectCategoryForType').append($("<option></option>")
+                                            .attr("value", element[0])
+                                            .text(element[1]));
+                                })
+                                var selectedCat = edit_type_table[2];
+                                $('.edit_selectCategoryForType option:contains("'+selectedCat+'")')
+                                        .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
+                                        .prop('selected', true);
+                            },
+                            error: function (request, status, error) {
+                                alert("Error: Could not back");
+                            }
+                        });
+                        $(".edit_typeName").val(edit_type_table[1]);
+                    },
+                    close: function (event, ui) {
+                        $(".dialog_edit_type").dialog("close")
+                    },
+                    beforeClose: function (event, ui) {
+                        $(".edit_typeName").val('')
+                        $(".edit_selectCategoryForType").find('option').remove();
+                        $(".dialog_edit_type").dialog("destroy")
+                    },
+                    width: 600
+                })
+            });
+
             $(document).on('click', '#edit_exclude', function () {
                 var rowId = exclude.row($(this).parents('tr')).data()[0];
                 var dellRow = exclude.row($(this).parents('tr'));
@@ -1167,7 +1420,7 @@
 //                                        listBarcode.push($(".prodCode").val());
                                     }else{
                                         //так же выбрасывает если не верно задана таблица в jsp
-                                        alert('Такой код уже есть в базе')
+                                        alert('Такой код уже есть в базе_')
                                     }
                                 },
                                 error: function (request, status, error) {
@@ -2055,6 +2308,8 @@
             }
 
             function fillProdType(catId, prod_type) {
+                console.log("fillProdType");
+
                 autocompleteInpTypes = [];
                 $(".edit_prodType").val('');
                 $(".prodType").val('');

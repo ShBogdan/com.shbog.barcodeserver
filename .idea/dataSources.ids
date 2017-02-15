@@ -291,19 +291,23 @@
         <mandatory>1</mandatory>
         <data-type>varchar(155)|0</data-type>
       </column>
-      <index id="79" parent="13" name="prodtype_typename_uindex">
-        <columns>type_name</columns>
+      <column id="79" parent="13" name="cat_id_frk">
+        <data-type>int(11)|0</data-type>
+      </column>
+      <index id="80" parent="13" name="prodtype_categories_cat_id_fk">
+        <columns>cat_id_frk</columns>
         <desc-columns></desc-columns>
-        <unique>1</unique>
       </index>
-      <key id="80" parent="13" name="PRIMARY">
+      <key id="81" parent="13" name="PRIMARY">
         <columns>id</columns>
         <primary>1</primary>
       </key>
-      <key id="81" parent="13" name="prodtype_typename_uindex">
-        <columns>type_name</columns>
-        <underlying-index>prodtype_typename_uindex</underlying-index>
-      </key>
+      <foreign-key id="82" parent="13" name="prodtype_categories_cat_id_fk">
+        <columns>cat_id_frk</columns>
+        <ref-key>~.categories.PRIMARY</ref-key>
+        <cascade-update-rule>restrict</cascade-update-rule>
+        <cascade-delete-rule>restrict</cascade-delete-rule>
+      </foreign-key>
     </database-model>
   </data-source>
 </component>
