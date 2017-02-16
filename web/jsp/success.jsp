@@ -440,7 +440,7 @@
                         comp_index = componets_array_ID.indexOf($(this).attr("id"));
                         if (comp_index > -1) {
                             componets_array_ID.splice(comp_index, 1);
-                            console.log('btnCompound deleted')
+//                            console.log('btnCompound deleted')
                             fillDobOgr()
                         }
                     });
@@ -448,10 +448,10 @@
                         $(this).remove();
                         varBtn_index = varButton.indexOf($(this).text());
                         if (!isEdit) {
-                            console.log("In")
+//                            console.log("In")
                             if (varBtn_index > -1) {
                                 varButton.splice(varBtn_index, 1);
-                                console.log(varButton)
+//                                console.log(varButton)
                             }
                         }
                         if (isEdit) {
@@ -461,14 +461,14 @@
                                 fillDobOgr()
                             }
                         }
-                        console.log('varButton deleted')
+//                        console.log('varButton deleted')
                     });
                     $(".components").on("click", ".varACCButton", function () {
                         $(this).remove();
                         comp_index = componets_array_ID.indexOf($(this).attr("id"));
                         if (comp_index > -1) {
                             componets_array_ID.splice(comp_index, 1);
-                            console.log('varACCButton deleted')
+//                            console.log('varACCButton deleted')
                             fillDobOgr()
                         }
                     });
@@ -480,11 +480,11 @@
                         }
                         comp_index = varButton.indexOf(input);
                         if (input == "") {
-                            console.log("Its empty divInput")
+//                            console.log("Its empty divInput")
                             return;
                         }
                         if (comp_index > -1) {
-                            console.log("over in the array")
+//                            console.log("over in the array")
                             alert("Данный компонент присутствует в составе продукта")
                             return;
                         }
@@ -498,10 +498,10 @@
                         for (var name in dictionaryAutoCompCompon) {
                             if (name == input) {
                                 compId = dictionaryAutoCompCompon[name];
-                                console.log('in dictionary')
+//                                console.log('in dictionary')
                                 var index = componets_array_ID.indexOf(compId)
                                 if (!(index > -1)) {
-                                    console.log('not in the array')
+//                                    console.log('not in the array')
                                     componets_array_ID.push(compId);
                                     $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + compId + "\"" + ">" + input + "</button>");
                                     $(".getInputComponent").val('');
@@ -516,7 +516,7 @@
                         var input = $(".getInputComponentEdit").val().trim();
                         comp_index = varButton.indexOf(input);
                         if (input.trim() == "") {
-                            console.log("Its empty divInputEdit")
+//                            console.log("Its empty divInputEdit")
                             return;
                         }
                         var reg = /^[EeЕе][0-9]/i.exec(input)
@@ -524,7 +524,7 @@
                             input = "Е" + input.substring(1);
                         }
                         if (comp_index > -1) {
-                            console.log("over in the array")
+//                            console.log("over in the array")
                             return;
                         }
                         if (!(input in dictionaryAutoCompCompon)) {
@@ -536,10 +536,10 @@
                         for (var name in dictionaryAutoCompCompon) {
                             if (name == input) {
                                 var id = dictionaryAutoCompCompon[name];
-                                console.log('in dictionary')
+//                                console.log('in dictionary')
                                 var index = componets_array_ID.indexOf(id)
                                 if (!(index > -1)) {
-                                    console.log('not in the array')
+//                                    console.log('not in the array')
                                     componets_array_ID.push(id);
                                     $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
                                     $(".getInputComponentEdit").val('');
@@ -641,11 +641,11 @@
                         comp_index = componentGroup.indexOf(inputText);
                         var inArray =autocompleteInpComponents.indexOf(inputText);
                         if (inputText == "") {
-                            console.log("Its empty")
+//                            console.log("Its empty")
                             return;
                         }
                         if (inputText == $(".e_name").val()) {
-                            console.log("Its repeat name")
+ //                           console.log("Its repeat name")
                             return;
                         }
                         if (inArray > -1) {
@@ -936,7 +936,7 @@
                         comp_index = componets_array_ID.indexOf($(this).attr("id"));
                         if (comp_index > -1) {
                             componets_array_ID.splice(comp_index, 1);
-                            console.log('btnCompound deleted')
+ //                           console.log('btnCompound deleted')
                             fillDobOgr()
                         }
                     });
@@ -944,10 +944,10 @@
                         $(this).remove();
                         varBtn_index = varButton.indexOf($(this).text());
                         if (!isEdit) {
-                            console.log("In")
+  //                          console.log("In")
                             if (varBtn_index > -1) {
                                 varButton.splice(varBtn_index, 1);
-                                console.log(varButton)
+  //                              console.log(varButton)
                             }
                         }
                         if (isEdit) {
@@ -957,14 +957,14 @@
                                 fillDobOgr()
                             }
                         }
-                        console.log('varButton deleted')
+  //                      console.log('varButton deleted')
                     });
                     $(".components").on("click", ".varACCButton", function () {
                         $(this).remove();
                         comp_index = componets_array_ID.indexOf($(this).attr("id"));
                         if (comp_index > -1) {
                             componets_array_ID.splice(comp_index, 1);
-                            console.log('varACCButton deleted')
+   //                         console.log('varACCButton deleted')
                             fillDobOgr()
                         }
                     });
@@ -972,7 +972,7 @@
                         var input = $(".getInputComponentEdit").val().trim();
                         comp_index = varButton.indexOf(input);
                         if (input.trim() == "") {
-                            console.log("Its empty divInputEdit")
+   //                         console.log("Its empty divInputEdit")
                             return;
                         }
                         var reg = /^[EeЕе][0-9]/i.exec(input)
@@ -980,7 +980,7 @@
                             input = "Е" + input.substring(1);
                         }
                         if (comp_index > -1) {
-                            console.log("over in the array")
+  //                          console.log("over in the array")
                             return;
                         }
                         if (!(input in dictionaryAutoCompCompon)) {
@@ -992,10 +992,10 @@
                         for (var name in dictionaryAutoCompCompon) {
                             if (name == input) {
                                 var id = dictionaryAutoCompCompon[name];
-                                console.log('in dictionary')
+   //                             console.log('in dictionary')
                                 var index = componets_array_ID.indexOf(id)
                                 if (!(index > -1)) {
-                                    console.log('not in the array')
+  //                                  console.log('not in the array')
                                     componets_array_ID.push(id);
                                     $(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
                                     $(".getInputComponentEdit").val('');
@@ -1091,15 +1091,15 @@
             $(document).on('click', ".cBox", function () {
                 var id = $(this).attr("id");
                 var index = cBoxs.indexOf(id)
-                console.log(index)
+ //               console.log(index)
                 if (index == -1) {
                     cBoxs.push(id)
-                    console.log("add")
+  //                  console.log("add")
                 } else {
                     cBoxs.splice(index, 1);
-                    console.log("remove")
+  //                  console.log("remove")
                 }
-                console.log(cBoxs.sort())
+ //               console.log(cBoxs.sort())
             });
             $(document).on('click', '#button_create_exclude', function () {
                 $(".addExclude").dialog({
@@ -1223,6 +1223,7 @@
             $(document).on('click', '#button_edit_type', function () {
                 edit_type_table = type_table.row($(this).parents('tr')).data();
                 dell_edit_type_table = type_table.row($(this).parents('tr'));
+                var selIdOld;
                 $(".dialog_edit_type").dialog({
                     autoOpen: true,
                     modal: true,
@@ -1245,6 +1246,7 @@
                                     type_id: edit_type_table[0],
                                     type_name:  $(".edit_typeName").val(),
                                     prodCategory_id:  selId,
+                                    prodCategory_idOld:  selIdOld,
                                 },
                                 type: 'POST',
                                 dataType: 'text',
@@ -1291,6 +1293,8 @@
                                 $('.edit_selectCategoryForType option:contains("'+selectedCat+'")')
                                         .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
                                         .prop('selected', true);
+
+                                selIdOld = $("select[name='editType'] option:selected").val();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1388,7 +1392,7 @@
                             var obj = new Object();
                             for (var i = 0, len = varButton.length; i < len; i++){
                                 obj['name_'+i]=varButton[i];
-                                console.log(varButton[i]);
+    //                            console.log(varButton[i]);
                             }
                             var jsonString= JSON.stringify(obj);
                             $.ajax({
@@ -1433,7 +1437,7 @@
                         }
                     },
                     open: function (event, ui) {
-                        console.log("open");
+  //                      console.log("open");
                         $.ajax({
                             url: urlDb,
                             data: {
@@ -1579,7 +1583,7 @@
                                     $(".inputImg").attr("src",reloadImage);
                                     $(".x").show();
                                 }, function () {
-                                    console.log("false")
+  //                                  console.log("false")
                                     var blank="${pageContext.request.contextPath}/image/bgr.jpg";
                                     $(".inputImg").attr("src",blank);
                                     $(".x").hide();
@@ -1667,7 +1671,7 @@
                             var obj = new Object();
                             for (var i = 0, len = varButton.length; i < len; i++){
                                 obj['name_'+i]=varButton[i];
-                                console.log(varButton[i]);
+  //                              console.log(varButton[i]);
                             }
                             var jsonString= JSON.stringify(obj);
 
@@ -1869,7 +1873,7 @@
 
                                 },
                                 error: function (request, status, error) {
-                                    console.log("somthing wrong");
+  //                                  console.log("somthing wrong");
                                     alert("Error: Could not back");
                                 }
                             });
@@ -2050,7 +2054,7 @@
                         cBoxs[i] = cBoxs[i].trim();
                     }
                 }
-                console.log("array = " + cBoxs.sort())
+ //               console.log("array = " + cBoxs.sort())
 
                 $.ajax({
                     url: urlDb,
@@ -2067,7 +2071,7 @@
                             } else
                                 $('.exclude').append("<p><input type=\"checkbox\" class=\"cBox\" id=\"" + id + "\" checked/>" + name + "</p>")
                         }
-                        console.log(cBoxs.sort())
+ //                       console.log(cBoxs.sort())
                     }
                 })
             };
@@ -2173,7 +2177,7 @@
                                     success: function (data) {
                                         var obj = JSON.parse(data);
                                         if ( obj.component[2] != 0 && obj.component[2] != null ) {
-                                            console.log(obj.component[2]+" ")
+ //                                           console.log(obj.component[2]+" ")
                                             $(".dobavki").append("<p>" + obj.component[1] + "</p>");
 //                                            $(".dobavki").append("<p>" + obj.component[2] + " - " + obj.component[1] + "</p>");
                                         }
@@ -2242,7 +2246,7 @@
                 fd.append('file', fileInput.files[0] );
                 fd.append('imageId', imageId );
                 if(fileInput.files[0]){
-                    console.log("save")
+ //                   console.log("save")
                     $.ajax({
                         url: '${pageContext.request.contextPath}/FileUploadServlet',
                         data: fd,
@@ -2250,7 +2254,7 @@
                         contentType: false,
                         type: 'POST',
                         success: function(data){
-                            console.log(data);
+ //                           console.log(data);
                         }
                     });
                 }else {
@@ -2308,7 +2312,7 @@
             }
 
             function fillProdType(catId, prod_type) {
-                console.log("fillProdType");
+ //               console.log("fillProdType");
 
                 autocompleteInpTypes = [];
                 $(".edit_prodType").val('');
@@ -2330,7 +2334,7 @@
                         var options = '';
                         for (var i = 0; i < autocompleteInpTypes.length; i++) {
                             options += '<option value="' + autocompleteInpTypes[i] + '" />'
-                            console.log(autocompleteInpTypes[i]);
+ //                           console.log(autocompleteInpTypes[i]);
                         }
                         document.getElementById(prod_type).innerHTML = options;
                     }

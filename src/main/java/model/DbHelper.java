@@ -38,8 +38,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-    private  final String PASSWORD = "";
-    //    private  final String PASSWORD = "bitnami";
+//    private  final String PASSWORD = "";
+        private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
@@ -609,7 +609,7 @@ public class DbHelper {
         if(connection!=null)
             connection.close();
     }
-    public PrintWriter renameType(String type_id, String type_name, String prodCategory_id, PrintWriter out) throws SQLException {
+    public PrintWriter renameType(String type_id, String type_name, String prodCategory_id, String prodCategory_idOld, PrintWriter out) throws SQLException {
         //если совпадения то возвращаем 0
         String _statement = "SELECT EXISTS(SELECT * FROM prodtype WHERE type_name=? and cat_id_frk=?)";
         PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
@@ -627,7 +627,6 @@ public class DbHelper {
             return out;
         }
 
-
         String statement = "UPDATE prodtype SET type_name=?, cat_id_frk=? WHERE id=?";
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         preparedStatement.setString(1, type_name);
@@ -638,6 +637,18 @@ public class DbHelper {
         }
         preparedStatement.setString(3, type_id);
         preparedStatement.execute();
+        //если тип переименован то удаляем его из продукта
+        System.out.println("Переименовываем_0");
+        if(!prodCategory_idOld.equals(prodCategory_id)){
+            System.out.println("Переименовываем_1: "+prodCategory_idOld);
+            System.out.println("Переименовываем_1: "+prodCategory_id);
+            String stm = "UPDATE product SET prod_type = NULL WHERE cat_id_frk = ? and prod_type = ?";
+            PreparedStatement pStatement = connection.prepareStatement(stm);
+            pStatement.setString(1, prodCategory_idOld);
+            pStatement.setString(2, type_id);
+            pStatement.execute();
+        }
+
         if(connection!=null)
             connection.close();
         return out;

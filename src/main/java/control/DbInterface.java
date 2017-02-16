@@ -52,6 +52,7 @@ public class DbInterface extends HttpServlet {
                         req.getParameter("type_id"),
                         req.getParameter("type_name"),
                         req.getParameter("prodCategory_id"),
+                        req.getParameter("prodCategory_idOld"),
                         out);
                 return;
             }

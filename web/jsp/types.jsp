@@ -184,7 +184,7 @@
         <tbody>
         <tr>
             <td>
-                <select class="edit_selectCategoryForType" style="width: 100%">
+                <select name = "editType" class="edit_selectCategoryForType" style="width: 100%">
                 </select>
             </td>
         </tr>
