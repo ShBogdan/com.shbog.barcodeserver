@@ -38,8 +38,8 @@ public class DbHelper {
 
     private  final String URL = "jdbc:mysql://localhost:3306/productsdb";
     private  final String NAME = "root";
-//    private  final String PASSWORD = "";
-        private  final String PASSWORD = "bitnami";
+    private  final String PASSWORD = "";
+//        private  final String PASSWORD = "bitnami";
     private  Connection connection = null;
 
 //    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
@@ -185,9 +185,9 @@ public class DbHelper {
                 prepSat.execute();
             }
             //удаляем излишки типов
-            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL);";
-            stmt = connection.createStatement();
-            stmt.executeUpdate(statement_remove);
+//            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL);";
+//            stmt = connection.createStatement();
+//            stmt.executeUpdate(statement_remove);
 
         } catch (MySQLIntegrityConstraintViolationException e){
             out.println("-1");
