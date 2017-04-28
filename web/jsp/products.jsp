@@ -323,7 +323,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><input class="edit_prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип" list="edit_prod_type"/>
+                        <td><input class="edit_prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип" list="edit_prodType"/>
                             <datalist id="edit_prod_type"></datalist></td>
                     </tr>
                     <tr>

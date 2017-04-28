@@ -1070,7 +1070,7 @@
                     selId = $(this).val()
                 });
                 fillCompound(selId);
-                fillProdType(selId, "prod_type");
+                fillProdType(selId, "prodType");
 
             });
             $(document).on('change', '.edit_selectCategory', function () {
@@ -1079,7 +1079,7 @@
                     selId = $(this).val()
                 });
                 fillCompound(selId)
-                fillProdType(selId, "edit_prod_type");
+                fillProdType(selId, "edit_prodType");
 
             });
             $(document).on('click', "#button_create_additive", function () {
@@ -1456,7 +1456,7 @@
                                             .text(element[1]));
                                 })
                                 fillCompound($(".selectCategory").val())
-                                fillProdType($(".selectCategory").val(), "prod_type");
+                                fillProdType($(".selectCategory").val(), "prodType");
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1612,7 +1612,7 @@
                                         .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
                                         .prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
-                                fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
+                                fillProdType($(".edit_selectCategory").val(), "edit_prodType");
                                 $(".edit_prodType").val(edit_tableRow[2]);
                                 $(".edit_prodName").val(edit_tableRow[3]);
                                 $(".edit_prodProvider").val(edit_tableRow[4]);
@@ -1778,7 +1778,7 @@
                                         .prop('selected', true);
                                 fillCompound($(".edit_selectCategory").val())
                                 $(".edit_prodCode").val(edit_tableRow[2]);
-                                fillProdType($(".edit_selectCategory").val(), "edit_prod_type");
+                                fillProdType($(".edit_selectCategory").val(), "edit_prodType");
 //                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
@@ -2296,8 +2296,7 @@
 
             function fillProdType(catId, prod_type) {
                 autocompleteInpTypes = [];
-                $(".edit_prodType").val('');
-                $(".prodType").val('');
+                $('.'+prod_type).val('');
                 $.ajax({
                     url: urlDb,
                     data: {getProdType: "getProdType",
@@ -2317,19 +2316,16 @@
                             options += '<option value="' + autocompleteInpTypes[i] + '" />'
                         }
                         document.getElementById(prod_type).innerHTML = options;
-                        var selector = prod_type;
-                        console.log(selector)
+                        //set texet and color if types present
                         if(autocompleteInpTypes.length>0){
-                            $('.'+selector).addClass('placeholerValueAvalible');
-                            $('.'+selector).removeClass('placeholerNormal');
-                            $('.'+selector).attr("placeholder", "Есть доступные типы");
-
+                            $('.'+prod_type).removeClass('placeholerNormal');
+                            $('.'+prod_type).addClass('placeholerValueAvalible');
+                            $('.'+prod_type).attr("placeholder", "Есть доступные типы");
                         }else{
-                            $('.'+selector).removeClass('placeholerValueAvalible');
-                            $('.'+selector).addClass('placeholerNormal');
-                            $('.'+selector).attr("placeholder", "Тип");
+                            $('.'+prod_type).removeClass('placeholerValueAvalible');
+                            $('.'+prod_type).addClass('placeholerNormal');
+                            $('.'+prod_type).attr("placeholder", "Тип");
                         }
-
                     }
                 });
 
