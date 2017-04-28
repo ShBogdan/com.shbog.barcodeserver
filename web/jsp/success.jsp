@@ -18,8 +18,11 @@
 
     <title>Success Page</title>
     <style type="text/css">
-        .warning {
-            background-color: #F99 !important;
+        .placeholerValueAvalible::-webkit-input-placeholder {
+            color: #e34b4e
+        }
+        .placeholerNormal::-webkit-input-placeholder {
+            color: #9c9c9c
         }
         .button {
             background-color: #e7e7e7; /* Green */
@@ -1516,7 +1519,6 @@
             };
 
             var edit_product = function () {
-//                var oldCodeValue;
                 isEdit = true;
                 $(".dialog_edit_product").dialog({
                     autoOpen: true,
@@ -1605,7 +1607,6 @@
 
                                 })
                                 fillProductCompound(edit_tableRow[0])
-//                                $('.edit_selectCategory option:contains("' + edit_tableRow[1] +'")').prop('selected', true);
                                 var selectedCat = edit_tableRow[1];
                                 $('.edit_selectCategory option:contains("'+selectedCat+'")')
                                         .filter(function (i, el) {return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();})
@@ -1616,7 +1617,6 @@
                                 $(".edit_prodName").val(edit_tableRow[3]);
                                 $(".edit_prodProvider").val(edit_tableRow[4]);
                                 $(".edit_prodCode").val(edit_tableRow[5]);
-//                                oldCodeValue = $(".edit_prodCode").val();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -2294,27 +2294,7 @@
                 });
             }
 
-            function fillProdGroupDate() {
-                $.ajax({
-                    url: urlDb,
-                    data: {
-                        getProdGroupDate: "getProdGroupDate",
-                    },
-                    type: 'POST',
-                    success: function (data) {
-                        $('.selectProdDate').append($("<option></option>").attr("value", 'empty').text('Пусто'));
-                        $('.selectProdDate').append($("<option></option>").attr("value", 'all').text('За все время'));
-                        var obj = JSON.parse(data).prodDates;
-                        for(var i=0; obj.length > i; i++){
-                            $('.selectProdDate').append($("<option></option>").attr("value", obj[i][0]).text(obj[i][0]));
-                        }
-                    }
-                })
-            }
-
             function fillProdType(catId, prod_type) {
- //               console.log("fillProdType");
-
                 autocompleteInpTypes = [];
                 $(".edit_prodType").val('');
                 $(".prodType").val('');
@@ -2335,11 +2315,24 @@
                         var options = '';
                         for (var i = 0; i < autocompleteInpTypes.length; i++) {
                             options += '<option value="' + autocompleteInpTypes[i] + '" />'
- //                           console.log(autocompleteInpTypes[i]);
                         }
                         document.getElementById(prod_type).innerHTML = options;
+                        var selector = prod_type;
+                        console.log(selector)
+                        if(autocompleteInpTypes.length>0){
+                            $('.'+selector).addClass('placeholerValueAvalible');
+                            $('.'+selector).removeClass('placeholerNormal');
+                            $('.'+selector).attr("placeholder", "Есть доступные типы");
+
+                        }else{
+                            $('.'+selector).removeClass('placeholerValueAvalible');
+                            $('.'+selector).addClass('placeholerNormal');
+                            $('.'+selector).attr("placeholder", "Тип");
+                        }
+
                     }
                 });
+
             }
 
             function fillProdGroupByDate(date) {
