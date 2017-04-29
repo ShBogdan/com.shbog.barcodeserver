@@ -249,10 +249,11 @@
                     <tbody>
                     <tr>
                         <td>
-                            <input class="selectCategory" style="width: 100%; display:table-cell;" type="text" placeholder="Категория!"
-                                   list="selectCategory"/>
-                            <datalist id="selectCategory"></datalist>
-
+                            <%--<input class="selectCategory" style="width: 100%; display:table-cell;" type="text" placeholder="Категория!"--%>
+                                   <%--list="selectCategory"/>--%>
+                            <%--<datalist id="selectCategory"></datalist>--%>
+                            <select class="selectCategory" style="width: 100%">
+                            </select>
                         </td>
                     </tr>
                     <tr>
