@@ -1,4 +1,4 @@
-;(function() {
+(function() {
 
     /*
      * Natural Sort algorithm for Javascript - Version 0.7 - Released under MIT license
