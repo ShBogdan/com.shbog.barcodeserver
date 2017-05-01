@@ -18,6 +18,22 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
     <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <style type="text/css">
+        .custom-selectCategory{
+            position: relative;
+            display: inline-block;
+        }
+        .custom-selectCategory-toggle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin-left: -1px;
+            padding: 0;
+        }
+        .custom-selectCategory-input {
+            margin: 0;
+            padding: 5px 10px;
+        }
+
         .ui-autocomplete {
             position: absolute;
             cursor: default;
@@ -182,7 +198,6 @@
         el.wrap('<form>').closest('form').get(0).reset();
         el.unwrap();
     }
-
 </script>
 <div class="temp">
     <button id="button" class="remove">Удалить выделенное</button>
@@ -250,10 +265,12 @@
                     <tr>
                         <td>
                             <%--<input class="selectCategory" style="width: 100%; display:table-cell;" type="text" placeholder="Категория!"--%>
-                                   <%--list="selectCategory"/>--%>
+                            <%--list="selectCategory"/>--%>
                             <%--<datalist id="selectCategory"></datalist>--%>
-                            <select class="selectCategory" style="width: 100%">
-                            </select>
+                            <%--<div class="ui-widget" style="width: 100%">--%>
+                                <select class="selectCategory" id="selectCategory" style="width: 100%">
+                                </select>
+                            <%--</div>--%>
                         </td>
                     </tr>
                     <tr>

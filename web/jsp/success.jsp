@@ -49,13 +49,30 @@
         }
         .adminButton{ color: #2b2b2b; text-shadow: 0 0 10px rgba(0,0,0,0.3); letter-spacing:1px;}
         .adminButton:hover{ color: #e34b4e; text-shadow: 0 12 16px rgba(0,0,0,0.24); letter-spacing:1px;}
+        .custom-combobox {
+            position: relative;
+            display: inline-block;
+        }
+        .custom-combobox-toggle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin-left: -1px;
+            padding: 0;
+        }
+        .custom-combobox-input {
+            margin: 0;
+            padding: 5px 10px;
+        }
     </style>
-    <script src="//code.jquery.com/jquery-1.12.3.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <%--<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>--%>
-    <script src="${pageContext.request.contextPath}/js/dataTables.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/colreorder/1.3.3/js/dataTables.colReorder.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/barcoder.js"></script>
-    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="${pageContext.request.contextPath}/js/naturalSort.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script>
         var urlDb = "${pageContext.request.contextPath}/DbInterface";
@@ -346,7 +363,6 @@
                         },
                         "pageLength": 25,
                         "lengthMenu": [[10, 25, 50, 100, 500, 1000, 5000, -1], [10, 25, 50, 100, 500, 1000, 5000, "All"]],
-                        "deferRender": true,
                         "columnDefs": [
                             {"targets": 0, "visible": false},
                             {"targets": 4, "wodht": "20%"},
@@ -368,8 +384,8 @@
                                 "defaultContent": "<button id = 'select'>&#10003;</button>"
                             }
                         ]
-
                     });
+
 //                  Поиск по колонкам
                     $('#products_table .searchable').each(function () {
                         var title = $(this).text();
@@ -514,7 +530,7 @@
                                 }
                             }
                         }
-                    })
+                    });
                     $(".divInputEdit").on("click", ".addComponentEdit", function () {
                         var input = $(".getInputComponentEdit").val().trim();
                         comp_index = varButton.indexOf(input);
@@ -552,7 +568,7 @@
                                 }
                             }
                         }
-                    })
+                    });
                 });
             });
             $(document).on('click', '#btn4', function () {
@@ -1473,6 +1489,7 @@
 
                                 fillCompound($(".selectCategory").val())
                                 fillProdType($(".selectCategory").val(), "prodType");
+                                inputFormSerching();
                             },
                             error: function (request, status, error) {
                                 alert("Error: Could not back");
@@ -1501,29 +1518,6 @@
                                 document.getElementById('components').innerHTML = options;
                             }
                         });
-//                        $.ajax({
-//                            url: urlDb,
-//                            data: {getComponenNames: "getComponenNames"},
-//                            dataSrc: "additive",
-//                            type: "POST",
-//                            success: function (data) {
-//                                var compName;
-//                                var compId;
-//                                var obj = JSON.parse(data).additive;
-//                                for (var i = 0, len = obj.length; i < len; i++) {
-//                                    compName = obj[i][3];
-//                                    compId = obj[i][0];
-//                                    dictionaryAutoCompCompon[compName] = compId;
-//                                    autocompleteInpTypes.push(compName);
-//                                };
-//                                autocompleteInpTypes.sort();
-//                                var options = '';
-//                                for (var i = 0; i < autocompleteInpTypes.length; i++) {
-//                                    options += '<option value="' + autocompleteInpTypes[i] + '" />'
-//                                }
-//                                document.getElementById('prod_type').innerHTML = options;
-//                            }
-//                        });
                     },
                     close: function (event, ui) {
                         $(".dialog_create_product").dialog("close")
@@ -2366,104 +2360,6 @@
                 })
             }
         });
-
-        (function() {
-
-            /*
-             * Natural Sort algorithm for Javascript - Version 0.7 - Released under MIT license
-             * Author: Jim Palmer (based on chunking idea from Dave Koelle)
-             * Contributors: Mike Grier (mgrier.com), Clint Priest, Kyle Adams, guillermo
-             * See: http://js-naturalsort.googlecode.com/svn/trunk/naturalSort.js
-             */
-            function naturalSort (a, b, html) {
-                var re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?%?$|^0x[0-9a-f]+$|[0-9]+)/gi,
-                        sre = /(^[ ]*|[ ]*$)/g,
-                        dre = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/,
-                        hre = /^0x[0-9a-f]+$/i,
-                        ore = /^0/,
-                        htmre = /(<([^>]+)>)/ig,
-                        // convert all to strings and trim()
-                        x = a.toString().replace(sre, '') || '',
-                        y = b.toString().replace(sre, '') || '';
-                // remove html from strings if desired
-                if (!html) {
-                    x = x.replace(htmre, '');
-                    y = y.replace(htmre, '');
-                }
-                // chunk/tokenize
-                var xN = x.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
-                        yN = y.replace(re, '\0$1\0').replace(/\0$/,'').replace(/^\0/,'').split('\0'),
-                        // numeric, hex or date detection
-                        xD = parseInt(x.match(hre), 10) || (xN.length !== 1 && x.match(dre) && Date.parse(x)),
-                        yD = parseInt(y.match(hre), 10) || xD && y.match(dre) && Date.parse(y) || null;
-
-                // first try and sort Hex codes or Dates
-                if (yD) {
-                    if ( xD < yD ) {
-                        return -1;
-                    }
-                    else if ( xD > yD ) {
-                        return 1;
-                    }
-                }
-
-                // natural sorting through split numeric strings and default strings
-                for(var cLoc=0, numS=Math.max(xN.length, yN.length); cLoc < numS; cLoc++) {
-                    // find floats not starting with '0', string or 0 if not defined (Clint Priest)
-                    var oFxNcL = !(xN[cLoc] || '').match(ore) && parseFloat(xN[cLoc], 10) || xN[cLoc] || 0;
-                    var oFyNcL = !(yN[cLoc] || '').match(ore) && parseFloat(yN[cLoc], 10) || yN[cLoc] || 0;
-                    // handle numeric vs string comparison - number < string - (Kyle Adams)
-                    if (isNaN(oFxNcL) !== isNaN(oFyNcL)) {
-                        return (isNaN(oFxNcL)) ? 1 : -1;
-                    }
-                    // rely on string comparison if different types - i.e. '02' < 2 != '02' < '2'
-                    else if (typeof oFxNcL !== typeof oFyNcL) {
-                        oFxNcL += '';
-                        oFyNcL += '';
-                    }
-                    if (oFxNcL < oFyNcL) {
-                        return -1;
-                    }
-                    if (oFxNcL > oFyNcL) {
-                        return 1;
-                    }
-                }
-                return 0;
-            }
-
-            jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-                "natural-asc": function ( a, b ) {
-                    return naturalSort(a,b,true);
-                },
-
-                "natural-desc": function ( a, b ) {
-                    return naturalSort(a,b,true) * -1;
-                },
-
-                "natural-nohtml-asc": function( a, b ) {
-                    return naturalSort(a,b,false);
-                },
-
-                "natural-nohtml-desc": function( a, b ) {
-                    return naturalSort(a,b,false) * -1;
-                },
-
-                "natural-ci-asc": function( a, b ) {
-                    a = a.toString().toLowerCase();
-                    b = b.toString().toLowerCase();
-
-                    return naturalSort(a,b,true);
-                },
-
-                "natural-ci-desc": function( a, b ) {
-                    a = a.toString().toLowerCase();
-                    b = b.toString().toLowerCase();
-
-                    return naturalSort(a,b,true) * -1;
-                }
-            } );
-
-        }());
 
     </script>
 </head>
