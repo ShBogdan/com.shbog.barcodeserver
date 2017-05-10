@@ -12,6 +12,7 @@
 		response.sendRedirect("index.jsp");
 	}
 %>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -85,7 +86,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<%--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>--%>
 	<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/colreorder/1.3.3/js/dataTables.colReorder.min.js"></script>
 	<script src="${pageContext.request.contextPath}/js/barcoder.js"></script>
@@ -128,9 +128,9 @@
 				$('.menuItem').append('' +
 					'<p> <button class="button" id="btn1">Сводка</button> ' +
 					'<button class="button" id="btn2">Каталог</button>' +
-					'<button class="button" id="btn3">Продукты</button>' +
-					'<button class="button" id="btn4">Добавки</button>' +
-					'<button class="button" id="btn5">Типы</button>' +
+					'<button class="button" id="btn3">Типы</button>' +
+					'<button class="button" id="btn4">Продукты</button>' +
+					'<button class="button" id="btn5">Добавки</button>' +
 					'<button class="button" id="btn6">Ограничения</button>' +
 					'<button class="button" id="btn7">Загрузки</button>' +
 					'</p>')
@@ -138,8 +138,8 @@
 				$('.menuItem').append(' ' +
 					'<p> <button class="button" id="btn1">Сводка</button> ' +
 					' <button class="button" id="btn2">Каталог</button>' +
-					'<button class="button" id="btn3">Продукты</button>' +
-					'<button class="button" id="btn6">Загрузки</button>' +
+					'<button class="button" id="btn4">Продукты</button>' +
+					'<button class="button" id="btn7">Загрузки</button>' +
 					'</p>')
 			}
 			$(document).click(function (event) {
@@ -149,8 +149,6 @@
 			$(document).on('click', '#btn1', function () {
 				$('#menu').load("info.jsp");
 				fillBarcodeList();
-
-
 			});
 			$(document).on('click', '#btn2', function () {
 				$('#menu').load("catalog.jsp", function () {
@@ -372,6 +370,87 @@
 				});
 			});
 			$(document).on('click', '#btn3', function () {
+				$('#menu').load("types.jsp", function () {
+					type_table = $('#type_table').DataTable({
+						processing: true,
+						ajax: {
+							url: urlDb,
+							data: {getTypes: "getTypes"},
+							dataSrc: "types",
+							type: "POST"
+						},
+						"pageLength": 25,
+						"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+						"deferRender": true,
+						"columnDefs": [
+							{"targets": 0, "visible": false},
+							{"targets": 1, "wodht": "20%"},
+							{"targets": 2, "wodht": "20%"},
+							{
+								"targets": 3,
+								"orderable": false,
+								"searchable": false,
+								"width": "1%",
+								"data": null,
+								"defaultContent": "<button id = 'button_edit_type'>&#8601;</button>"
+							},
+							{
+								"targets": 4,
+								"orderable": false,
+								"searchable": false,
+								"width": "1%",
+								"data": null,
+								"defaultContent": "<button id = 'select'>&#10003;</button>"
+							}
+						]
+
+					});
+//                  Поиск по колонкам
+					$('#type_table .searchable').each(function () {
+						var title = $(this).text();
+						$(this).html('<input type="text" placeholder="Search ' + title + '" />');
+					});
+					type_table.columns().every(function () {
+						var that = this;
+
+						$('input', this.footer()).on('keyup change', function () {
+							if (that.search() !== this.value) {
+								that
+									.search(this.value)
+									.draw();
+							}
+						});
+					});
+//                  удаляем выделенные елементы 100 штук
+					$('#button').click(function () {
+						var i = 0;
+						while (i < 100) {
+							i++;
+							var typeId = type_table.row('.selected').data()[0];
+							$.ajax({
+								url: urlDb,
+								data: {
+									removeType: "removeType",
+									type_id: typeId
+								},
+								type: 'POST',
+								dataType: 'text',
+								success: function (output) {
+								},
+								error: function (request, status, error) {
+									alert("Error: Could not back");
+								}
+							});
+							type_table.row('.selected').remove().draw(false);
+						}
+					});
+//                  нажатие кнопки выделить row
+					$('#type_table tbody').on('click', '#select', function () {
+						$($(this).parents('tr')).toggleClass('selected');
+					});
+				});
+			});
+			$(document).on('click', '#btn4', function () {
 				$('#menu').load("products.jsp", function () {
 					table = $('#products_table').DataTable({
 						processing: true,
@@ -591,8 +670,7 @@
 					});
 				});
 			});
-
-			$(document).on('click', '#btn4', function () {
+			$(document).on('click', '#btn5', function () {
 				$('#menu').load("additive.jsp", function () {
 					e_table = $('#additive_table').DataTable({
 						processing: true,
@@ -710,87 +788,6 @@
 						}
 					});
 				})
-			});
-			$(document).on('click', '#btn5', function () {
-				$('#menu').load("types.jsp", function () {
-					type_table = $('#type_table').DataTable({
-						processing: true,
-						ajax: {
-							url: urlDb,
-							data: {getTypes: "getTypes"},
-							dataSrc: "types",
-							type: "POST"
-						},
-						"pageLength": 25,
-						"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-						"deferRender": true,
-						"columnDefs": [
-							{"targets": 0, "visible": false},
-							{"targets": 1, "wodht": "20%"},
-							{"targets": 2, "wodht": "20%"},
-							{
-								"targets": 3,
-								"orderable": false,
-								"searchable": false,
-								"width": "1%",
-								"data": null,
-								"defaultContent": "<button id = 'button_edit_type'>&#8601;</button>"
-							},
-							{
-								"targets": 4,
-								"orderable": false,
-								"searchable": false,
-								"width": "1%",
-								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
-							}
-						]
-
-					});
-//                  Поиск по колонкам
-					$('#type_table .searchable').each(function () {
-						var title = $(this).text();
-						$(this).html('<input type="text" placeholder="Search ' + title + '" />');
-					});
-					type_table.columns().every(function () {
-						var that = this;
-
-						$('input', this.footer()).on('keyup change', function () {
-							if (that.search() !== this.value) {
-								that
-									.search(this.value)
-									.draw();
-							}
-						});
-					});
-//                  удаляем выделенные елементы 100 штук
-					$('#button').click(function () {
-						var i = 0;
-						while (i < 100) {
-							i++;
-							var typeId = type_table.row('.selected').data()[0];
-							$.ajax({
-								url: urlDb,
-								data: {
-									removeType: "removeType",
-									type_id: typeId
-								},
-								type: 'POST',
-								dataType: 'text',
-								success: function (output) {
-								},
-								error: function (request, status, error) {
-									alert("Error: Could not back");
-								}
-							});
-							type_table.row('.selected').remove().draw(false);
-						}
-					});
-//                  нажатие кнопки выделить row
-					$('#type_table tbody').on('click', '#select', function () {
-						$($(this).parents('tr')).toggleClass('selected');
-					});
-				});
 			});
 			$(document).on('click', '#btn6', function () {
 				$('#menu').load("limitations.jsp", function () {
@@ -1105,7 +1102,7 @@
 				var catName = $(this).val();
 				$("#selectCategory option").each(function () {
 					if (catName === $(this).val()) {
-						catId = $(this).text();
+						catId = $(this).attr('data-value');
 					}
 				});
 				if (categories.includes(catName)) {
@@ -1120,7 +1117,7 @@
 				var catName = $(this).val();
 				$("#edit_selectCategory option").each(function () {
 					if (catName === $(this).val()) {
-						catId = $(this).text();
+						catId = $(this).attr('data-value');
 					}
 				});
 				if (categories.includes(catName)) {
@@ -2280,7 +2277,10 @@
 					success: function (data) {
 						var options = '';
 						$.each(data, function (index, element) {
-							options += '<option value="' + element[1] + '"/>' + element[0] + '</option>'
+//							options += '<option value="' + element[0] + '"/>' + element[1] + '</option>'
+							options += '<option data-value="' + element[0] + '" value="' + element[1] + '"></option>'
+//							<option data-value="Safari" value="5"></option>
+
 							categories.push(element[1])
 						})
 						document.getElementById(elementId).innerHTML = options;
