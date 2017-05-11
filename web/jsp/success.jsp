@@ -82,7 +82,6 @@
 			padding: 5px 10px;
 		}
 	</style>
-	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -1408,13 +1407,6 @@
 				cell = newprod_table.cell({row: rowTable[0][0], column: 2}).node();
 				create_newProduct();
 			});
-			$(document).on('change', '.selectProdDate', function () {
-				var selId;
-				$("select option:selected").each(function () {
-					selId = $(this).val()
-				});
-				fillProdGroupByDate(selId);
-			});
 
 			var create_product = function () {
 				isEdit = false;
@@ -2289,25 +2281,6 @@
 						alert("Error: Could not back");
 					}
 				});
-			}
-
-			function fillProdGroupByDate(date) {
-				document.getElementsByClassName("catTab")[0].innerHTML = "";
-				$.ajax({
-					url: urlDb,
-					data: {
-						getProdGroupByDate: "getProdGroupByDate",
-						date: date,
-					},
-					type: 'POST',
-					success: function (data) {
-						var obj = JSON.parse(data).prodGroupByDate;
-						$('.catTab').append("<table class=\"main_section\" style=\"width: 100%\" border=\"0\" ></table>")
-						for (var i = 0; obj.length > i; i++) {
-							$('.main_section').append('<tr><td>' + obj[i][0] + '</td><td>' + obj[i][1] + '</td></tr>');
-						}
-					}
-				})
 			}
 		});
 

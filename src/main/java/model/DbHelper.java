@@ -1211,34 +1211,6 @@ public class DbHelper {
 		return out;
 	}
 
-	// FIXME: 11.05.2017 удалить
-	public PrintWriter getProdGroupDate(PrintWriter out) throws SQLException {
-		String query = "SELECT prod_date FROM product GROUP BY prod_date ORDER BY prod_id DESC;";
-		Statement stmt = connection.createStatement();
-		ResultSet resultSet = stmt.executeQuery(query);
-		JSONObject result = new JSONObject();
-		JSONArray array = new JSONArray();
-		while (resultSet.next()) {
-			JSONArray ja = new JSONArray();
-			String prod_date = resultSet.getString("prod_date");
-			ja.put(prod_date);
-			array.put(ja);
-//            System.out.println(prod_date);
-
-		}
-		try {
-			result.put("prodDates", array);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		out.println(result);
-		out.flush();
-		if (connection != null)
-			connection.close();
-
-		return out;
-	}
-
 	// FIXME: 11.05.2017 вернуть иня, количество, дату.
 	// два датапикера, ок, все
 	// Убрать empty
@@ -1247,6 +1219,8 @@ public class DbHelper {
 	//UPDATE productsdb.product SET prod_date = '2017-05-11 08:28:12.274391';
 	//ALTER TABLE productsdb.product MODIFY prod_date TIMESTAMP NOT NULL;
 	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate) throws SQLException {
+		System.out.println(startDate);
+		System.out.println(endDate);
 		Statement stmt;
 		String query;
 		ResultSet resultSet;
