@@ -11,7 +11,7 @@ public class LogoutServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         String message = "Вы успешно вышли.";
 
-        HttpSession session = req.getSession(false);//getSession() То же сто и getSession(true) возвращает новую сессию
+        HttpSession session = req.getSession(false);//getSession() То же что и getSession(true) возвращает новую сессию
 
         session.invalidate();
 
