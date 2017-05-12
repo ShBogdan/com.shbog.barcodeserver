@@ -16,7 +16,6 @@
 <html>
 
 <head>
-
 	<title>Success Page</title>
 	<style type="text/css">
 		.placeholerValueAvalible::-webkit-input-placeholder {
@@ -96,9 +95,11 @@
 			window.imageId = 0;
 			window.isEdit = false;
 			window.removeImage = false;
-			$('#menu').load("info.jsp");
+			document.getElementById("#btn1").click();
 			var imageUrl;
 			var table;
+			var cat_info_table;
+			var cat_info_data;
 			var e_table;
 			var newprod_table;
 			var type_table;
@@ -146,8 +147,42 @@
 				<%--console.log('<%= session.getAttribute("username") %>');--%>
 			});
 			$(document).on('click', '#btn1', function () {
-				$('#menu').load("info.jsp");
 				fillBarcodeList();
+				$('#menu').load("info.jsp", function () {
+					cat_info_table = $('#cat_info_table').DataTable({
+						processing: true,
+						"pageLength": 25,
+						"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+						"deferRender": true,
+						"columnDefs": [
+							{"targets": 0, "visible": false},
+							{"targets": 2, "visible": false},
+							{
+								"targets": 4,
+								"orderable": false,
+								"searchable": false,
+								"width": "1%",
+								"data": null,
+								"defaultContent": "<button id = 'go_to_products'>&#10003;</button>"
+							}
+						]
+					});
+					$('#cat_info_table .searchable').each(function () {
+						var title = $(this).text();
+						$(this).html('<input type="text" placeholder="Search ' + title + '" />');
+					});
+					cat_info_table.columns().every(function () {
+						var that = this;
+						$('input', this.footer()).on('keyup change', function () {
+							if (that.search() !== this.value) {
+								that.search(this.value).draw();
+							}
+						});
+					});
+					$('#cat_info_table tbody').on('click', '#go_to_products', function () {
+						console.log("go_to")
+					});
+				});
 			});
 			$(document).on('click', '#btn2', function () {
 				$('#menu').load("catalog.jsp", function () {
@@ -1406,6 +1441,25 @@
 				var rowTable = dell_edit_tableRow.row($(this).parents('tr')[0]);
 				cell = newprod_table.cell({row: rowTable[0][0], column: 2}).node();
 				create_newProduct();
+			});
+			$(document).on('click', '#getProductsByDate', function () {
+				var startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				var endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				$.ajax({
+					url: urlDb,
+					data: {
+						getProdGroupByDate: "getProdGroupByDate",
+						startDate: startDate,
+						endDate: endDate
+					},
+					type: 'POST',
+					success: function (data) {
+						cat_info_table.clear().draw();
+						var obj = $.parseJSON(data);
+						var arr = $.map(obj, function(el) { return el });
+						cat_info_table.rows.add(arr).draw();
+					}
+				})
 			});
 
 			var create_product = function () {

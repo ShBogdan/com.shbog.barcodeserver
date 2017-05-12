@@ -1211,30 +1211,29 @@ public class DbHelper {
 		return out;
 	}
 
-	// FIXME: 11.05.2017 вернуть иня, количество, дату.
-	// два датапикера, ок, все
-	// Убрать empty
-	// change base:
+	// FIXME: 11.05.2017 Изменить базу.
 	//ALTER TABLE productsdb.product MODIFY prod_date VARCHAR(100) NOT NULL;
 	//UPDATE productsdb.product SET prod_date = '2017-05-11 08:28:12.274391';
 	//ALTER TABLE productsdb.product MODIFY prod_date TIMESTAMP NOT NULL;
+
+	/**
+	 * @param out       PrintWriter
+	 * @param startDate dateFormat: "yy-mm-dd"
+	 * @param endDate   dateFormat: "yy-mm-dd"
+	 * @return json array {"products":[[],[]]}
+	 * @throws SQLException
+	 */
 	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate) throws SQLException {
-		System.out.println(startDate);
-		System.out.println(endDate);
-		Statement stmt;
-		String query;
-		ResultSet resultSet;
+		endDate = endDate + " 23:59:59";
+		String query = "SELECT cat_id, cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+
 		JSONObject result = new JSONObject();
 		JSONArray array = new JSONArray();
-		if (startDate.equals("all")) {
-			query = "SELECT cat_name, prod_date, COUNT(*) AS count FROM product INNER JOIN categories ON cat_id_frk=cat_id GROUP BY cat_id_frk;";
-		} else {
-			query = "SELECT cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";
-		}
-		stmt = connection.createStatement();
-		resultSet = stmt.executeQuery(query);
 		while (resultSet.next()) {
 			JSONArray ja = new JSONArray();
+			ja.put(resultSet.getString("cat_id"));
 			ja.put(resultSet.getString("cat_name"));
 			ja.put(resultSet.getString("prod_date"));
 			ja.put(resultSet.getString("count"));
@@ -1254,56 +1253,6 @@ public class DbHelper {
 		out.flush();
 		return out;
 	}
-
-
-//	public PrintWriter getProdGroupByDate(PrintWriter out, String date) throws SQLException {
-//		if (date.equals("empty")) {
-//			out.println("empty");
-//			out.flush();
-//			return out;
-//		}
-//		Statement stmt;
-//		ResultSet resultSet;
-//		JSONObject result = new JSONObject();
-//		JSONArray array = new JSONArray();
-//		if (date.equals("all")) {
-//			String query = "SELECT cat_name, COUNT(*) AS count FROM product INNER JOIN categories ON cat_id_frk=cat_id GROUP BY cat_id_frk;";
-//			stmt = connection.createStatement();
-//			resultSet = stmt.executeQuery(query);
-//			while (resultSet.next()) {
-//				JSONArray ja = new JSONArray();
-//				String cat_name = resultSet.getString("cat_name");
-//				String count = resultSet.getString("count");
-//				ja.put(cat_name);
-//				ja.put(count);
-//				array.put(ja);
-//			}
-//		} else {
-//			String query = "SELECT cat_name, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date = '" + date + "' GROUP BY cat_id_frk;";
-//			stmt = connection.createStatement();
-//			resultSet = stmt.executeQuery(query);
-//			while (resultSet.next()) {
-//				JSONArray ja = new JSONArray();
-//				String cat_name = resultSet.getString("cat_name");
-//				String count = resultSet.getString("count");
-//				ja.put(cat_name);
-//				ja.put(count);
-//				array.put(ja);
-//			}
-//		}
-//
-//		try {
-//			result.put("prodGroupByDate", array);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		out.println(result);
-//		out.flush();
-//		if (connection != null)
-//			connection.close();
-//
-//		return out;
-//	}
 
 	public ArrayList getUsers() throws SQLException {
 		String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";

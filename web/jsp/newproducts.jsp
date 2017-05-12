@@ -153,7 +153,6 @@
 			top: 1px;
 			margin-left: 5px;
 		}
-
 	</style>
 </head>
 
@@ -195,7 +194,6 @@
 		var url = largeImage.getAttribute('src');
 		window.open(url, 'Image', 'width=largeImage.stylewidth,height=largeImage.style.height,resizable=1');
 	}
-
 </script>
 <div class="temp">
 	<button id="button" class="remove">Удалить выделенное</button>
@@ -203,7 +201,7 @@
 <hr>
 <table id="newprod_table" class="display" cellspacing="0" width="100%">
 	<thead>
-	<tr class="hello1">
+	<tr>
 		<th>id</th>
 		<th>Категория</th>
 		<th>Штрихкод</th>
@@ -233,25 +231,25 @@
 				<tr>
 					<td>
 						<div><img class="upload_inputImg_1" id="largeImage_1"
-								  style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
+						          style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
 					</td>
 					<td>
 						<div><img class="upload_inputImg_2" id="largeImage_2"
-								  style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
+						          style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
 					</td>
 					<td>
 						<div><img class="upload_inputImg_3" id="largeImage_3"
-								  style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
+						          style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
 					</td>
 				</tr>
 				<tr></tr>
 				<td>
 					<div><img class="upload_inputImg_4" id="largeImage_4"
-							  style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
+					          style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
 				</td>
 				<td>
 					<div><img class="upload_inputImg_5" id="largeImage_5"
-							  style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
+					          style="height:100px; width:auto; max-width:150px;" onClick="swipe(this.id);"/></div>
 				</td>
 				</tr>
 				</tbody>
@@ -269,9 +267,9 @@
 						<td>
 							<span class="x" hidden onclick="closeImage()">[X]</span>
 							<input type="button" class="loadFileXml" value="Загрузить фото"
-								   onclick="document.getElementsByClassName('image')[0].click();"/>
+							       onclick="document.getElementsByClassName('image')[0].click();"/>
 							<input type="file" name="attachfile" onchange="previewFile();" class="image"
-								   style="display:none;">
+							       style="display:none;">
 						</td>
 					</tr>
 					</tbody>
@@ -284,28 +282,28 @@
 				<tr>
 					<td>
 						<input class="edit_selectCategory" style="width: 100%;" maxlength="155" type="text"
-							   placeholder="Категория"
-							   list="edit_selectCategory"/>
+						       placeholder="Категория"
+						       list="edit_selectCategory"/>
 						<datalist id="edit_selectCategory"></datalist>
 					</td>
 				</tr>
 				<tr>
 					<td><input class="edit_prodType" style="width: 100%;" maxlength="155" type="text" placeholder="Тип"
-							   list="edit_prodType"/>
+					           list="edit_prodType"/>
 						<datalist id="edit_prodType"></datalist>
 					</td>
 				</tr>
 				<tr>
 					<td><textarea class="edit_prodName" rows="2" style="width: 100%;" maxlength="155" type="text"
-								  placeholder="Название"></textarea></td>
+					              placeholder="Название"></textarea></td>
 				</tr>
 				<tr>
 					<td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text"
-							   placeholder="Производитель"/></td>
+					           placeholder="Производитель"/></td>
 				</tr>
 				<tr>
 					<td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text"
-							   placeholder="штрих-код"/></td>
+					           placeholder="штрих-код"/></td>
 				</tr>
 				</tbody>
 			</table>
@@ -330,7 +328,7 @@
 			<td align="center" width="50%">
 				<div class="divInputEdit" align="center">
 					<input class="getInputComponentEdit" placeholder="Новый компонент" type="text"
-						   style="display:table-cell; width:60%" list="edit_components">
+					       style="display:table-cell; width:60%" list="edit_components">
 					<button class="addComponentEdit" style="display:table-cell; width:36%">Добавить</button>
 					<datalist id="edit_components"></datalist>
 				</div>

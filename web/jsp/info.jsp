@@ -15,29 +15,6 @@
 <html>
 <head>
 	<script>
-		var urlDb = "${pageContext.request.contextPath}/DbInterface";
-		$(document).on('click', '#getProducts', function () {
-			document.getElementsByClassName("catTab")[0].innerHTML = "";
-			$("#startDate").datepicker('getDate', '+1d');
-			var startDate = $("#startDate").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-			var endDate = $("#endDate").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-			$.ajax({
-				url: urlDb,
-				data: {
-					getProdGroupByDate: "getProdGroupByDate",
-					startDate: startDate,
-					endDate: endDate
-				},
-				type: 'POST',
-				success: function (data) {
-					var obj = JSON.parse(data).prodGroupByDate;
-					$('.catTab').append("<table class=\"main_section\" style=\"width: 100%\" border=\"0\" ></table>")
-					for (var i = 0; obj.length > i; i++) {
-						$('.main_section').append('<tr><td>' + obj[i][0] + '</td><td>' + obj[i][2] + '</td></tr>');
-					}
-				}
-			})
-		});
 		$(function () {
 			$("#startDate").datepicker({dateFormat: "yy-mm-dd"});
 			$("#endDate").datepicker({dateFormat: "yy-mm-dd"});
@@ -51,12 +28,35 @@
 		<td><p>Начальная дата: <input type="text" id="startDate"></p></td>
 		<td><p>Конечная дата: <input type="text" id="endDate"></p></td>
 		<td>
-			<button id="getProducts">Выбрать</button>
+			<button id="getProductsByDate">Выбрать</button>
 		</td>
 	</tr>
 </table>
 <div class="catTab" style="width: 50%">
+
 </div>
+<table id="cat_info_table" class="display" cellspacing="0" width="100%">
+	<thead>
+	<tr>
+		<th>id</th>
+		<th>Категория</th>
+		<th>Дата</th>
+		<th>Количество</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tfoot>
+	<tr>
+		<th>id</th>
+		<th class="searchable">Категория</th>
+		<th class="searchable">Дата</th>
+		<th class="searchable">Количество</th>
+		<th></th>
+	</tr>
+	</tfoot>
+	<tbody>
+	</tbody>
+</table>
 </body>
 </html>
 
