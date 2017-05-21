@@ -112,7 +112,7 @@
 			top: 1px;
 		}
 
-		.remove, .button_create_product, .addComponent, .addComponentEdit, .loadFileXml {
+		.remove, .addComponentEdit, .edit_checkBarcode, .loadFileXml {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
 			background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
 			background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -136,7 +136,7 @@
 			margin-left: 5px;
 		}
 
-		.remove:hover, .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover, .loadFileXml:hover {
+		.remove:hover, .addComponentEdit:hover, .edit_checkBarcode:hover, .loadFileXml:hover {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
 			background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
 			background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -148,7 +148,7 @@
 			margin-left: 5px;
 		}
 
-		.remove:active, .button_create_product:active, .addComponent:active, .loadFileXml:active {
+		.remove:active, .button_create_product:active, .addComponent:active, .edit_checkBarcoed:active,.loadFileXml:active {
 			position: relative;
 			top: 1px;
 			margin-left: 5px;
@@ -280,6 +280,11 @@
 			<table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
 				<tbody>
 				<tr>
+					<td><input class="edit_prodCode" style="width: 80%;" maxlength="18" type="text"
+							   placeholder="штрих-код"/>
+						<button class="edit_checkBarcode" style="display:table-cell; width:5%">&#x27f3;</button></td></td>
+				</tr>
+				<tr>
 					<td>
 						<input class="edit_selectCategory" style="width: 100%;" maxlength="155" type="text"
 						       placeholder="Категория"
@@ -300,10 +305,6 @@
 				<tr>
 					<td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text"
 					           placeholder="Производитель"/></td>
-				</tr>
-				<tr>
-					<td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text"
-					           placeholder="штрих-код"/></td>
 				</tr>
 				</tbody>
 			</table>

@@ -90,12 +90,12 @@
 	<script src="${pageContext.request.contextPath}/js/naturalSort.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<script>
+
 		var urlDb = "${pageContext.request.contextPath}/DbInterface";
 		$(document).ready(function () {
 			window.imageId = 0;
 			window.isEdit = false;
 			window.removeImage = false;
-			document.getElementById("#btn1").click();
 			var imageUrl;
 			var table;
 			var cat_info_table;
@@ -124,6 +124,8 @@
 			var catId;
 			var listBarcode = [];
 			var permission = '${permission}';
+			var btn4;
+			var products_table_search;
 			if (permission == '1') {
 				$('.menuItem').append('' +
 					'<p> <button class="button" id="btn1">Сводка</button> ' +
@@ -133,7 +135,8 @@
 					'<button class="button" id="btn5">Добавки</button>' +
 					'<button class="button" id="btn6">Ограничения</button>' +
 					'<button class="button" id="btn7">Загрузки</button>' +
-					'</p>')
+					'</p>');
+				btn4 = document.getElementById('btn4');
 			} else {
 				$('.menuItem').append(' ' +
 					'<p> <button class="button" id="btn1">Сводка</button> ' +
@@ -142,12 +145,12 @@
 					'<button class="button" id="btn7">Загрузки</button>' +
 					'</p>')
 			}
+			fillBarcodeList();
 			$(document).click(function (event) {
 				<%--console.log(${sessionScope.username});--%>
 				<%--console.log('<%= session.getAttribute("username") %>');--%>
 			});
 			$(document).on('click', '#btn1', function () {
-				fillBarcodeList();
 				$('#menu').load("info.jsp", function () {
 					cat_info_table = $('#cat_info_table').DataTable({
 						processing: true,
@@ -163,7 +166,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'go_to_products'>&#10003;</button>"
+								"defaultContent": "<button id = 'go_to_products'>&#62;</button>"
 							}
 						]
 					});
@@ -180,7 +183,8 @@
 						});
 					});
 					$('#cat_info_table tbody').on('click', '#go_to_products', function () {
-						console.log("go_to")
+						products_table_search = cat_info_table.row($(this).parents('tr')).data()[1];
+						btn4.click();
 					});
 				});
 			});
@@ -207,6 +211,7 @@
 							}
 						});
 					}));
+
 					//заполнить таблицу
 					function fill_main_section() {
 						$.ajax({
@@ -220,6 +225,7 @@
 								$("#main_section").append(data);
 							},
 							error: function (request, status, error) {
+								alert("Error: Could not back");
 							}
 						})
 					}
@@ -400,6 +406,12 @@
 
 							})
 						}
+						if (this.className === "goToProduct") {
+							var re = /[ ^0-9.]+/;
+							console.log(rName)
+							products_table_search = rName.replace(re, "");
+							btn4.click();
+						}
 					}));
 				});
 			});
@@ -496,6 +508,7 @@
 						},
 						"pageLength": 25,
 						"lengthMenu": [[10, 25, 50, 100, 500, 1000, 5000, -1], [10, 25, 50, 100, 500, 1000, 5000, "All"]],
+						"deferRender": true,
 						"columnDefs": [
 							{"targets": 0, "visible": false},
 							{"targets": 4, "wodht": "20%"},
@@ -518,6 +531,11 @@
 							}
 						]
 					});
+
+					if (products_table_search !== '')
+						table.columns(1).search(products_table_search).draw();
+					products_table_search = '';
+
 
 //                  Поиск по колонкам
 					$('#products_table .searchable').each(function () {
@@ -632,11 +650,9 @@
 						}
 						comp_index = varButton.indexOf(input);
 						if (input == "") {
-//                            console.log("Its empty divInput")
 							return;
 						}
 						if (comp_index > -1) {
-//                            console.log("over in the array")
 							alert("Данный компонент присутствует в составе продукта")
 							return;
 						}
@@ -650,10 +666,8 @@
 						for (var name in dictionaryAutoCompCompon) {
 							if (name == input) {
 								compId = dictionaryAutoCompCompon[name];
-//                                console.log('in dictionary')
 								var index = componets_array_ID.indexOf(compId)
 								if (!(index > -1)) {
-//                                    console.log('not in the array')
 									componets_array_ID.push(compId);
 									$(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + compId + "\"" + ">" + input + "</button>");
 									$(".getInputComponent").val('');
@@ -723,7 +737,6 @@
 							{"targets": 1, "visible": true},
 							{"targets": 2, "visible": true},
 							{"targets": 3, "type": "natural"},
-//                            {"targets": 3, "visible": true, "width": "1%",},
 							{"targets": 4, "visible": true,},
 							{"targets": 5, "visible": true,},
 							{"targets": 6, "visible": true},
@@ -1456,7 +1469,9 @@
 					success: function (data) {
 						cat_info_table.clear().draw();
 						var obj = $.parseJSON(data);
-						var arr = $.map(obj, function(el) { return el });
+						var arr = $.map(obj, function (el) {
+							return el
+						});
 						cat_info_table.rows.add(arr).draw();
 					}
 				})
@@ -1623,8 +1638,13 @@
 						});
 
 						$(".edit_selectCategory").val(selectedCat);
-
+						$("#edit_selectCategory option").each(function () {
+							if (selectedCat === $(this).val()) {
+								catId = $(this).attr('data-value');
+							}
+						});
 						fillProductCompound(edit_tableRow[0]);
+						console.log(catId)
 						fillCompound(catId);
 						fillProdType(catId, "edit_prodType");
 						fillComponents("edit_components");
@@ -1754,6 +1774,11 @@
 						});
 
 						$(".edit_selectCategory").val(selectedCat);
+						$("#edit_selectCategory option").each(function () {
+							if (selectedCat === $(this).val()) {
+								catId = $(this).attr('data-value');
+							}
+						});
 
 						fillCompound(catId);
 						fillProdType(catId, "edit_prodType");
@@ -2174,6 +2199,7 @@
 			}
 
 			function fillBarcodeList() {
+				console.log("fill")
 				listBarcode = [];
 				$.ajax({
 					url: urlDb,
@@ -2293,6 +2319,7 @@
 				$(".components button").remove();
 				$(".dobavki p").remove();
 				$(".ogranicenija p").remove();
+				if (catId === null) return;
 				$.ajax({
 					url: urlDb,
 					data: {

@@ -124,7 +124,7 @@
 			top: 1px;
 		}
 
-		.remove, .button_create_product, .addComponent, .addComponentEdit, .loadFileXml {
+		.remove, .button_create_product, .addComponent, .checkBarcode, .addComponentEdit, .edit_checkBarcoed, .loadFileXml {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
 			background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
 			background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -148,7 +148,8 @@
 			margin-left: 5px;
 		}
 
-		.remove:hover, .button_create_product:hover, .addComponent:hover, .addComponentEdit:hover, .loadFileXml:hover {
+		.remove:hover, .button_create_product:hover, .addComponent:hover, .checkBarcode:hover, .edit_checkBarcoed:hover,
+		.addComponentEdit:hover, .loadFileXml:hover {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
 			background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
 			background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -160,7 +161,8 @@
 			margin-left: 5px;
 		}
 
-		.remove:active, .button_create_product:active, .addComponent:active, .loadFileXml:active {
+		.remove:active, .button_create_product:active, .addComponent:active, .checkBarcode:active, edit_checkBarcoed:active,
+		.loadFileXml:active {
 			position: relative;
 			top: 1px;
 			margin-left: 5px;
@@ -265,6 +267,12 @@
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
 					<tbody>
 					<tr>
+						<td><input class="prodCode" style="width: 80%;" maxlength="18" type="text"
+								   placeholder="штрих-код"/>
+							<button class="checkBarcode" style="display:table-cell; width:5%">&#x27f3;</button>
+						</td>
+					</tr>
+					<tr>
 						<td>
 							<input class="selectCategory" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Категория"
@@ -287,11 +295,7 @@
 						<td><input class="prodProvider" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Производитель"/></td>
 					</tr>
-					<tr>
-						<td><input class="prodCode" style="width: 100%;" maxlength="18" type="text"
-								   placeholder="штрих-код"/></td>
-					</tr>
-					</tbody>
+								</tbody>
 				</table>
 			</td>
 		</tr>
@@ -367,6 +371,11 @@
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="5" align="center">
 					<tbody>
 					<tr>
+						<td><input class="edit_prodCode" style="width: 80%;" maxlength="18" type="text"
+								   placeholder="штрих-код"/>
+							<button class="edit_checkBarcoed" style="display:table-cell; width:5%">&#x27f3;</button></td>
+					</tr>
+					<tr>
 						<td>
 							<input class="edit_selectCategory" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Категория"
@@ -388,11 +397,7 @@
 						<td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Производитель"/></td>
 					</tr>
-					<tr>
-						<td><input class="edit_prodCode" style="width: 100%;" maxlength="18" type="text"
-								   placeholder="штрих-код"/></td>
-					</tr>
-					</tbody>
+				</tbody>
 				</table>
 			</td>
 		</tr>

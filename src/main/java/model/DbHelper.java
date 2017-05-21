@@ -700,6 +700,7 @@ public class DbHelper {
 		return out;
 	}
 
+	// FIXME: 21.05.2017 why do we need it?
 	public PrintWriter getCategoryJSONobj(PrintWriter out) throws SQLException {
 		String query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
 		Statement stmt = connection.createStatement();
@@ -819,14 +820,15 @@ public class DbHelper {
 			out.println("<td class=\"rename-" + resultSet.getString("section_id") + "\"><button>&#8601;</button>&nbsp;&nbsp;</td>");
 			out.println("<td class=\"addCategory-" + resultSet.getString("section_id") + "\"><button>&#43;</button>&nbsp;&nbsp;</td>");
 			out.println("</tr>");
-			String _query = "SELECT cat_id, cat_name FROM categories WHERE section_id_frk = " + resultSet.getString("section_id");
+			String _query = "SELECT cat_id, cat_name FROM categories WHERE section_id_frk = " + resultSet.getString("section_id") + " ORDER BY cat_name";
 			Statement _stmt = connection.createStatement();
 			ResultSet _resultSet = _stmt.executeQuery(_query);
 			while (_resultSet.next()) {
 				out.println("<tr class=\"child-" + resultSet.getString("section_id") + "\"  id = \"" + _resultSet.getString("cat_id") + "\">"); //style="display:none"
-				out.println("<td>" + "&nbsp;&nbsp;&nbsp;&nbsp;" + count + "." + _count + ". " + _resultSet.getString("cat_name") + "</td>");
+				out.println("<td>" + count + "." + _count + ". " + _resultSet.getString("cat_name") + "</td>");
 				out.println("<td class=\"removeCat\"><button>&#215;</button>&nbsp;&nbsp;</td>");
 				out.println("<td class=\"renameCat\"><button >&#8601;</button>&nbsp;&nbsp;</td>");
+				out.println("<td class=\"goToProduct\"><button >&#62;</button>&nbsp;&nbsp;</td>");
 				out.println("<td></td>");
 				out.println("</tr>");
 				_count++;
@@ -1295,173 +1297,4 @@ public class DbHelper {
 		System.out.println("createProdPhone");
 	}
 
-
-//parsing
-//    public void createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String type) throws SQLException {
-//        //создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
-//        List<String> names = Arrays.asList(additiveName.split(";"));
-//        String mainId;
-//
-//        String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type) VALUE (?,?,?,?,?,?,?,?,?)";
-//        PreparedStatement preparedStatement = connection.prepareStatement(statement);
-//        preparedStatement.setString(1, names.get(0));
-//        preparedStatement.setString(2, additiveNamber);
-//        preparedStatement.setString(3, additiveInfo);
-//        preparedStatement.setString(4, additivePermission);
-//        preparedStatement.setString(5, additiveColor);
-//        preparedStatement.setString(6, additiveCBox);
-//        preparedStatement.setString(7, additiveFor);
-//        preparedStatement.setString(8, additiveNotes);
-//        preparedStatement.setString(9, type);
-//        preparedStatement.execute();
-//
-//        String query = "SELECT LAST_INSERT_ID() as last_id from component;";
-//        Statement stmt = connection.createStatement();
-//        ResultSet resultSet = stmt.executeQuery(query);
-//        resultSet.next();
-//        mainId = resultSet.getString("last_id");
-//
-//        for (int i = 1; i < names.size(); i++) {
-//            statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
-//            preparedStatement = connection.prepareStatement(statement);
-//            preparedStatement.setString(1, names.get(i).trim());
-//            preparedStatement.setString(2, additiveNamber.trim());
-//            preparedStatement.setString(3, additiveInfo.trim());
-//            preparedStatement.setString(4, additivePermission.trim());
-//            preparedStatement.setString(5, additiveColor.trim());
-//            preparedStatement.setString(6, additiveCBox.trim());
-//            preparedStatement.setString(7, additiveFor.trim());
-//            preparedStatement.setString(8, additiveNotes.trim());
-//            preparedStatement.setString(9, type.trim());
-//            preparedStatement.setString(10, mainId.trim());
-//            preparedStatement.execute();
-//        }
-//
-//        if(connection!=null)
-//            connection.close();
-//    }
-
-//    public void parse(String name) throws SQLException {
-//
-//        InputStream in = null;
-//        HSSFWorkbook wb = null;
-//        try {
-//            in = new FileInputStream(name);
-//            wb = new HSSFWorkbook(in);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Sheet sheet = wb.getSheetAt(0);
-//        Iterator<Row> it = sheet.iterator();
-//        while (it.hasNext()) {
-//            Row row = it.next();
-//            Iterator<Cell> cells = row.iterator();
-//            int count = 0;
-//            Dobavka d = new Dobavka();
-//            while (cells.hasNext()) {
-//                String result;
-//                ++count;
-//                Cell cell = cells.next();
-//                int cellType = cell.getCellType();
-//                switch (cellType) {
-//                    case Cell.CELL_TYPE_STRING:
-//                        result = cell.getStringCellValue();
-//                        break;
-//                    case Cell.CELL_TYPE_NUMERIC:
-//                        result = String.valueOf(cell.getNumericCellValue());
-//                        break;
-//
-//                    case Cell.CELL_TYPE_FORMULA:
-//                        result = String.valueOf(cell.getNumericCellValue());
-//                        break;
-//                    default:
-//                        result = "space";
-//                        break;
-//                }
-//                switch (count){
-//                    case 1: d.type = result.trim();
-//                        break;
-//                    case 2: d.naznac = result.trim();
-//                        break;
-//                    case 3: d.nomerE = result.trim();
-//                        break;
-//                    case 4: d.nazvRu = result.trim();
-//                        break;
-//                    case 5: d.nazvEN = result.trim();
-//                        break;
-//                    case 6: d.forWhat = result.trim();
-//                        break;
-//                    case 7: d.zaProtiv = result.trim();
-//                        break;
-//                    case 8: d.primecanie = result.trim();
-//                        break;
-//                    case 9:  if(result.equals("1.0")) d.ogran.add("1");
-//                        break;
-//                    case 10: if(result.equals("1.0")) d.ogran.add("2");
-//                        break;
-//                    case 11: if(result.equals("1.0")) d.ogran.add("3");
-//                        break;
-//                    case 12: if(result.equals("1.0")) d.ogran.add("4");
-//                        break;
-//                    case 13: if(result.equals("1.0")) d.ogran.add("5");
-//                        break;
-//                    case 14: if(result.equals("1.0")) d.ogran.add("6");
-//                        break;
-//                    case 15: if(result.equals("1.0")) d.ogran.add("7");
-//                        break;
-//                    case 16: if(result.equals("1.0")) d.ogran.add("8");
-//                        break;
-//                    case 17:
-//                        if(result.equals("З")){d.color="0";};
-//                        if(result.equals("Ж")){d.color="1";};
-//                        if(result.equals("К")){d.color="2";};
-//                        break;
-//                }
-//            }
-//            System.out.println(d.toString());
-//            if( null!=d.nazvRu &&  !d.nazvRu.equals("")){
-//                String ogran = d.ogran.toString().substring(1, d.ogran.toString().length()-1).replace(" ", "");
-//                String names = d.nazvRu+"; "+d.nomerE+"; "+d.nazvEN;
-//                System.out.println(ogran);
-//                createComponent(d.nomerE, names, d.color, d.forWhat, d.zaProtiv, ogran, d.naznac, d.primecanie, d.type);
-//            }
-//        }
-//        System.out.println("in end");
-//    }
-//    class Dobavka{
-//        String type;
-//        String naznac;
-//        String nomerE;
-//        String nazvRu;
-//        String nazvEN;
-//        String forWhat;
-//        String zaProtiv;
-//        String primecanie;
-//        ArrayList<String> ogran = new ArrayList<String>();
-//        String color;
-//
-//        String getOgranicenie(){
-//
-//            String s = ogran.toString().replace(" ", "");
-//            String ogranicenie = s.substring(1, s.length()-1);
-//            return ogranicenie;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return "Dobavka{" +
-//                    "type='" + type + '\'' +
-//                    ", naznac='" + naznac + '\'' +
-//                    ", nomerE='" + nomerE + '\'' +
-//                    ", nazvRu='" + nazvRu + '\'' +
-//                    ", nazvEN='" + nazvEN + '\'' +
-//                    ", forWhat='" + forWhat + '\'' +
-//                    ", zaProtiv='" + zaProtiv + '\'' +
-//                    ", primecanie='" + primecanie + '\'' +
-//                    ", ogran='" + ogran + '\'' +
-//                    ", color='" + color + '\'' +
-//                    '}';
-//        }
-//    }
 }
