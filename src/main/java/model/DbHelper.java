@@ -815,7 +815,7 @@ public class DbHelper {
 		while (resultSet.next()) {
 			out.println("<tbody id=" + resultSet.getString("section_id") + ">");
 			out.println("<tr class=\"par\">");
-			out.println("<td class=\"parent\">&nbsp;&nbsp;" + count + ". " + resultSet.getString("section_name") + "</td>");
+			out.println("<td class=\"parent\">&nbsp;&nbsp;&nbsp;&nbsp;" + count + ". " + resultSet.getString("section_name") + "</td>");
 			out.println("<td class=\"remove-" + resultSet.getString("section_id") + "\"><button>&#215;</button>&nbsp;&nbsp;</td>");
 			out.println("<td class=\"rename-" + resultSet.getString("section_id") + "\"><button>&#8601;</button>&nbsp;&nbsp;</td>");
 			out.println("<td class=\"addCategory-" + resultSet.getString("section_id") + "\"><button>&#43;</button>&nbsp;&nbsp;</td>");
@@ -852,7 +852,7 @@ public class DbHelper {
 			componArrId.add(resultSet.getString("compon"));
 		}
 		if (componArrId.size() != 0) {
-			String _statement = "SELECT * FROM component WHERE comp_id IN" + "(" + componArrId.toString().substring(1, componArrId.toString().length() - 1).replaceAll("\\s+", "") + ")";
+			String _statement = "SELECT * FROM component WHERE comp_id IN" + "(" + componArrId.toString().substring(1, componArrId.toString().length() - 1).replaceAll("\\s+", "") + ") ORDER BY comp_name";
 			Statement _stmt = connection.createStatement();
 			ResultSet _resultSet = _stmt.executeQuery(_statement);
 			while (_resultSet.next()) {
@@ -1168,6 +1168,30 @@ public class DbHelper {
 		}
 		try {
 			result.put("exclude", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		out.println(result);
+		out.flush();
+		if (connection != null)
+			connection.close();
+		return out;
+	}
+
+	public PrintWriter isBarcodeExist(PrintWriter out, String barcode) throws SQLException {
+		String query = "SELECT prod_code FROM product WHERE prod_code = '" + barcode +"'";
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		while (resultSet.next()) {
+			JSONArray ja = new JSONArray();
+			String id = String.valueOf(resultSet.getString("prod_code"));
+			ja.put(id);
+			array.put(ja);
+		}
+		try {
+			result.put("barcode", array);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

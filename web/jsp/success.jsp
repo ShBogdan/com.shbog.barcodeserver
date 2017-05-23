@@ -26,6 +26,14 @@
 			color: #9c9c9c
 		}
 
+		.textcolorRed {
+			color: #e34b4e
+		}
+
+		.textcolorBlack {
+			color: #1c1c1c
+		}
+
 		.button {
 			background-color: #e7e7e7; /* Green */
 			color: black; /*text color*/
@@ -145,7 +153,6 @@
 					'<button class="button" id="btn7">Загрузки</button>' +
 					'</p>')
 			}
-			fillBarcodeList();
 			$(document).click(function (event) {
 				<%--console.log(${sessionScope.username});--%>
 				<%--console.log('<%= session.getAttribute("username") %>');--%>
@@ -223,6 +230,7 @@
 							dataType: 'text',
 							success: function (data) {
 								$("#main_section").append(data);
+								$("#main_section tr:even").css("background-color", "#ced0c7");
 							},
 							error: function (request, status, error) {
 								alert("Error: Could not back");
@@ -716,6 +724,27 @@
 							}
 						}
 					});
+					$(document).on("click", ".checkBarcode", function () {
+						if (isBarcodeExist($(".prodCode").val())) {
+							console.log("exist")
+							$(".prodCode").removeClass('textcolorBlack');
+							$(".prodCode").addClass('textcolorRed');
+						} else {
+							$(".prodCode").removeClass('textcolorRed');
+							$(".prodCode").addClass('textcolorBlack');
+						}
+
+					});
+					$(document).on("click", ".edit_checkBarcode", function () {
+						if (isBarcodeExist($(".edit_prodCode").val())) {
+							console.log("exist")
+							$(".edit_prodCode").removeClass('textcolorBlack');
+							$(".edit_prodCode").addClass('textcolorRed');
+						} else {
+							$(".edit_prodCode").removeClass('textcolorRed');
+							$(".edit_prodCode").addClass('textcolorBlack');
+						}
+					});
 				});
 			});
 			$(document).on('click', '#btn5', function () {
@@ -1091,6 +1120,16 @@
 							}
 						}
 					})
+					$(document).on("click", ".edit_checkBarcode", function () {
+						if (isBarcodeExist($(".edit_prodCode").val())) {
+							console.log("exist")
+							$(".edit_prodCode").removeClass('textcolorBlack');
+							$(".edit_prodCode").addClass('textcolorRed');
+						} else {
+							$(".edit_prodCode").removeClass('textcolorRed');
+							$(".edit_prodCode").addClass('textcolorBlack');
+						}
+					});
 				});
 			});
 			$(document).on('click', '.adminButton', function () {
@@ -1477,6 +1516,7 @@
 				})
 			});
 
+
 			var create_product = function () {
 				isEdit = false;
 				imageUrl = undefined;
@@ -1493,6 +1533,12 @@
 							}
 							if ($.inArray($(".selectCategory").val(), categories) === -1) {
 								alert("Не верно указана категория продукта")
+								return;
+							}
+							if (($.inArray($(".prodType").val(), autocompleteInpTypes) === -1) &&
+							$(".prodType").val().trim() != "")
+							{
+								alert("Вы не можете создать здесь тип")
 								return;
 							}
 							var obj = new Object();
@@ -1568,6 +1614,12 @@
 							}
 							if ($.inArray($(".edit_selectCategory").val(), categories) === -1) {
 								alert("Не верно указана категория продукта")
+								return;
+							}
+							if (($.inArray($(".edit_prodType").val(), autocompleteInpTypes) === -1) &&
+								$(".edit_prodType").val().trim() != "")
+							{
+								alert("Вы не можете создать здесь тип")
 								return;
 							}
 							var obj = new Object();
@@ -1675,6 +1727,12 @@
 							}
 							if ($.inArray($(".edit_selectCategory").val(), categories) === -1) {
 								alert("Не верно указана категория продукта")
+								return;
+							}
+							if (($.inArray($(".edit_prodType").val(), autocompleteInpTypes) === -1) &&
+								$(".edit_prodType").val().trim() != "")
+							{
+								alert("Вы не можете создать здесь тип")
 								return;
 							}
 							var obj = new Object();
@@ -2038,6 +2096,10 @@
 				$(".prodCode").val('');
 				$(".prodType").val('');
 				$(".selectCategory").val('');
+				$(".edit_prodCode").removeClass('textcolorRed');
+				$(".edit_prodCode").addClass('textcolorBlack');
+				$(".prodCode").removeClass('textcolorRed');
+				$(".prodCode").addClass('textcolorBlack');
 
 				var blank = "${pageContext.request.contextPath}/image/bgr.jpg";
 				$("#inputImg").attr("src", blank);
@@ -2061,6 +2123,8 @@
 				$(".edit_prodProvider").val('');
 				$(".edit_prodCode").val('');
 				$(".edit_prodType").val('');
+				$(".edit_prodCode").removeClass('textcolorRed');
+				$(".edit_prodCode").addClass('textcolorBlack');
 				$(".edit_selectCategory").find('option').remove();
 				if ($(".dialog_edit_product").dialog("isOpen")) {
 					$(".dialog_edit_product").dialog("destroy");
@@ -2199,7 +2263,6 @@
 			}
 
 			function fillBarcodeList() {
-				console.log("fill")
 				listBarcode = [];
 				$.ajax({
 					url: urlDb,
@@ -2214,6 +2277,26 @@
 						}
 					}
 				});
+			}
+
+			function isBarcodeExist(barcode) {
+				var result = false;
+				$.ajax({
+					url: urlDb,
+					data: {
+						isBarcodeExist: "isBarcodeExist",
+						barcode: barcode
+					},
+					dataSrc: "barcode",
+					type: "POST",
+					async: false,
+					success: function (data) {
+						var obj = JSON.parse(data);
+						if (obj.barcode.length >= 1)
+							result = true;
+					}
+				});
+				return result;
 			}
 
 			function dynamicUpload(_imageId) {

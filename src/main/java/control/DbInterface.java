@@ -194,6 +194,10 @@ public class DbInterface extends HttpServlet {
 				db.getProdType(out, req.getParameter("setCategory"));
 				return;
 			}
+			if (null != req.getParameter("isBarcodeExist")) {
+				db.isBarcodeExist(out, req.getParameter("barcode"));
+				return;
+			}
 			if (null != req.getParameter("removeProduct")) {
 				String prod_id = req.getParameter("prod_id");
 				db.removeProduct(prod_id);

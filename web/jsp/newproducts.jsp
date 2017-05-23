@@ -148,7 +148,7 @@
 			margin-left: 5px;
 		}
 
-		.remove:active, .button_create_product:active, .addComponent:active, .edit_checkBarcoed:active,.loadFileXml:active {
+		.remove:active, .button_create_product:active, .addComponent:active, .edit_checkBarcode:active, .addComponentEdit:active, .loadFileXml:active {
 			position: relative;
 			top: 1px;
 			margin-left: 5px;
@@ -282,7 +282,7 @@
 				<tr>
 					<td><input class="edit_prodCode" style="width: 80%;" maxlength="18" type="text"
 							   placeholder="штрих-код"/>
-						<button class="edit_checkBarcode" style="display:table-cell; width:5%">&#x27f3;</button></td></td>
+						<button class="edit_checkBarcode" style="float: right;">&#x27f3;</button></td></td>
 				</tr>
 				<tr>
 					<td>

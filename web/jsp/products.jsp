@@ -81,50 +81,69 @@
 			white-space: normal;
 		}
 
-		.varButton, .btnCompound, .varACCButton {
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));
-			background: -moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-			background: -webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-			background: -o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-			background: -ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);
-			background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6', GradientType=0);
-			background-color: #ffffff;
-			-moz-border-radius: 42px;
-			-webkit-border-radius: 42px;
-			border-radius: 42px;
-			border: 2px solid #dcdcdc;
-			display: inline-block;
-			cursor: pointer;
-			color: #666666;
-			font-family: Arial;
-			font-size: 15px;
-			font-weight: bold;
-			padding: 3px 7px;
+		/*.varButton, .btnCompound, .varACCButton {*/
+			/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));*/
+			/*background: -moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
+			/*background: -webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
+			/*background: -o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
+			/*background: -ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
+			/*background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);*/
+			/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6', GradientType=0);*/
+			/*background-color: #ffffff;*/
+			/*-moz-border-radius: 42px;*/
+			/*-webkit-border-radius: 42px;*/
+			/*border-radius: 42px;*/
+			/*border: 2px solid #dcdcdc;*/
+			/*display: inline-block;*/
+			/*cursor: pointer;*/
+			/*color: #666666;*/
+			/*font-family: Arial;*/
+			/*font-size: px;*/
+			/*font-weight: bold;*/
+			/*padding: 3px 7px;*/
+			/*text-decoration: none;*/
+			/*margin-top: 5px;*/
+			/*margin-right: 5px;*/
+			/*margin-bottom: 5px;*/
+			/*margin-left: 5px;*/
+		/*}*/
+
+		/*.varButton:hover, .btnCompound:hover, .varACCButton:hover {*/
+			/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));*/
+			/*background: -moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
+			/*background: -webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
+			/*background: -o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
+			/*background: -ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
+			/*background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);*/
+			/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff', GradientType=0);*/
+			/*background-color: #f6f6f6;*/
+		/*}*/
+
+		/*.varButton:active, .btnCompound:active {*/
+			/*position: relative;*/
+			/*top: 1px;*/
+		/*}*/
+
+		.varButton, .btnCompound, .varACCButton  {
+			-webkit-border-radius: 3;
+			-moz-border-radius: 3;
+			border-radius: 3px;
+			color: #000000;
+			font-size: 10px;
+			border: solid #446173 1px;
 			text-decoration: none;
-			margin-top: 5px;
-			margin-right: 5px;
-			margin-bottom: 5px;
-			margin-left: 5px;
 		}
 
-		.varButton:hover, .btnCompound:hover, .varACCButton:hover {
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));
-			background: -moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-			background: -webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-			background: -o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-			background: -ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);
-			background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff', GradientType=0);
-			background-color: #f6f6f6;
+		.varButton:hover , .btnCompound:hover , .varACCButton:hover {
+			text-decoration: none;
 		}
 
-		.varButton:active, .btnCompound:active {
-			position: relative;
-			top: 1px;
+		.varButton:active, .btnCompound:active, .varACCButton:active {
+		position: relative;
+		top: 1px;
 		}
 
-		.remove, .button_create_product, .addComponent, .checkBarcode, .addComponentEdit, .edit_checkBarcoed, .loadFileXml {
+		.remove, .button_create_product, .addComponent, .checkBarcode, .addComponentEdit, .edit_checkBarcode, .loadFileXml {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
 			background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
 			background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
@@ -148,7 +167,7 @@
 			margin-left: 5px;
 		}
 
-		.remove:hover, .button_create_product:hover, .addComponent:hover, .checkBarcode:hover, .edit_checkBarcoed:hover,
+		.remove:hover, .button_create_product:hover, .addComponent:hover, .checkBarcode:hover, .edit_checkBarcode:hover,
 		.addComponentEdit:hover, .loadFileXml:hover {
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
 			background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
@@ -161,8 +180,8 @@
 			margin-left: 5px;
 		}
 
-		.remove:active, .button_create_product:active, .addComponent:active, .checkBarcode:active, edit_checkBarcoed:active,
-		.loadFileXml:active {
+		.remove:active, .button_create_product:active, .addComponent:active, .checkBarcode:active, .edit_checkBarcode:active,
+		.addComponentEdit:active, .loadFileXml:active {
 			position: relative;
 			top: 1px;
 			margin-left: 5px;
@@ -269,7 +288,7 @@
 					<tr>
 						<td><input class="prodCode" style="width: 80%;" maxlength="18" type="text"
 								   placeholder="штрих-код"/>
-							<button class="checkBarcode" style="display:table-cell; width:5%">&#x27f3;</button>
+							<button class="checkBarcode" style="float: right;">&#x27f3;</button>
 						</td>
 					</tr>
 					<tr>
@@ -373,7 +392,7 @@
 					<tr>
 						<td><input class="edit_prodCode" style="width: 80%;" maxlength="18" type="text"
 								   placeholder="штрих-код"/>
-							<button class="edit_checkBarcoed" style="display:table-cell; width:5%">&#x27f3;</button></td>
+							<button class="edit_checkBarcode" style="float: right;">&#x27f3;</button></td>
 					</tr>
 					<tr>
 						<td>
