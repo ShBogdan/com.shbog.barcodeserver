@@ -1,6 +1,5 @@
 package control;
 
-
 import model.DbHelper;
 
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-
 
 public class DbInterface extends HttpServlet {
 
@@ -22,7 +20,6 @@ public class DbInterface extends HttpServlet {
 
 		try {
 			if (null != req.getParameter("getBarcodes")) {
-//                resp.setContentType("application/json;charset=UTF-8"); //будет глючит success
 				db.getBarcodes(out);
 				return;
 			}
@@ -179,7 +176,7 @@ public class DbInterface extends HttpServlet {
 				return;
 			}
 			if (null != req.getParameter("getNewProducts")) {
-				db.getNewProducts(out);
+				db.getNewProducts(out, req.getParameter("startDate"), req.getParameter("endDate"));
 				return;
 			}
 			if (null != req.getParameter("getComponents")) {

@@ -816,19 +816,19 @@ public class DbHelper {
 			out.println("<tbody id=" + resultSet.getString("section_id") + ">");
 			out.println("<tr class=\"par\">");
 			out.println("<td class=\"parent\">&nbsp;&nbsp;&nbsp;&nbsp;" + count + ". " + resultSet.getString("section_name") + "</td>");
-			out.println("<td class=\"remove-" + resultSet.getString("section_id") + "\"><button>&#215;</button>&nbsp;&nbsp;</td>");
-			out.println("<td class=\"rename-" + resultSet.getString("section_id") + "\"><button>&#8601;</button>&nbsp;&nbsp;</td>");
-			out.println("<td class=\"addCategory-" + resultSet.getString("section_id") + "\"><button>&#43;</button>&nbsp;&nbsp;</td>");
+			out.println("<td class=\"remove-" + resultSet.getString("section_id") + "\"><button class='actionButton'>&#215;</button>&nbsp;&nbsp;</td>");
+			out.println("<td class=\"rename-" + resultSet.getString("section_id") + "\"><button class='actionButton'>&#8601;</button>&nbsp;&nbsp;</td>");
+			out.println("<td class=\"addCategory-" + resultSet.getString("section_id") + "\"><button class='actionButton'>&#43;</button>&nbsp;&nbsp;</td>");
 			out.println("</tr>");
-			String _query = "SELECT cat_id, cat_name FROM categories WHERE section_id_frk = " + resultSet.getString("section_id") + " ORDER BY cat_name";
+			String _query = "SELECT cat_id, cat_name, COUNT(cat_id) AS size FROM categories RIGHT JOIN product ON cat_id = cat_id_frk WHERE section_id_frk = " + resultSet.getString("section_id") + " GROUP BY cat_id ORDER BY cat_name;";
 			Statement _stmt = connection.createStatement();
 			ResultSet _resultSet = _stmt.executeQuery(_query);
 			while (_resultSet.next()) {
-				out.println("<tr class=\"child-" + resultSet.getString("section_id") + "\"  id = \"" + _resultSet.getString("cat_id") + "\">"); //style="display:none"
+				out.println("<tr class=\"child-" + resultSet.getString("section_id") + "\"  id = \"" + _resultSet.getString("cat_id") + "\">");
 				out.println("<td>" + count + "." + _count + ". " + _resultSet.getString("cat_name") + "</td>");
-				out.println("<td class=\"removeCat\"><button>&#215;</button>&nbsp;&nbsp;</td>");
-				out.println("<td class=\"renameCat\"><button >&#8601;</button>&nbsp;&nbsp;</td>");
-				out.println("<td class=\"goToProduct\"><button >&#62;</button>&nbsp;&nbsp;</td>");
+				out.println("<td class=\"goToProduct\"><button class='actionButton'>" + _resultSet.getString("size") + "&nbsp;&#62;</button>&nbsp;&nbsp;</td>");
+				out.println("<td class=\"removeCat\"><button class='actionButton'>&#215;</button>&nbsp;&nbsp;</td>");
+				out.println("<td class=\"renameCat\"><button class='actionButton'>&#8601;</button>&nbsp;&nbsp;</td>");
 				out.println("<td></td>");
 				out.println("</tr>");
 				_count++;
@@ -928,7 +928,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getTypes(PrintWriter out) throws SQLException {
-		String query = "SELECT id, type_name, cat_name FROM prodtype LEFT JOIN categories ON cat_id_frk<=>categories.cat_id";
+		String query = "SELECT id, type_name, cat_name FROM prodtype LEFT JOIN categories ON cat_id_frk<=>categories.cat_id ORDER BY cat_name;";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
 		JSONObject result = new JSONObject();
@@ -936,12 +936,12 @@ public class DbHelper {
 		while (resultSet.next()) {
 			JSONArray ja = new JSONArray();
 			String id = String.valueOf(resultSet.getInt("id"));
-			String type_name = resultSet.getString("type_name");
 			String cat_id_frk = resultSet.getString("cat_name");
+			String type_name = resultSet.getString("type_name");
 
 			ja.put(id);
-			ja.put(type_name);
 			ja.put(cat_id_frk);
+			ja.put(type_name);
 			array.put(ja);
 		}
 		try {
@@ -980,10 +980,22 @@ public class DbHelper {
 		return out;
 	}
 
-	public PrintWriter getNewProducts(PrintWriter out) throws SQLException {
-		String query = "SELECT prod_id, cat_name,  prod_code FROM newproducts INNER JOIN categories ON cat_id_frk=cat_id";
+	// FIXME: 11.05.2017 Изменить базу.
+	//ALTER TABLE productsdb.newproducts ADD prod_date VARCHAR(100) NOT NULL;
+	//UPDATE productsdb.newproducts SET prod_date = '2017-05-11 08:28:12.274391';
+	/**
+	 * @param out       PrintWriter
+	 * @param startDate dateFormat: "yy-mm-dd"
+	 * @param endDate   dateFormat: "yy-mm-dd"
+	 * @return json array {"newproducts":[[],[]]}
+	 */
+	public PrintWriter getNewProducts(PrintWriter out, String startDate, String endDate) throws SQLException {
+		endDate = endDate + " 23:59:59";
+		String query = "SELECT prod_id, cat_name, prod_code, prod_date FROM newproducts INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "'";
+
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
+
 		JSONObject result = new JSONObject();
 		JSONArray array = new JSONArray();
 		while (resultSet.next()) {
@@ -991,9 +1003,11 @@ public class DbHelper {
 			String id = String.valueOf(resultSet.getInt("prod_id"));
 			String cat_name = resultSet.getString("cat_name");
 			String prod_code = resultSet.getString("prod_code");
+			String prod_date = resultSet.getString("prod_date");
 			ja.put(id);
 			ja.put(cat_name);
 			ja.put(prod_code);
+			ja.put(prod_date);
 			array.put(ja);
 		}
 		try {
@@ -1179,7 +1193,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter isBarcodeExist(PrintWriter out, String barcode) throws SQLException {
-		String query = "SELECT prod_code FROM product WHERE prod_code = '" + barcode +"'";
+		String query = "SELECT prod_code FROM product WHERE prod_code = '" + barcode + "'";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
 		JSONObject result = new JSONObject();
@@ -1241,13 +1255,11 @@ public class DbHelper {
 	//ALTER TABLE productsdb.product MODIFY prod_date VARCHAR(100) NOT NULL;
 	//UPDATE productsdb.product SET prod_date = '2017-05-11 08:28:12.274391';
 	//ALTER TABLE productsdb.product MODIFY prod_date TIMESTAMP NOT NULL;
-
 	/**
 	 * @param out       PrintWriter
 	 * @param startDate dateFormat: "yy-mm-dd"
 	 * @param endDate   dateFormat: "yy-mm-dd"
 	 * @return json array {"products":[[],[]]}
-	 * @throws SQLException
 	 */
 	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate) throws SQLException {
 		endDate = endDate + " 23:59:59";
@@ -1299,7 +1311,6 @@ public class DbHelper {
 	}
 
 	public void changeUserPass(String id, String user_name, String user_pass) throws SQLException {
-//        System.out.println("changeUserPass");
 		String query = "UPDATE users SET user_name=?, user_pass=? WHERE user_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(query);
 		preparedStatement.setString(1, user_name);
@@ -1318,7 +1329,6 @@ public class DbHelper {
 		preparedStatement.execute();
 		if (connection != null)
 			connection.close();
-		System.out.println("createProdPhone");
 	}
 
 }

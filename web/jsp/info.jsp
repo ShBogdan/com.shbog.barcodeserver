@@ -21,6 +21,21 @@
 		});
 	</script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+	<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	<style type="text/css">
+		.ui-widget-content {
+			background: #F9F9F9;
+			/*border: 1px solid #90d93f;*/
+			/*color: #222222;*/
+		}
+
+		.ui-widget-header {
+			background: #e7e7e7;
+			border: 1px solid #bcbcbc;
+			color: black;
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
 <table>
@@ -28,7 +43,7 @@
 		<td><p>Начальная дата: <input type="text" id="startDate"></p></td>
 		<td><p>Конечная дата: <input type="text" id="endDate"></p></td>
 		<td>
-			<button id="getProductsByDate">Выбрать</button>
+			<button id="getProdGroupByDate" class="actionButton">Выбрать</button>
 		</td>
 	</tr>
 </table>

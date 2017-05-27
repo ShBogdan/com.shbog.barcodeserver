@@ -88,6 +88,83 @@
 			margin: 0;
 			padding: 5px 10px;
 		}
+
+		.actionButton {
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
+			background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+			background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+			background: -o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+			background: -ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
+			background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9', GradientType=0);
+			background-color: #f9f9f9;
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+			border-radius: 3px;
+			border: 1px solid #dcdcdc;
+			display: inline-block;
+			cursor: pointer;
+			color: #666666;
+			font-family: Arial;
+			font-size: 15px;
+			font-weight: bold;
+			padding: 3px 24px;
+			text-decoration: none;
+			margin-left: 5px;
+		}
+
+		.actionButton:hover {
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
+			background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+			background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+			background: -o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+			background: -ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
+			background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9', GradientType=0);
+			background-color: #e9e9e9;
+			margin-left: 5px;
+		}
+
+		.actionButton:active {
+			position: relative;
+			top: 1px;
+			margin-left: 5px;
+		}
+
+		.varButton, .btnCompound, .varACCButton {
+			-webkit-border-radius: 3;
+			-moz-border-radius: 3;
+			border-radius: 3px;
+			color: #000000;
+			font-size: 5px;
+			border: solid #446173 1px;
+			background-color: #ffffff;
+			text-decoration: none;
+			margin-top: 2px;
+			margin-right: 2px;
+			margin-bottom: 2px;
+			margin-left: 2px;
+		}
+
+		.varButton:hover, .btnCompound:hover, .varACCButton:hover {
+			text-decoration: none;
+		}
+
+		.varButton:active, .btnCompound:active, .varACCButton:active {
+			position: relative;
+			top: 1px;
+		}
+
+		.components, .compound {
+			white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+			white-space: -pre-wrap; /* Opera 4-6 */
+			white-space: -o-pre-wrap; /* Opera 7 */
+			white-space: pre-wrap; /* css-3 */
+			word-wrap: break-word; /* Internet Explorer 5.5+ */
+			word-break: break-all;
+			white-space: normal;
+		}
+
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -161,6 +238,7 @@
 				$('#menu').load("info.jsp", function () {
 					cat_info_table = $('#cat_info_table').DataTable({
 						processing: true,
+						order: [1, 'asc'],
 						"pageLength": 25,
 						"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
 						"deferRender": true,
@@ -173,7 +251,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'go_to_products'>&#62;</button>"
+								"defaultContent": "<button id = 'go_to_products' class='actionButton'>&#62;</button>"
 							}
 						]
 					});
@@ -197,7 +275,7 @@
 			});
 			$(document).on('click', '#btn2', function () {
 				$('#menu').load("catalog.jsp", function () {
-					//добавить катгорию
+					//добавить категорию
 					fill_main_section();
 					$(".addSection").on("click", "#addSection", (function () {
 						$.ajax({
@@ -427,6 +505,7 @@
 				$('#menu').load("types.jsp", function () {
 					type_table = $('#type_table').DataTable({
 						processing: true,
+						order: [1, 'asc'],
 						ajax: {
 							url: urlDb,
 							data: {getTypes: "getTypes"},
@@ -446,7 +525,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'button_edit_type'>&#8601;</button>"
+								"defaultContent": "<button id = 'button_edit_type' class='actionButton'>&#8601;</button>"
 							},
 							{
 								"targets": 4,
@@ -454,7 +533,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
+								"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
 							}
 						]
 
@@ -508,6 +587,7 @@
 				$('#menu').load("products.jsp", function () {
 					table = $('#products_table').DataTable({
 						processing: true,
+						order: [0, 'desc'],
 						ajax: {
 							url: urlDb,
 							data: {getProducts: "getProducts"},
@@ -527,7 +607,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'edit'>&#8601;</button>"
+								"defaultContent": "<button id = 'edit' class='actionButton'>&#8601;</button>"
 							},
 							{
 								"targets": 7,
@@ -535,7 +615,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
+								"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
 							}
 						]
 					});
@@ -778,7 +858,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'edit_component'>&#8601;</button>"
+								"defaultContent": "<button id = 'edit_component' class='actionButton'>&#8601;</button>"
 							},
 							{
 								"targets": 11,
@@ -786,7 +866,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
+								"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
 							}
 						]
 					});
@@ -887,7 +967,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
+								"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
 							},
 							{
 								"targets": 2,
@@ -895,7 +975,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'edit_exclude'>&#8601;</button>"
+								"defaultContent": "<button id = 'edit_exclude' class='actionButton'>&#8601;</button>"
 							}]
 
 					});
@@ -946,6 +1026,7 @@
 					fillBarcodeList();
 					newprod_table = $('#newprod_table').DataTable({
 						processing: true,
+						order: [0, 'desc'],
 						ajax: {
 							url: urlDb,
 							data: {getNewProducts: "getNewProducts"},
@@ -964,7 +1045,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'select'>&#10003;</button>"
+								"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
 							},
 							{
 								"targets": 3,
@@ -972,7 +1053,7 @@
 								"searchable": false,
 								"width": "1%",
 								"data": null,
-								"defaultContent": "<button id = 'edit_newproducts'>&#8601;</button>"
+								"defaultContent": "<button id = 'edit_newproducts' class='actionButton'>&#8601;</button>"
 							}],
 
 						"createdRow": function (row, data, index) {
@@ -1302,8 +1383,8 @@
 									if (parseInt(data, 10) != 0) {
 										type_table.row.add([
 											parseInt(data, 10),
-											$(".typeName").val(),
 											$(".selectCategoryForType option:selected").text(),
+											$(".typeName").val(),
 										]).draw(false);
 										$(".dialog_create_type").dialog("close")
 									} else {
@@ -1386,8 +1467,8 @@
 									if (parseInt(data, 10) != 0) {
 										type_table.row.add([
 											edit_type_table[0],
-											$(".edit_typeName").val(),
 											$(".edit_selectCategoryForType option:selected").text(),
+											$(".edit_typeName").val(),
 										]).draw(false);
 										type_table.row(dell_edit_type_table).remove().draw(false);
 										$(".dialog_edit_type").dialog("close")
@@ -1422,7 +1503,7 @@
 										.attr("value", element[0])
 										.text(element[1]));
 								})
-								var selectedCat = edit_type_table[2];
+								var selectedCat = edit_type_table[1];
 								$('.edit_selectCategoryForType option:contains("' + selectedCat + '")')
 									.filter(function (i, el) {
 										return el.innerHTML.toLowerCase().trim() === selectedCat.toLowerCase().trim();
@@ -1435,7 +1516,7 @@
 								alert("Error: Could not back");
 							}
 						});
-						$(".edit_typeName").val(edit_type_table[1]);
+						$(".edit_typeName").val(edit_type_table[2]);
 					},
 					beforeClose: function (event, ui) {
 						$(".edit_typeName").val('')
@@ -1494,7 +1575,7 @@
 				cell = newprod_table.cell({row: rowTable[0][0], column: 2}).node();
 				create_newProduct();
 			});
-			$(document).on('click', '#getProductsByDate', function () {
+			$(document).on('click', '#getProdGroupByDate', function () {
 				var startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
 				var endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
 				$.ajax({
@@ -1512,6 +1593,27 @@
 							return el
 						});
 						cat_info_table.rows.add(arr).draw();
+					}
+				})
+			});
+			$(document).on('click', '#getNewProductsByDate', function () {
+				var startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				var endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				$.ajax({
+					url: urlDb,
+					data: {
+						getNewProducts: "getNewProducts",
+						startDate: startDate,
+						endDate: endDate
+					},
+					type: 'POST',
+					success: function (data) {
+						newprod_table.clear().draw();
+						var obj = $.parseJSON(data);
+						var arr = $.map(obj, function (el) {
+							return el
+						});
+						newprod_table.rows.add(arr).draw();
 					}
 				})
 			});
@@ -1536,8 +1638,7 @@
 								return;
 							}
 							if (($.inArray($(".prodType").val(), autocompleteInpTypes) === -1) &&
-							$(".prodType").val().trim() != "")
-							{
+								$(".prodType").val().trim() != "") {
 								alert("Вы не можете создать здесь тип")
 								return;
 							}
@@ -1617,8 +1718,7 @@
 								return;
 							}
 							if (($.inArray($(".edit_prodType").val(), autocompleteInpTypes) === -1) &&
-								$(".edit_prodType").val().trim() != "")
-							{
+								$(".edit_prodType").val().trim() != "") {
 								alert("Вы не можете создать здесь тип")
 								return;
 							}
@@ -1730,8 +1830,7 @@
 								return;
 							}
 							if (($.inArray($(".edit_prodType").val(), autocompleteInpTypes) === -1) &&
-								$(".edit_prodType").val().trim() != "")
-							{
+								$(".edit_prodType").val().trim() != "") {
 								alert("Вы не можете создать здесь тип")
 								return;
 							}

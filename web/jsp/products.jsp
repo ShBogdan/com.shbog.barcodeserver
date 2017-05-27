@@ -71,121 +71,6 @@
 			font-weight: bold;
 		}
 
-		.components, .compound {
-			white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-			white-space: -pre-wrap; /* Opera 4-6 */
-			white-space: -o-pre-wrap; /* Opera 7 */
-			white-space: pre-wrap; /* css-3 */
-			word-wrap: break-word; /* Internet Explorer 5.5+ */
-			word-break: break-all;
-			white-space: normal;
-		}
-
-		/*.varButton, .btnCompound, .varACCButton {*/
-			/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #f6f6f6));*/
-			/*background: -moz-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
-			/*background: -webkit-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
-			/*background: -o-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
-			/*background: -ms-linear-gradient(top, #ffffff 5%, #f6f6f6 100%);*/
-			/*background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);*/
-			/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f6f6f6', GradientType=0);*/
-			/*background-color: #ffffff;*/
-			/*-moz-border-radius: 42px;*/
-			/*-webkit-border-radius: 42px;*/
-			/*border-radius: 42px;*/
-			/*border: 2px solid #dcdcdc;*/
-			/*display: inline-block;*/
-			/*cursor: pointer;*/
-			/*color: #666666;*/
-			/*font-family: Arial;*/
-			/*font-size: px;*/
-			/*font-weight: bold;*/
-			/*padding: 3px 7px;*/
-			/*text-decoration: none;*/
-			/*margin-top: 5px;*/
-			/*margin-right: 5px;*/
-			/*margin-bottom: 5px;*/
-			/*margin-left: 5px;*/
-		/*}*/
-
-		/*.varButton:hover, .btnCompound:hover, .varACCButton:hover {*/
-			/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f6f6f6), color-stop(1, #ffffff));*/
-			/*background: -moz-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
-			/*background: -webkit-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
-			/*background: -o-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
-			/*background: -ms-linear-gradient(top, #f6f6f6 5%, #ffffff 100%);*/
-			/*background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);*/
-			/*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f6f6f6', endColorstr='#ffffff', GradientType=0);*/
-			/*background-color: #f6f6f6;*/
-		/*}*/
-
-		/*.varButton:active, .btnCompound:active {*/
-			/*position: relative;*/
-			/*top: 1px;*/
-		/*}*/
-
-		.varButton, .btnCompound, .varACCButton  {
-			-webkit-border-radius: 3;
-			-moz-border-radius: 3;
-			border-radius: 3px;
-			color: #000000;
-			font-size: 10px;
-			border: solid #446173 1px;
-			text-decoration: none;
-		}
-
-		.varButton:hover , .btnCompound:hover , .varACCButton:hover {
-			text-decoration: none;
-		}
-
-		.varButton:active, .btnCompound:active, .varACCButton:active {
-		position: relative;
-		top: 1px;
-		}
-
-		.remove, .button_create_product, .addComponent, .checkBarcode, .addComponentEdit, .edit_checkBarcode, .loadFileXml {
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9));
-			background: -moz-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-			background: -webkit-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-			background: -o-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-			background: -ms-linear-gradient(top, #f9f9f9 5%, #e9e9e9 100%);
-			background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9', GradientType=0);
-			background-color: #f9f9f9;
-			-moz-border-radius: 3px;
-			-webkit-border-radius: 3px;
-			border-radius: 3px;
-			border: 1px solid #dcdcdc;
-			display: inline-block;
-			cursor: pointer;
-			color: #666666;
-			font-family: Arial;
-			font-size: 15px;
-			font-weight: bold;
-			padding: 3px 24px;
-			text-decoration: none;
-			margin-left: 5px;
-		}
-
-		.remove:hover, .button_create_product:hover, .addComponent:hover, .checkBarcode:hover, .edit_checkBarcode:hover,
-		.addComponentEdit:hover, .loadFileXml:hover {
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9));
-			background: -moz-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-			background: -webkit-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-			background: -o-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-			background: -ms-linear-gradient(top, #e9e9e9 5%, #f9f9f9 100%);
-			background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9', GradientType=0);
-			background-color: #e9e9e9;
-			margin-left: 5px;
-		}
-
-		.remove:active, .button_create_product:active, .addComponent:active, .checkBarcode:active, .edit_checkBarcode:active,
-		.addComponentEdit:active, .loadFileXml:active {
-			position: relative;
-			top: 1px;
-			margin-left: 5px;
-		}
 	</style>
 </head>
 
@@ -199,7 +84,6 @@
 		}
 		var file = document.getElementsByClassName('image')[0].files[0];
 		var reader = new FileReader();
-//        console.log(file)
 		if (file.size > 1200000) {
 			alert("фото не может весить больше 1 мегабайта");
 			closeImage();
@@ -223,8 +107,8 @@
 	}
 </script>
 <div class="temp">
-	<button id="button" class="remove">Удалить выделенное</button>
-	<button id="button_create_product" class="button_create_product">Добавить продукт</button>
+	<button id="button" class="remove actionButton">Удалить выделенное</button>
+	<button id="button_create_product" class="button_create_product actionButton">Добавить продукт</button>
 </div>
 <hr>
 <table id="products_table" class="display" cellspacing="0" width="100%">
@@ -271,7 +155,7 @@
 						<tr>
 							<td>
 								<span class="x" hidden onclick="closeImage()">[X]</span>
-								<input type="button" class="loadFileXml" value="Загрузить фото"
+								<input type="button" class="loadFileXml actionButton" value="Загрузить фото"
 									   onclick="document.getElementsByClassName('image')[0].click();"/>
 								<input type="file" name="attachfile" onchange="previewFile();" class="image"
 									   style="display:none;">
@@ -288,7 +172,7 @@
 					<tr>
 						<td><input class="prodCode" style="width: 80%;" maxlength="18" type="text"
 								   placeholder="штрих-код"/>
-							<button class="checkBarcode" style="float: right;">&#x27f3;</button>
+							<button class="checkBarcode actionButton" style="float: right;">&#x27f3;</button>
 						</td>
 					</tr>
 					<tr>
@@ -314,7 +198,7 @@
 						<td><input class="prodProvider" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Производитель"/></td>
 					</tr>
-								</tbody>
+					</tbody>
 				</table>
 			</td>
 		</tr>
@@ -339,7 +223,7 @@
 				<div class="divInput" align="center">
 					<input class="getInputComponent" placeholder="Новый компонент" type="text"
 						   style="display:table-cell; width:60%" maxlength="50" list="components">
-					<button class="addComponent" style="display:table-cell; width:36%">Добавить</button>
+					<button class="addComponent actionButton" style="display:table-cell; width:36%">Добавить</button>
 					<datalist id="components"></datalist>
 				</div>
 			</td>
@@ -375,7 +259,7 @@
 						<tr>
 							<td>
 								<span class="x" hidden onclick="closeImage()">[X]</span>
-								<input type="button" class="loadFileXml" value="Загрузить фото"
+								<input type="button" class="loadFileXml actionButton" value="Загрузить фото"
 									   onclick="document.getElementsByClassName('image')[0].click();"/>
 								<input type="file" name="attachfile" onchange="previewFile();" class="image"
 									   style="display:none;">
@@ -392,7 +276,8 @@
 					<tr>
 						<td><input class="edit_prodCode" style="width: 80%;" maxlength="18" type="text"
 								   placeholder="штрих-код"/>
-							<button class="edit_checkBarcode" style="float: right;">&#x27f3;</button></td>
+							<button class="edit_checkBarcode actionButton" style="float: right;">&#x27f3;</button>
+						</td>
 					</tr>
 					<tr>
 						<td>
@@ -416,7 +301,7 @@
 						<td><input class="edit_prodProvider" style="width: 100%;" maxlength="155" type="text"
 								   placeholder="Производитель"/></td>
 					</tr>
-				</tbody>
+					</tbody>
 				</table>
 			</td>
 		</tr>
@@ -441,7 +326,8 @@
 				<div class="divInputEdit" align="center">
 					<input class="getInputComponentEdit" placeholder="Новый компонент" type="text"
 						   style="display:table-cell; width:60%" list="edit_components">
-					<button class="addComponentEdit" style="display:table-cell; width:36%">Добавить</button>
+					<button class="addComponentEdit actionButton" style="display:table-cell; width:36%">Добавить
+					</button>
 					<datalist id="edit_components"></datalist>
 				</div>
 			</td>
