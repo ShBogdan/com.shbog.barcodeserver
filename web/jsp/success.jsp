@@ -2102,7 +2102,7 @@
 						getComponentNames();
 						$.ajax({
 							url: urlDb,
-							data: {getComponenNames: "getComponenNames"},
+							data: {getComponentNames: "getComponentNames"},
 							dataSrc: "additive",
 							type: "POST",
 							success: function (data) {
@@ -2255,7 +2255,7 @@
 			function getComponentNames() {
 				$.ajax({
 					url: urlDb,
-					data: {getComponenNames: "getComponenNames"},
+					data: {getComponentNames: "getComponentNames"},
 					dataSrc: "additive",
 					type: "POST",
 					success: function (data) {
@@ -2337,7 +2337,7 @@
 			function fillComponents(elId) {
 				$.ajax({
 					url: urlDb,
-					data: {getComponenNames: "getComponenNames"},
+					data: {getComponentNames: "getComponentNames"},
 					dataSrc: "additive",
 					type: "POST",
 					success: function (data) {

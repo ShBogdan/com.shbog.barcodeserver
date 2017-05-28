@@ -1048,7 +1048,7 @@ public class DbHelper {
 		return out;
 	}
 
-	public PrintWriter getComponenNames(PrintWriter out) throws SQLException {
+	public PrintWriter getComponentNames(PrintWriter out) throws SQLException {
 		String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type FROM component"; //  WHERE COALESCE(comp_group, '') = ''
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);

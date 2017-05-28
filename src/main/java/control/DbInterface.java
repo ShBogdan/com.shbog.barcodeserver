@@ -183,8 +183,8 @@ public class DbInterface extends HttpServlet {
 				db.getComponents(out);
 				return;
 			}
-			if (null != req.getParameter("getComponenNames")) {
-				db.getComponenNames(out);
+			if (null != req.getParameter("getComponentNames")) {
+				db.getComponentNames(out);
 				return;
 			}
 			if (null != req.getParameter("getProdType")) {
