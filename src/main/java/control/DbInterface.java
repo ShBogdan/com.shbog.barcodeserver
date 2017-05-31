@@ -66,7 +66,6 @@ public class DbInterface extends HttpServlet {
 				return;
 			}
 			if (null != req.getParameter("createComponent")) {
-				System.out.println("createComponent");
 				db.createComponent(req.getParameter("additiveNamber"),
 						req.getParameter("additiveName"),
 						req.getParameter("additiveColor"),
@@ -76,7 +75,8 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("additiveNotes"),
 						req.getParameter("additiveFor"),
 						out,
-						req.getParameter("additiveType"));
+						req.getParameter("additiveType"),
+						req.getParameter("additiveNameUa"));
 				return;
 			}
 			if (null != req.getParameter("addExclude")) {
@@ -94,8 +94,10 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("additiveCBox"),
 						req.getParameter("additiveFor"),
 						req.getParameter("additiveNotes"),
-						req.getParameter("additiveType")
-				);
+						req.getParameter("additiveType"),
+						req.getParameter("additiveNameUa"
+
+				));
 				return;
 			}
 			if (null != req.getParameter("getCBox")) {

@@ -56,6 +56,7 @@
 		<th>Назначение</th>
 		<th>Номер</th>
 		<th>Название</th>
+		<th>Название UA</th>
 		<th>Описание</th>
 		<th>Запрет</th>
 		<th>Примечание</th>
@@ -72,6 +73,7 @@
 		<th class="searchable">Назначени</th>
 		<th class="searchable">Номер</th>
 		<th class="searchable">Название</th>
+		<th class="searchable">Название UA</th>
 		<th class="searchable">Описание</th>
 		<th class="searchable">Запрет</th>
 		<th class="searchable">Примечание</th>
@@ -99,6 +101,7 @@
 			<td align="center" width="50%" valign="top">
 				<input class="e_namber" placeholder="Номер" style="width: 100%" type="text"/>
 				<input class="e_name" placeholder="Название" style="width: 100%" type="text"/>
+				<input class="e_name_ua" placeholder="Название UA" style="width: 100%" type="text"/>
 				<input class="e_for" placeholder="Назначение" style="width: 100%" type="text"/>
 				<input class="e_type" placeholder="Тип добавки" style="width: 100%" type="text"/>
 				<select class="e_color" style="width: 100%">

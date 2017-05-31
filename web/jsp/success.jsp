@@ -840,7 +840,8 @@
 						"pageLength": 25,
 						"lengthMenu": [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, "All"]],
 						"deferRender": true,
-						order: [[0, 'asc']],
+						order: [0, 'desc'],
+
 						"columnDefs": [
 							{"targets": 0, "visible": false},
 							{"targets": 1, "visible": true},
@@ -848,12 +849,13 @@
 							{"targets": 3, "type": "natural"},
 							{"targets": 4, "visible": true,},
 							{"targets": 5, "visible": true,},
-							{"targets": 6, "visible": true},
+							{"targets": 6, "visible": true,},
 							{"targets": 7, "visible": true},
-							{"targets": 8, "visible": false},
+							{"targets": 8, "visible": true},
 							{"targets": 9, "visible": false},
+							{"targets": 10, "visible": false},
 							{
-								"targets": 10,
+								"targets": 11,
 								"orderable": false,
 								"searchable": false,
 								"width": "1%",
@@ -861,7 +863,7 @@
 								"defaultContent": "<button id = 'edit_component' class='actionButton'>&#8601;</button>"
 							},
 							{
-								"targets": 11,
+								"targets": 12,
 								"orderable": false,
 								"searchable": false,
 								"width": "1%",
@@ -1970,6 +1972,7 @@
 							for (var i = 0, len = componentGroup.length; i < len; i++) {
 								obj['name_' + i] = componentGroup[i];
 							}
+							console.log(obj)
 							var jsonString = JSON.stringify(obj);
 							$.ajax({
 								url: urlDb,
@@ -1984,6 +1987,7 @@
 									additiveFor: $(".e_for").val(),
 									additiveNotes: $(".e_notes").val(),
 									additiveType: $(".e_type").val(),
+									additiveNameUa: $(".e_name_ua").val(),
 								},
 								type: 'POST',
 								dataType: 'text',
@@ -1994,6 +1998,7 @@
 										$(".e_for").val(),
 										$(".e_namber").val(),
 										$(".e_name").val(),
+										$(".e_name_ua").val(),
 										$(".info").val(),
 										$(".permission").val(),
 										$(".e_notes").val(),
@@ -2042,6 +2047,7 @@
 								obj['name_' + i] = componentGroup[i];
 							}
 							var jsonString = JSON.stringify(obj);
+							console.log(obj)
 							$.ajax({
 								url: urlDb,
 								data: {
@@ -2055,9 +2061,8 @@
 									additiveCBox: cBoxs.toString(),
 									additiveFor: $(".e_for").val(),
 									additiveNotes: $(".e_notes").val(),
-									additiveType: $(".e_type").val()
-
-
+									additiveType: $(".e_type").val(),
+									additiveNameUa: $(".e_name_ua").val()
 								},
 								type: 'POST',
 								dataType: 'text',
@@ -2068,6 +2073,7 @@
 										$(".e_for").val(),
 										$(".e_namber").val(),
 										$(".e_name").val(),
+										$(".e_name_ua").val(),
 										$(".info").val(),
 										$(".permission").val(),
 										$(".e_notes").val(),
@@ -2092,13 +2098,14 @@
 						edit_e_tableRow[8] == 2 ? $('.e_color option:contains("Крассный")').prop('selected', true) : null;
 
 						$(".e_type").val(edit_e_tableRow[1])
-						$(".e_name").val(edit_e_tableRow[4]);
-						$(".e_namber").val(edit_e_tableRow[3]);
 						$(".e_for").val(edit_e_tableRow[2]);
-						$(".e_notes").val(edit_e_tableRow[7]);
-						$(".info").val(edit_e_tableRow[5]);
-						$(".permission").val(edit_e_tableRow[6]);
-						getCBox(edit_e_tableRow[9])
+						$(".e_namber").val(edit_e_tableRow[3]);
+						$(".e_name").val(edit_e_tableRow[4]);
+						$(".e_name_ua").val(edit_e_tableRow[5]);
+						$(".info").val(edit_e_tableRow[6]);
+						$(".permission").val(edit_e_tableRow[7]);
+						$(".e_notes").val(edit_e_tableRow[8]);
+						getCBox(edit_e_tableRow[10])
 						getComponentNames();
 						$.ajax({
 							url: urlDb,
@@ -2245,7 +2252,8 @@
 				$(".e_color").val('0');
 				$(".info").val('');
 				$(".permission").val('');
-				$(".e_type").val('')
+				$(".e_type").val('');
+				$(".e_name_ua").val('');
 				$(".getInputComponent").val('');
 				if ($(".dialog_create_additive").dialog("isOpen")) {
 					$(".dialog_create_additive").dialog("destroy");

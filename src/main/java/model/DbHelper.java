@@ -12,12 +12,6 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
 
-//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-//import org.apache.poi.ss.usermodel.Cell;
-//import org.apache.poi.ss.usermodel.Row;
-//import org.apache.poi.ss.usermodel.Sheet;
-
-
 public class DbHelper {
 
 	private final String URL = "jdbc:mysql://localhost:3306/productsdb";
@@ -193,7 +187,8 @@ public class DbHelper {
 		}
 	}
 
-	public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out, String additiveType) throws SQLException {
+	// TODO: 30.05.2017 ALTER TABLE component ADD comp_name_ua VARCHAR(150);
+	public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out, String additiveType, String additiveNameUa) throws SQLException {
 		//создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
 		List<String> names = new ArrayList<String>();
 		String mainId;
@@ -209,7 +204,7 @@ public class DbHelper {
 			names.add((String) jsonObject.get("name_" + i));
 		}
 
-		String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type) VALUE (?,?,?,?,?,?,?,?,?)";
+		String statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_name_ua) VALUE (?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, names.get(0));
 		preparedStatement.setString(2, additiveNamber);
@@ -220,6 +215,7 @@ public class DbHelper {
 		preparedStatement.setString(7, additiveFor);
 		preparedStatement.setString(8, additiveNotes);
 		preparedStatement.setString(9, additiveType);
+		preparedStatement.setString(10, additiveNameUa);
 		preparedStatement.execute();
 
 		String query = "SELECT LAST_INSERT_ID() AS last_id FROM component;";
@@ -231,7 +227,7 @@ public class DbHelper {
 		out.flush();
 
 		for (int i = 1; i < names.size(); i++) {
-			statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
+			statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group, comp_name_ua) VALUE (?,?,?,?,?,?,?,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(statement);
 			preparedStatement.setString(1, names.get(i));
 			preparedStatement.setString(2, additiveNamber);
@@ -243,6 +239,7 @@ public class DbHelper {
 			preparedStatement.setString(8, additiveNotes);
 			preparedStatement.setString(9, additiveType);
 			preparedStatement.setString(10, mainId);
+			preparedStatement.setString(11, additiveNameUa);
 			preparedStatement.execute();
 		}
 
@@ -315,7 +312,7 @@ public class DbHelper {
 		return out;
 	}
 
-	public void changeComponent(String additiveId, String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String additiveType) throws SQLException {
+	public void changeComponent(String additiveId, String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String additiveType, String additiveNameUa) throws SQLException {
 		List<String> names = new ArrayList<String>();
 
 		org.json.simple.parser.JSONParser parser = new JSONParser();
@@ -331,7 +328,7 @@ public class DbHelper {
 		List<String> copyNames = new ArrayList<String>(names);
 		copyNames.remove(0);
 
-		String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ? WHERE comp_id = ?";
+		String statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ?, comp_name_ua = ? WHERE comp_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, names.get(0));
 		preparedStatement.setString(2, additiveNamber);
@@ -342,7 +339,8 @@ public class DbHelper {
 		preparedStatement.setString(7, additiveFor);
 		preparedStatement.setString(8, additiveNotes);
 		preparedStatement.setString(9, additiveType);
-		preparedStatement.setString(10, additiveId);
+		preparedStatement.setString(10, additiveNameUa);
+		preparedStatement.setString(11, additiveId);
 		preparedStatement.execute();
 		//получаем id всех текущих названий
 		statement = "SELECT comp_id, comp_name FROM component WHERE comp_group=" + additiveId;
@@ -351,7 +349,7 @@ public class DbHelper {
 		while (resultSet.next()) {
 			if (names.contains(resultSet.getString("comp_name"))) {
 				copyNames.remove(resultSet.getString("comp_name"));
-				String _statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ?, comp_group=? WHERE comp_id = ?";
+				String _statement = "UPDATE component SET comp_name = ?, comp_e_code = ?, comp_info = ?, comp_perm = ?, comp_color = ?, comp_cbox = ?, comp_for = ?, comp_notes = ?, comp_type = ?, comp_group=?, comp_name_ua = ? WHERE comp_id = ?";
 				PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
 				_preparedStatement.setString(1, resultSet.getString("comp_name"));
 				_preparedStatement.setString(2, additiveNamber);
@@ -363,7 +361,8 @@ public class DbHelper {
 				_preparedStatement.setString(8, additiveNotes);
 				_preparedStatement.setString(9, additiveType);
 				_preparedStatement.setString(10, additiveId);
-				_preparedStatement.setString(11, resultSet.getString("comp_id"));
+				_preparedStatement.setString(11, additiveNameUa);
+				_preparedStatement.setString(12, resultSet.getString("comp_id"));
 				_preparedStatement.execute();
 //                System.out.println("Изменяем");
 			} else {
@@ -373,12 +372,10 @@ public class DbHelper {
 				tempPreparedStatement.execute();
 			}
 		}
-//        System.out.println(names.toString());
-//        System.out.println(copyNames.toString());
 
 		//Создаем новые
 		for (int i = 0; i < copyNames.size(); i++) {
-			statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group) VALUE (?,?,?,?,?,?,?,?,?,?)";
+			statement = "INSERT INTO component(comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_for, comp_notes, comp_type, comp_group, comp_name_ua) VALUE (?,?,?,?,?,?,?,?,?,?,?)";
 			preparedStatement = connection.prepareStatement(statement);
 			preparedStatement.setString(1, copyNames.get(i));
 			preparedStatement.setString(2, additiveNamber);
@@ -390,6 +387,7 @@ public class DbHelper {
 			preparedStatement.setString(8, additiveNotes);
 			preparedStatement.setString(9, additiveType);
 			preparedStatement.setString(10, additiveId);
+			preparedStatement.setString(11, additiveNameUa);
 			preparedStatement.execute();
 		}
 		if (connection != null)
@@ -1123,7 +1121,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getComponents(PrintWriter out) throws SQLException {
-		String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type FROM component WHERE COALESCE(comp_group, '') = ''";
+		String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type, comp_name_ua FROM component WHERE COALESCE(comp_group, '') = ''";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
 		JSONObject result = new JSONObject();
@@ -1141,11 +1139,13 @@ public class DbHelper {
 			String additive_notes = resultSet.getString("comp_notes");
 			String additive_group = resultSet.getString("comp_group");
 			String additive_type = resultSet.getString("comp_type");
+			String additive_name_ua = resultSet.getString("comp_name_ua");
 			ja.put(id);
 			ja.put(additive_type);
 			ja.put(additive_for);
 			ja.put(additive_code);
 			ja.put(additive_name);
+			ja.put(additive_name_ua);
 			ja.put(additive_info);
 			ja.put(additive_perm);
 			ja.put(additive_notes);
