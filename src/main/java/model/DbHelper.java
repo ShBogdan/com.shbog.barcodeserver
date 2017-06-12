@@ -8,39 +8,48 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
 
 public class DbHelper {
 
-	private final String URL = "jdbc:mysql://localhost:3306/productsdb";
-	private final String NAME = "root";
-	private final String PASSWORD = "";
-	//        private  final String PASSWORD = "bitnami";
-	private Connection connection = null;
+	private static final String APPLICATION_PROPERTIES_FILE_NAME = "application.properties";
+	private static final Properties applicationProperties;
+	private static final String DB_DRIVER;
+	private static final String URL;
+	private static final String NAME;
+	private static final String PASSWORD;
 
-//    private  final String URL = "jdbc:mysql://mysql313.1gb.ua/gbua_productsdb";
-//    private  final String NAME = "gbua_productsdb";
-//    private  final String PASSWORD = "df14a9c2xvn";
+	private Connection connection;
+
+	static {
+		applicationProperties = new Properties();
+		InputStream in = DbHelper.class.getClassLoader().getResourceAsStream(APPLICATION_PROPERTIES_FILE_NAME);
+		try {
+			applicationProperties.load(in);
+			in.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		URL = applicationProperties.getProperty("URL");
+		NAME = applicationProperties.getProperty("NAME");
+		PASSWORD = applicationProperties.getProperty("PASSWORD");
+		DB_DRIVER = applicationProperties.getProperty("dbDriver");
+	}
 
 	public DbHelper() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(DB_DRIVER);
 			Driver driver = new FabricMySQLDriver();
 			DriverManager.registerDriver(driver);
 			connection = DriverManager.getConnection(URL, NAME, PASSWORD);
 		} catch (SQLException e) {
-//            System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
-			return;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}
-		if (connection != null) {
-//            System.out.println("You made it, take model your database now!");
-		} else {
-			System.out.println("Failed to make connection!");
 		}
 	}
 
@@ -981,6 +990,7 @@ public class DbHelper {
 	// FIXME: 11.05.2017 Изменить базу.
 	//ALTER TABLE productsdb.newproducts ADD prod_date VARCHAR(100) NOT NULL;
 	//UPDATE productsdb.newproducts SET prod_date = '2017-05-11 08:28:12.274391';
+
 	/**
 	 * @param out       PrintWriter
 	 * @param startDate dateFormat: "yy-mm-dd"
@@ -1255,6 +1265,7 @@ public class DbHelper {
 	//ALTER TABLE productsdb.product MODIFY prod_date VARCHAR(100) NOT NULL;
 	//UPDATE productsdb.product SET prod_date = '2017-05-11 08:28:12.274391';
 	//ALTER TABLE productsdb.product MODIFY prod_date TIMESTAMP NOT NULL;
+
 	/**
 	 * @param out       PrintWriter
 	 * @param startDate dateFormat: "yy-mm-dd"
