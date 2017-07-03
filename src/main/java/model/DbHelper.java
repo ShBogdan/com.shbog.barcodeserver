@@ -55,12 +55,10 @@ public class DbHelper {
 
 	public void createCategory(String cat, String sectionId) throws SQLException {
 		if (cat != null && !cat.trim().isEmpty()) {
-//            String statement = "INSERT INTO categories(cat_name, section_id_frk, components) VALUE (?,?,?)";
 			String statement = "INSERT INTO categories(cat_name, section_id_frk) VALUE (?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(statement);
 			preparedStatement.setString(1, cat);
 			preparedStatement.setString(2, sectionId);
-//            preparedStatement.setString(3, "");
 			preparedStatement.execute();
 			if (connection != null)
 				connection.close();
@@ -123,7 +121,6 @@ public class DbHelper {
 			//создать тип и получить id
 			String prodTypeId = null;
 			if (!prodType.trim().equals("")) {
-//                String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) VALUE (?, ?) ON DUPLICATE KEY UPDATE type_name = ?";
 				String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk = ? ) LIMIT 1;";
 				prepSat = connection.prepareStatement(statement_createProdType);
 				prepSat.setString(1, prodType);
@@ -196,7 +193,6 @@ public class DbHelper {
 		}
 	}
 
-	// TODO: 30.05.2017 ALTER TABLE component ADD comp_name_ua VARCHAR(150);
 	public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out, String additiveType, String additiveNameUa) throws SQLException {
 		//создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
 		List<String> names = new ArrayList<String>();
@@ -441,22 +437,6 @@ public class DbHelper {
 				input_components_ID.add(resultSet.getString("comp_id"));
 			}
 
-			//создать тип и получить id
-//            String prodTypeId = null;
-//            if(!prodType.trim().equals("")) {
-//                String statement_createProdType = "INSERT INTO prodtype (type_name) VALUE (?) ON DUPLICATE KEY UPDATE type_name = ?";
-//                prepSat = connection.prepareStatement(statement_createProdType);
-//                prepSat.setString(1, prodType);
-//                prepSat.setString(2, prodType);
-//                prepSat.execute();
-//                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
-//                prepSat = connection.prepareStatement(queryLastId);
-//                prepSat.setString(1, prodType);
-//                resultSet = prepSat.executeQuery();
-//                resultSet.next();
-//                prodTypeId = resultSet.getString("id");
-//
-//            }
 			String prodTypeId = null;
 			if (!prodType.trim().equals("")) {
 				String statement_createProdType = "INSERT INTO prodtype (type_name, cat_id_frk) SELECT * FROM (SELECT ?, ?) AS tmp WHERE NOT EXISTS (SELECT type_name, cat_id_frk FROM prodtype WHERE type_name = ? AND cat_id_frk = ? ) LIMIT 1;";
@@ -503,11 +483,6 @@ public class DbHelper {
 				prepSat.setString(3, s);
 				prepSat.execute();
 			}
-
-			//удаляем излишки типов
-//            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL)";
-//            stmt = connection.createStatement();
-//            stmt.executeUpdate(statement_remove);
 
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			e.printStackTrace();

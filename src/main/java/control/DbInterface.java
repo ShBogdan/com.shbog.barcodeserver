@@ -72,8 +72,8 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("additiveInfo"),
 						req.getParameter("additivePermission"),
 						req.getParameter("additiveCBox"),
-						req.getParameter("additiveNotes"),
 						req.getParameter("additiveFor"),
+						req.getParameter("additiveNotes"),
 						out,
 						req.getParameter("additiveType"),
 						req.getParameter("additiveNameUa"));
