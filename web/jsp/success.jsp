@@ -805,7 +805,7 @@
 						}
 					});
 					$(document).on("click", ".checkBarcode", function () {
-						if (isBarcodeExist($(".prodCode").val())) {
+						if (isBarcodeExist($(".prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
 							console.log("exist")
 							$(".prodCode").removeClass('textcolorBlack');
 							$(".prodCode").addClass('textcolorRed');
@@ -816,7 +816,7 @@
 
 					});
 					$(document).on("click", ".edit_checkBarcode", function () {
-						if (isBarcodeExist($(".edit_prodCode").val())) {
+						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
 							console.log("exist")
 							$(".edit_prodCode").removeClass('textcolorBlack');
 							$(".edit_prodCode").addClass('textcolorRed');
@@ -1204,7 +1204,7 @@
 						}
 					})
 					$(document).on("click", ".edit_checkBarcode", function () {
-						if (isBarcodeExist($(".edit_prodCode").val())) {
+						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
 							console.log("exist")
 							$(".edit_prodCode").removeClass('textcolorBlack');
 							$(".edit_prodCode").addClass('textcolorRed');
@@ -1972,13 +1972,17 @@
 							for (var i = 0, len = componentGroup.length; i < len; i++) {
 								obj['name_' + i] = componentGroup[i];
 							}
-							console.log(obj)
+							var e_namber_reg = $(".e_namber").val().trim();
+							var reg = /^[EeЕе][0-9]/i.exec(e_namber_reg)
+							if (reg) {
+								e_namber_reg = "Е" + e_namber_reg.substring(1);
+							}
 							var jsonString = JSON.stringify(obj);
 							$.ajax({
 								url: urlDb,
 								data: {
 									createComponent: "createComponent",
-									additiveNamber: $(".e_namber").val(),
+									additiveNamber: e_namber_reg,
 									additiveName: jsonString.toString(),
 									additiveColor: $(".e_color").val(),
 									additiveInfo: $(".info").val(),
@@ -1996,7 +2000,7 @@
 										parseInt(data, 10),
 										$(".e_type").val(),
 										$(".e_for").val(),
-										$(".e_namber").val(),
+										e_namber_reg,
 										$(".e_name").val(),
 										$(".e_name_ua").val(),
 										$(".info").val(),
@@ -2047,13 +2051,17 @@
 								obj['name_' + i] = componentGroup[i];
 							}
 							var jsonString = JSON.stringify(obj);
-							console.log(obj)
+							var e_namber_reg = $(".e_namber").val().trim();
+							var reg = /^[EeЕе][0-9]/i.exec(e_namber_reg)
+							if (reg) {
+								e_namber_reg = "Е" + e_namber_reg.substring(1);
+							}
 							$.ajax({
 								url: urlDb,
 								data: {
 									changeComponent: "changeComponent",
 									additiveId: edit_e_tableRow[0],
-									additiveNamber: $(".e_namber").val(),
+									additiveNamber: e_namber_reg,
 									additiveName: jsonString.toString(),
 									additiveColor: $(".e_color").val(),
 									additiveInfo: $(".info").val(),
@@ -2071,7 +2079,7 @@
 										edit_e_tableRow[0],
 										$(".e_type").val(),
 										$(".e_for").val(),
-										$(".e_namber").val(),
+										e_namber_reg,
 										$(".e_name").val(),
 										$(".e_name_ua").val(),
 										$(".info").val(),
