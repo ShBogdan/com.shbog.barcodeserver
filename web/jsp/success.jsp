@@ -1665,9 +1665,10 @@
 								dataType: 'text',
 								success: function (data) {
 									if (parseInt(data, 10) != -1) {
-										dynamicUpload(parseInt(data, 10));
+										var productAsArray = JSON.parse("[" + data + "]");
+										dynamicUpload(productAsArray[1]);
 										table.row.add([
-											parseInt(data, 10),
+											productAsArray[0],
 											$(".selectCategory").val(),
 											$(".prodType").val(),
 											$(".prodName").val(),
@@ -1746,7 +1747,7 @@
 								dataType: 'text',
 								success: function (data) {
 									if (parseInt(data, 10) != -1) {
-										dynamicUpload(edit_tableRow[0]);
+										dynamicUpload(edit_tableRow[5]);
 										table.row.add([
 											edit_tableRow[0],
 											$(".edit_selectCategory").val(),
@@ -1771,7 +1772,7 @@
 						}
 					},
 					open: function (event, ui) {
-						imageUrl = "${pageContext.request.contextPath}/image/images/" + edit_tableRow[0] + ".jpg";
+						imageUrl = "${pageContext.request.contextPath}/image/images/" + edit_tableRow[5] + ".jpg";
 						var reloadImage = imageUrl + "?t=" + new Date().getTime();
 						doesFileExist(imageUrl,
 							function () {
@@ -1859,7 +1860,8 @@
 								dataType: 'text',
 								success: function (data) {
 									if (parseInt(data, 10) != -1) {
-										dynamicUpload(parseInt(data, 10));
+										var productAsArray = JSON.parse("[" + data + "]");
+										dynamicUpload(productAsArray[1]);
 										cell.style.backgroundColor = '#E3A9B8'
 										$(".dialog_edit_product").dialog("close")
 									} else {

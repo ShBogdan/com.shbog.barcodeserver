@@ -127,17 +127,13 @@ public class DbHelper {
 				prepSat.setString(2, prodCategory_id);
 				prepSat.setString(3, prodType);
 				prepSat.setString(4, prodCategory_id);
-//                prepSat.setString(3, prodType);
 				prepSat.execute();
-//                String queryLastId = "SELECT id FROM prodtype WHERE type_name = ?;";
-//                String queryLastId = "SELECT LAST_INSERT_ID() as last_id from prodtype;";
 				String queryLastId = "SELECT id FROM prodtype WHERE type_name = ? AND cat_id_frk =?";
 				prepSat = connection.prepareStatement(queryLastId);
 				prepSat.setString(1, prodType);
 				prepSat.setString(2, prodCategory_id);
 				resultSet = prepSat.executeQuery();
 				resultSet.next();
-//                prodTypeId = resultSet.getString("last_id");
 				prodTypeId = resultSet.getString("id");
 			}
 
@@ -158,7 +154,7 @@ public class DbHelper {
 			resultSet = stmt.executeQuery(query);
 			resultSet.next();
 			prodId = resultSet.getString("last_id");
-			out.println(prodId);
+			out.println(prodId + "," + prodCode);
 			out.flush();
 
 			for (String s : input_components_ID) {
@@ -182,7 +178,6 @@ public class DbHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-//            System.out.println("Запись:" + prodName + " добавлен");
 			if (connection != null)
 				try {
 					connection.close();
