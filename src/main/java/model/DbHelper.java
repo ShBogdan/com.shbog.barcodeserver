@@ -13,8 +13,11 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class DbHelper {
+
+	private static final Logger LOGGER = Logger.getLogger(DbHelper.class.getSimpleName());
 
 	private static final String APPLICATION_PROPERTIES_FILE_NAME = "application.properties";
 	private static final Properties applicationProperties;
@@ -54,6 +57,7 @@ public class DbHelper {
 	}
 
 	public void createCategory(String cat, String sectionId) throws SQLException {
+		LOGGER.info("About to create category named " + cat);
 		if (cat != null && !cat.trim().isEmpty()) {
 			String statement = "INSERT INTO categories(cat_name, section_id_frk) VALUE (?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -63,9 +67,11 @@ public class DbHelper {
 			if (connection != null)
 				connection.close();
 		}
+		LOGGER.info("Category created");
 	}
 
 	public void createSection(String section) throws SQLException {
+		LOGGER.info("About to create section " + section);
 		if (section != null && !section.trim().isEmpty()) {
 			String statement = "INSERT INTO section(section_name) VALUE (?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -74,9 +80,12 @@ public class DbHelper {
 			if (connection != null)
 				connection.close();
 		}
+		LOGGER.info("Section created");
+
 	}
 
 	public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType) {
+		LOGGER.info("About to create product");
 		Calendar calendar = Calendar.getInstance();
 		Timestamp currentTimestamp = new Timestamp(calendar.getTime().getTime());
 		PreparedStatement prepSat;
@@ -106,8 +115,6 @@ public class DbHelper {
 				prepSat.setString(2, s);
 				prepSat.execute();
 			}
-//            System.out.println("Список компонентов продукта до: " +input_components_ID);
-
 			//получаем id добавленных компонентов
 			for (String s : input_components_name) {
 				String statement_get_componentID = "SELECT comp_id FROM component WHERE comp_name=\"" + s + "\"";
@@ -116,8 +123,6 @@ public class DbHelper {
 				resultSet.next();
 				input_components_ID.add(resultSet.getString("comp_id"));
 			}
-//            System.out.println("Список компонентов продукта после: " +input_components_ID);
-
 			//создать тип и получить id
 			String prodTypeId = null;
 			if (!prodType.trim().equals("")) {
@@ -136,7 +141,6 @@ public class DbHelper {
 				resultSet.next();
 				prodTypeId = resultSet.getString("id");
 			}
-
 			//создаем продукт до обновления input_components_ID
 			String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, prod_date, prod_type) VALUE (?,?,?,?,?,?);";
 			prepSat = connection.prepareStatement(statement);
@@ -165,11 +169,6 @@ public class DbHelper {
 				prepSat.setString(3, s);
 				prepSat.execute();
 			}
-			//удаляем излишки типов
-//            String statement_remove = "DELETE FROM prodtype WHERE id NOT IN (SELECT prod_type FROM product WHERE prod_type IS NOT NULL);";
-//            stmt = connection.createStatement();
-//            stmt.executeUpdate(statement_remove);
-
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			out.println("-1");
 			System.err.println("createProduct");
@@ -189,6 +188,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter createComponent(String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, PrintWriter out, String additiveType, String additiveNameUa) throws SQLException {
+		LOGGER.info("About to create component");
 		//создаем ключевой компонет, дополнительные имена добавляются как компоненты с пустыми полями.
 		List<String> names = new ArrayList<String>();
 		String mainId;
@@ -249,7 +249,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter createExclude(String excludeName, PrintWriter out) throws SQLException {
-
+		LOGGER.info("About to create exclude");
 		String statement = "INSERT INTO exclude(ogran_name) VALUE (?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, excludeName);
@@ -268,6 +268,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter createType(String prodType, String prodCategory_id, PrintWriter out) throws SQLException {
+		LOGGER.info("About to create type");
 		String statement;
 		PreparedStatement prepSat;
 		ResultSet resultSet;
@@ -286,8 +287,6 @@ public class DbHelper {
 			resultSet = stmt.executeQuery(query);
 			resultSet.next();
 			out.println(resultSet.getString("last_id"));
-			System.out.println(resultSet.getString("last_id"));
-
 			out.flush();
 		} else {
 			//если дубль возвращает 0
@@ -303,7 +302,6 @@ public class DbHelper {
 			resultSet = prepSat.executeQuery();
 			resultSet.next();
 			String lastID = resultSet.getString("last_id");
-			System.out.println(lastID);
 			out.println(lastID);
 			out.flush();
 		}
@@ -313,6 +311,7 @@ public class DbHelper {
 	}
 
 	public void changeComponent(String additiveId, String additiveNamber, String additiveName, String additiveColor, String additiveInfo, String additivePermission, String additiveCBox, String additiveFor, String additiveNotes, String additiveType, String additiveNameUa) throws SQLException {
+		LOGGER.info("About to change component");
 		List<String> names = new ArrayList<String>();
 
 		org.json.simple.parser.JSONParser parser = new JSONParser();
@@ -364,7 +363,6 @@ public class DbHelper {
 				_preparedStatement.setString(11, additiveNameUa);
 				_preparedStatement.setString(12, resultSet.getString("comp_id"));
 				_preparedStatement.execute();
-//                System.out.println("Изменяем");
 			} else {
 				String tempStatement = "DELETE FROM component WHERE comp_id = ?";
 				PreparedStatement tempPreparedStatement = connection.prepareStatement(tempStatement);
@@ -395,6 +393,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType) {
+		LOGGER.info("About to change product");
 		PreparedStatement prepSat;
 		ResultSet resultSet;
 		Statement stmt;
@@ -448,10 +447,7 @@ public class DbHelper {
 				resultSet = prepSat.executeQuery();
 				resultSet.next();
 				prodTypeId = resultSet.getString("id");
-				System.out.println("Added id: " + prodTypeId);
 			}
-			//
-
 			//создаем продукт до обновления input_components_ID
 			String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, prod_type = ? WHERE prod_id = ?";
 			prepSat = connection.prepareStatement(statement);
@@ -463,12 +459,10 @@ public class DbHelper {
 			prepSat.setString(6, prod_id);
 			prepSat.execute();
 
-
 			statement = "DELETE FROM frkgroup WHERE prod = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(statement);
 			preparedStatement.setString(1, prod_id);
 			preparedStatement.execute();
-
 
 			for (String s : input_components_ID) {
 				String qInsertFrk = "INSERT INTO frkgroup(cat, prod, compon) VALUE (?,?,?)";
@@ -478,7 +472,6 @@ public class DbHelper {
 				prepSat.setString(3, s);
 				prepSat.execute();
 			}
-
 		} catch (MySQLIntegrityConstraintViolationException e) {
 			e.printStackTrace();
 			out.println("-1");
@@ -497,6 +490,7 @@ public class DbHelper {
 	}
 
 	public void removeCategory(String cat_id) throws SQLException {
+		LOGGER.info("About to remove category");
 		String statement = "DELETE FROM categories WHERE cat_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, cat_id);
@@ -506,6 +500,7 @@ public class DbHelper {
 	}
 
 	public void removeSection(String sectionId) throws SQLException {
+		LOGGER.info("About to remove section");
 		String statement = "DELETE FROM section WHERE section_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, sectionId);
@@ -515,6 +510,7 @@ public class DbHelper {
 	}
 
 	public void removeProduct(String prod_id) throws SQLException {
+		LOGGER.info("About to remove product");
 		String statement = "DELETE FROM product WHERE prod_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, prod_id);
@@ -530,6 +526,7 @@ public class DbHelper {
 	}
 
 	public void removeType(String type_id) throws SQLException {
+		LOGGER.info("About to remove type");
 		String _statement = "UPDATE product SET prod_type = NULL WHERE prod_type = ?";
 		PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
 		_preparedStatement.setString(1, type_id);
@@ -545,6 +542,7 @@ public class DbHelper {
 	}
 
 	public void removeTempProducts(String prod_id) throws SQLException {
+		LOGGER.info("About to remove temp product");
 		String statement = "DELETE FROM newproducts WHERE prod_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, prod_id);
@@ -554,6 +552,7 @@ public class DbHelper {
 	}
 
 	public void removeComponent(String additive_id) throws SQLException {
+		LOGGER.info("About to remove component");
 		String statement = "DELETE FROM component WHERE comp_id = ? OR comp_group = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, additive_id);
@@ -565,27 +564,28 @@ public class DbHelper {
 	}
 
 	public void removeExclude(String exclude_id) throws SQLException {
+		LOGGER.info("About to remove exclude");
 		String statement = "DELETE FROM exclude WHERE ogran_id = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, exclude_id);
 		preparedStatement.execute();
-//        System.out.println("Запись:" + exclude_id +" удалена");
 		if (connection != null)
 			connection.close();
 	}
 
 	public void renameCategory(String cat_id, String catName) throws SQLException {
+		LOGGER.info("About to rename category");
 		String statement = "UPDATE categories SET cat_name=? WHERE cat_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, catName);
 		preparedStatement.setString(2, cat_id);
 		preparedStatement.execute();
-//        System.out.println("Запись:" + catName +" переименована");
 		if (connection != null)
 			connection.close();
 	}
 
 	public PrintWriter renameType(String type_id, String type_name, String prodCategory_id, String prodCategory_idOld, PrintWriter out) throws SQLException {
+		LOGGER.info("About to rename type");
 		//если совпадения то возвращаем 0
 		String _statement = "SELECT EXISTS(SELECT * FROM prodtype WHERE type_name=? AND cat_id_frk=?)";
 		PreparedStatement _preparedStatement = connection.prepareStatement(_statement);
@@ -614,10 +614,7 @@ public class DbHelper {
 		preparedStatement.setString(3, type_id);
 		preparedStatement.execute();
 		//если тип переименован то удаляем его из продукта
-		System.out.println("Переименовываем_0");
 		if (!prodCategory_idOld.equals(prodCategory_id)) {
-			System.out.println("Переименовываем_1: " + prodCategory_idOld);
-			System.out.println("Переименовываем_1: " + prodCategory_id);
 			String stm = "UPDATE product SET prod_type = NULL WHERE cat_id_frk = ? AND prod_type = ?";
 			PreparedStatement pStatement = connection.prepareStatement(stm);
 			pStatement.setString(1, prodCategory_idOld);
@@ -631,6 +628,7 @@ public class DbHelper {
 	}
 
 	public void renameExclude(String exclude_id, String excludeName) throws SQLException {
+		LOGGER.info("About to rename exclude");
 		String statement = "UPDATE exclude SET ogran_name=? WHERE ogran_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, excludeName);
@@ -641,17 +639,18 @@ public class DbHelper {
 	}
 
 	public void renameSection(String sectionId, String secName) throws SQLException {
+		LOGGER.info("About to rename section");
 		String statement = "UPDATE section SET section_name=? WHERE section_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, secName);
 		preparedStatement.setString(2, sectionId);
 		preparedStatement.execute();
-//        System.out.println("Запись:" + secName +" переименована");
 		if (connection != null)
 			connection.close();
 	}
 
 	public PrintWriter getCategory(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get category");
 		String query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -705,6 +704,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getBarcodeInfo(PrintWriter out, String barcode) throws SQLException {
+		LOGGER.info("About to get barcodeinfo");
 		String prod_id;
 		String cat_id_frk;
 		String cat_name;
@@ -784,6 +784,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getSection(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get section");
 		String query = "SELECT section_id, section_name FROM section ORDER BY section_name";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -821,6 +822,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getCompound(PrintWriter out, String catId) throws SQLException {
+		LOGGER.info("About to get compound");
 		ArrayList<String> componArrId = new ArrayList<String>();
 		String statement = "SELECT compon FROM frkgroup WHERE cat=" + catId;
 		Statement stmt = connection.createStatement();
@@ -843,6 +845,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getProductCompound(PrintWriter out, String productID) throws SQLException {
+		LOGGER.info("About to get product compound");
 		ArrayList<String> componArrId = new ArrayList<String>();
 		String statement = "SELECT compon FROM frkgroup WHERE prod=" + productID;
 		Statement stmt = connection.createStatement();
@@ -870,7 +873,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getProducts(PrintWriter out) throws SQLException {
-//        String query = "SELECT prod_id, cat_name, prod_name, prod_maker, prod_code FROM product INNER JOIN categories ON cat_id_frk=cat_id";
+		LOGGER.info("About to get products");
 		String query = "SELECT prod_id, cat_name, prod_name, prod_maker, prod_code, type_name FROM product INNER JOIN categories ON cat_id_frk=cat_id LEFT JOIN prodtype ON prod_type=id";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -905,6 +908,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getTypes(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get types");
 		String query = "SELECT id, type_name, cat_name FROM prodtype LEFT JOIN categories ON cat_id_frk<=>categories.cat_id ORDER BY cat_name;";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -934,6 +938,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getBarcodes(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get barcodes");
 		String query = "SELECT prod_code FROM product";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -968,6 +973,7 @@ public class DbHelper {
 	 * @return json array {"newproducts":[[],[]]}
 	 */
 	public PrintWriter getNewProducts(PrintWriter out, String startDate, String endDate) throws SQLException {
+		LOGGER.info("About to get new products");
 		endDate = endDate + " 23:59:59";
 		String query = "SELECT prod_id, cat_name, prod_code, prod_date FROM newproducts INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "'";
 
@@ -1001,6 +1007,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getExclude(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get exclude");
 		String query = "SELECT ogran_id, ogran_name FROM exclude";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1027,6 +1034,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getComponentNames(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get component names");
 		String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type FROM component"; //  WHERE COALESCE(comp_group, '') = ''
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1071,22 +1079,19 @@ public class DbHelper {
 	}
 
 	public PrintWriter getProdType(PrintWriter out, String catId) throws SQLException {
-//        String query = "SELECT DISTINCT type_name FROM prodtype INNER JOIN product ON product.prod_type = prodtype.id WHERE cat_id_frk = ?";
+		LOGGER.info("About to get prod type");
 		String query = "SELECT * FROM prodtype WHERE cat_id_frk =  ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(query);
 		preparedStatement.setString(1, catId);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		JSONObject result = new JSONObject();
 		JSONArray array = new JSONArray();
-		System.out.println("start");
-		System.out.println(catId);
 
 		while (resultSet.next()) {
 			JSONArray ja = new JSONArray();
 			String type_name = resultSet.getString("type_name");
 			ja.put(type_name);
 			array.put(ja);
-			System.out.println(type_name);
 		}
 		try {
 			result.put("prodtype", array);
@@ -1101,6 +1106,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getComponents(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get components");
 		String query = "SELECT comp_id, comp_for, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_notes, comp_group, comp_type, comp_name_ua FROM component WHERE COALESCE(comp_group, '') = ''";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1147,6 +1153,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getCBox(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get cBox");
 		String query = "SELECT ogran_id, ogran_name FROM exclude"; // WHERE comp_type = 1
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1173,6 +1180,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter isBarcodeExist(PrintWriter out, String barcode) throws SQLException {
+		LOGGER.info("About to check barcode");
 		String query = "SELECT prod_code FROM product WHERE prod_code = '" + barcode + "'";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1197,6 +1205,7 @@ public class DbHelper {
 	}
 
 	public PrintWriter getAdditiveByID(PrintWriter out, String compId) throws SQLException {
+		LOGGER.info("About to get additive by id");
 		String query = "SELECT comp_id, comp_name, comp_e_code, comp_info, comp_perm, comp_color, comp_cbox, comp_group FROM component WHERE comp_id=" + compId;
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1243,6 +1252,7 @@ public class DbHelper {
 	 * @return json array {"products":[[],[]]}
 	 */
 	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate) throws SQLException {
+		LOGGER.info("About to get product group by id");
 		endDate = endDate + " 23:59:59";
 		String query = "SELECT cat_id, cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";
 		Statement stmt = connection.createStatement();
@@ -1274,6 +1284,7 @@ public class DbHelper {
 	}
 
 	public ArrayList getUsers() throws SQLException {
+		LOGGER.info("About to get user");
 		String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
@@ -1292,6 +1303,7 @@ public class DbHelper {
 	}
 
 	public void changeUserPass(String id, String user_name, String user_pass) throws SQLException {
+		LOGGER.info("About to change user password");
 		String query = "UPDATE users SET user_name=?, user_pass=? WHERE user_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(query);
 		preparedStatement.setString(1, user_name);
@@ -1303,6 +1315,7 @@ public class DbHelper {
 	}
 
 	public void createProdPhone(String cat, String code) throws SQLException {
+		LOGGER.info("About to create product by android app");
 		String statement = "INSERT INTO newproducts(cat_id_frk, prod_code) VALUE (?,?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(statement);
 		preparedStatement.setString(1, cat);
