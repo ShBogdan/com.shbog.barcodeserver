@@ -230,10 +230,6 @@
 					'<button class="button" id="btn7">Загрузки</button>' +
 					'</p>')
 			}
-			$(document).click(function (event) {
-				<%--console.log(${sessionScope.username});--%>
-				<%--console.log('<%= session.getAttribute("username") %>');--%>
-			});
 			$(document).on('click', '#btn1', function () {
 				$('#menu').load("info.jsp", function () {
 					cat_info_table = $('#cat_info_table').DataTable({
@@ -494,7 +490,6 @@
 						}
 						if (this.className === "goToProduct") {
 							var re = /[ ^0-9.]+/;
-							console.log(rName)
 							products_table_search = rName.replace(re, "");
 							btn4.click();
 						}
@@ -698,7 +693,6 @@
 						comp_index = componets_array_ID.indexOf($(this).attr("id"));
 						if (comp_index > -1) {
 							componets_array_ID.splice(comp_index, 1);
-//                            console.log('btnCompound deleted')
 							fillDobOgr()
 						}
 					});
@@ -706,10 +700,8 @@
 						$(this).remove();
 						varBtn_index = varButton.indexOf($(this).text());
 						if (!isEdit) {
-//                            console.log("In")
 							if (varBtn_index > -1) {
 								varButton.splice(varBtn_index, 1);
-//                                console.log(varButton)
 							}
 						}
 						if (isEdit) {
@@ -719,14 +711,12 @@
 								fillDobOgr()
 							}
 						}
-//                        console.log('varButton deleted')
 					});
 					$(".components").on("click", ".varACCButton", function () {
 						$(this).remove();
 						comp_index = componets_array_ID.indexOf($(this).attr("id"));
 						if (comp_index > -1) {
 							componets_array_ID.splice(comp_index, 1);
-//                            console.log('varACCButton deleted')
 							fillDobOgr()
 						}
 					});
@@ -770,7 +760,6 @@
 						var input = $(".getInputComponentEdit").val().trim();
 						comp_index = varButton.indexOf(input);
 						if (input.trim() == "") {
-//                            console.log("Its empty divInputEdit")
 							return;
 						}
 						var reg = /^[EeЕе][0-9]/i.exec(input)
@@ -778,7 +767,6 @@
 							input = "Е" + input.substring(1);
 						}
 						if (comp_index > -1) {
-//                            console.log("over in the array")
 							return;
 						}
 						if (!(input in dictionaryAutoCompCompon)) {
@@ -790,10 +778,8 @@
 						for (var name in dictionaryAutoCompCompon) {
 							if (name == input) {
 								var id = dictionaryAutoCompCompon[name];
-//                                console.log('in dictionary')
 								var index = componets_array_ID.indexOf(id)
 								if (!(index > -1)) {
-//                                    console.log('not in the array')
 									componets_array_ID.push(id);
 									$(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
 									$(".getInputComponentEdit").val('');
@@ -806,7 +792,6 @@
 					});
 					$(document).on("click", ".checkBarcode", function () {
 						if (isBarcodeExist($(".prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
-							console.log("exist")
 							$(".prodCode").removeClass('textcolorBlack');
 							$(".prodCode").addClass('textcolorRed');
 						} else {
@@ -816,8 +801,7 @@
 
 					});
 					$(document).on("click", ".edit_checkBarcode", function () {
-						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
-							console.log("exist")
+						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".edit_prodCode").val())) {
 							$(".edit_prodCode").removeClass('textcolorBlack');
 							$(".edit_prodCode").addClass('textcolorRed');
 						} else {
@@ -918,11 +902,9 @@
 						comp_index = componentGroup.indexOf(inputText);
 						var inArray = autocompleteInpComponents.indexOf(inputText);
 						if (inputText == "") {
-//                            console.log("Its empty")
 							return;
 						}
 						if (inputText == $(".e_name").val()) {
-							//                           console.log("Its repeat name")
 							return;
 						}
 						if (inArray > -1) {
@@ -1133,7 +1115,6 @@
 						comp_index = componets_array_ID.indexOf($(this).attr("id"));
 						if (comp_index > -1) {
 							componets_array_ID.splice(comp_index, 1);
-							//                           console.log('btnCompound deleted')
 							fillDobOgr()
 						}
 					});
@@ -1141,10 +1122,8 @@
 						$(this).remove();
 						varBtn_index = varButton.indexOf($(this).text());
 						if (!isEdit) {
-							//                          console.log("In")
 							if (varBtn_index > -1) {
 								varButton.splice(varBtn_index, 1);
-								//                              console.log(varButton)
 							}
 						}
 						if (isEdit) {
@@ -1154,14 +1133,12 @@
 								fillDobOgr()
 							}
 						}
-						//                      console.log('varButton deleted')
 					});
 					$(".components").on("click", ".varACCButton", function () {
 						$(this).remove();
 						comp_index = componets_array_ID.indexOf($(this).attr("id"));
 						if (comp_index > -1) {
 							componets_array_ID.splice(comp_index, 1);
-							//                         console.log('varACCButton deleted')
 							fillDobOgr()
 						}
 					});
@@ -1169,7 +1146,6 @@
 						var input = $(".getInputComponentEdit").val().trim();
 						comp_index = varButton.indexOf(input);
 						if (input.trim() == "") {
-							//                         console.log("Its empty divInputEdit")
 							return;
 						}
 						var reg = /^[EeЕе][0-9]/i.exec(input)
@@ -1177,7 +1153,6 @@
 							input = "Е" + input.substring(1);
 						}
 						if (comp_index > -1) {
-							//                          console.log("over in the array")
 							return;
 						}
 						if (!(input in dictionaryAutoCompCompon)) {
@@ -1189,10 +1164,8 @@
 						for (var name in dictionaryAutoCompCompon) {
 							if (name == input) {
 								var id = dictionaryAutoCompCompon[name];
-								//                             console.log('in dictionary')
 								var index = componets_array_ID.indexOf(id)
 								if (!(index > -1)) {
-									//                                  console.log('not in the array')
 									componets_array_ID.push(id);
 									$(".components").append("<button class=\"varACCButton\"" + "id=" + "\"" + id + "\"" + ">" + input + "</button>");
 									$(".getInputComponentEdit").val('');
@@ -1204,8 +1177,7 @@
 						}
 					})
 					$(document).on("click", ".edit_checkBarcode", function () {
-						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".prodCode").val())) {
-							console.log("exist")
+						if (isBarcodeExist($(".edit_prodCode").val()) || !Barcoder.validate($(".edit_prodCode").val())) {
 							$(".edit_prodCode").removeClass('textcolorBlack');
 							$(".edit_prodCode").addClass('textcolorRed');
 						} else {
@@ -1310,15 +1282,11 @@
 			$(document).on('click', ".cBox", function () {
 				var id = $(this).attr("id");
 				var index = cBoxs.indexOf(id)
-				//               console.log(index)
 				if (index == -1) {
 					cBoxs.push(id)
-					//                  console.log("add")
 				} else {
 					cBoxs.splice(index, 1);
-					//                  console.log("remove")
 				}
-				//               console.log(cBoxs.sort())
 			});
 			$(document).on('click', '#button_create_exclude', function () {
 				$(".addExclude").dialog({
@@ -1426,10 +1394,8 @@
 						});
 					},
 					beforeClose: function (event, ui) {
-						console.log("is working")
 						$(".typeName").val('')
 						$(".selectCategoryForType").find('option').remove();
-
 						$(".dialog_create_type").dialog("destroy")
 					},
 					width: 600
@@ -1799,7 +1765,6 @@
 							}
 						});
 						fillProductCompound(edit_tableRow[0]);
-						console.log(catId)
 						fillCompound(catId);
 						fillProdType(catId, "edit_prodType");
 						fillComponents("edit_components");
@@ -1840,7 +1805,6 @@
 							var obj = new Object();
 							for (var i = 0, len = varButton.length; i < len; i++) {
 								obj['name_' + i] = varButton[i];
-								//                              console.log(varButton[i]);
 							}
 							var jsonString = JSON.stringify(obj);
 
@@ -2015,7 +1979,6 @@
 
 								},
 								error: function (request, status, error) {
-									//                                  console.log("somthing wrong");
 									alert("Error: Could not back");
 								}
 							});
@@ -2176,7 +2139,6 @@
 						cBoxs[i] = cBoxs[i].trim();
 					}
 				}
-				//               console.log("array = " + cBoxs.sort())
 
 				$.ajax({
 					url: urlDb,
@@ -2193,7 +2155,6 @@
 							} else
 								$('.exclude').append("<p><input type=\"checkbox\" class=\"cBox\" id=\"" + id + "\" checked/>" + name + "</p>")
 						}
-						//                       console.log(cBoxs.sort())
 					}
 				})
 			};
@@ -2307,9 +2268,7 @@
 								success: function (data) {
 									var obj = JSON.parse(data);
 									if (obj.component[2] != 0 && obj.component[2] != null) {
-										//                                           console.log(obj.component[2]+" ")
 										$(".dobavki").append("<p>" + obj.component[1] + "</p>");
-//                                            $(".dobavki").append("<p>" + obj.component[2] + " - " + obj.component[1] + "</p>");
 									}
 									var ogran = obj.component[6];
 									var tempOgtArr = [];
@@ -2424,7 +2383,6 @@
 				fd.append('file', fileInput.files[0]);
 				fd.append('imageId', imageId);
 				if (fileInput.files[0]) {
-					//                   console.log("save")
 					$.ajax({
 						url: '${pageContext.request.contextPath}/FileUploadServlet',
 						data: fd,
@@ -2432,7 +2390,6 @@
 						contentType: false,
 						type: 'POST',
 						success: function (data) {
-							//                           console.log(data);
 						}
 					});
 				} else {
