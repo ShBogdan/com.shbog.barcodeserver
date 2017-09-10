@@ -676,6 +676,33 @@ public class DbHelper {
 		return out;
 	}
 
+	public PrintWriter getCreators(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get creators");
+		String query = "SELECT user_id, user_name FROM users ORDER BY user_name";
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		while (resultSet.next()) {
+			JSONArray ja = new JSONArray();
+			String id = String.valueOf(resultSet.getInt("user_id"));
+			String cat_name = resultSet.getString("user_name");
+			ja.put(id);
+			ja.put(cat_name);
+			array.put(ja);
+		}
+		try {
+			result.put("creators", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		out.println(array);
+		out.flush();
+		if (connection != null)
+			connection.close();
+		return out;
+	}
+
 	// FIXME: 21.05.2017 why do we need it?
 	public PrintWriter getCategoryJSONobj(PrintWriter out) throws SQLException {
 		String query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
@@ -1251,7 +1278,7 @@ public class DbHelper {
 	 * @param endDate   dateFormat: "yy-mm-dd"
 	 * @return json array {"products":[[],[]]}
 	 */
-	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate) throws SQLException {
+	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate, String creator) throws SQLException {
 		LOGGER.info("About to get product group by id");
 		endDate = endDate + " 23:59:59";
 		String query = "SELECT cat_id, cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";

@@ -97,7 +97,7 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("additiveType"),
 						req.getParameter("additiveNameUa"
 
-				));
+						));
 				return;
 			}
 			if (null != req.getParameter("getCBox")) {
@@ -155,6 +155,10 @@ public class DbInterface extends HttpServlet {
 			}
 			if (null != req.getParameter("getCategory")) {
 				db.getCategory(out);
+				return;
+			}
+			if (null != req.getParameter("getCreators")) {
+				db.getCreators(out);
 				return;
 			}
 			if (null != req.getParameter("getExclude")) {
@@ -223,7 +227,10 @@ public class DbInterface extends HttpServlet {
 				return;
 			}
 			if (null != req.getParameter("getProdGroupByDate")) {
-				db.getProdGroupByDate(out, req.getParameter("startDate"), req.getParameter("endDate"));
+				db.getProdGroupByDate(out,
+						req.getParameter("startDate"),
+						req.getParameter("endDate"),
+						req.getParameter("creator"));
 				return;
 			}
 			if (null != req.getParameter("createProdPhone")) {

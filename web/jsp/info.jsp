@@ -23,6 +23,18 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 	<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
 	<style type="text/css">
+
+		tfoot input {
+			width: 100%;
+			padding: 3px;
+			box-sizing: border-box;
+			font-weight: bold;
+		}
+
+		tfoot {
+			display: table-header-group;
+		}
+
 		.ui-widget-content {
 			background: #F9F9F9;
 			/*border: 1px solid #90d93f;*/
@@ -42,6 +54,11 @@
 	<tr>
 		<td><p>Начальная дата: <input type="text" id="startDate"></p></td>
 		<td><p>Конечная дата: <input type="text" id="endDate"></p></td>
+		<td>
+			<p>Создатель: <input class="selectCreator" type="text" list="selectCreator"/>
+				<datalist id="selectCreator"></datalist>
+			</p>
+		</td>
 		<td>
 			<button id="getProdGroupByDate" class="actionButton">Выбрать</button>
 		</td>
@@ -65,7 +82,7 @@
 		<th>id</th>
 		<th class="searchable">Категория</th>
 		<th class="searchable">Дата</th>
-		<th class="searchable">Количество</th>
+		<th style="text-align:left">Total:</th>
 		<th></th>
 	</tr>
 	</tfoot>

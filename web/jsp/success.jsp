@@ -181,6 +181,9 @@
 			window.imageId = 0;
 			window.isEdit = false;
 			window.removeImage = false;
+			var startDate;
+			var endDate;
+			var creator;
 			var imageUrl;
 			var table;
 			var cat_info_table;
@@ -249,7 +252,37 @@
 								"data": null,
 								"defaultContent": "<button id = 'go_to_products' class='actionButton'>&#62;</button>"
 							}
-						]
+						],
+						// Show totall for column
+						"footerCallback": function (row, data, start, end, display) {
+							var api = this.api();
+							// Remove the formatting to get integer data for summation
+							var intVal = function (i) {
+								return typeof i === 'string' ?
+									i.replace(/\D+/g, '') * 1 :
+									typeof i === 'number' ?
+										i : 0;
+							};
+							// Total over all pages
+							total = api
+								.column(3)
+								.data()
+								.reduce(function (a, b) {
+									return intVal(a) + intVal(b);
+								}, 0);
+							// Total over this page
+							pageTotal = api
+								.column(3, {page: 'current'})
+								.data()
+								.reduce(function (a, b) {
+									return intVal(a) + intVal(b);
+								}, 0);
+							// Update footer
+							$(api.column(3).footer()).html(
+								pageTotal + ' (' + total + ' Всего)'
+							);
+						}
+
 					});
 					$('#cat_info_table .searchable').each(function () {
 						var title = $(this).text();
@@ -267,6 +300,8 @@
 						products_table_search = cat_info_table.row($(this).parents('tr')).data()[1];
 						btn4.click();
 					});
+					fillCreators();
+					getProdGroupByDate();
 				});
 			});
 			$(document).on('click', '#btn2', function () {
@@ -643,7 +678,7 @@
 						while (i < 100) {
 							i++;
 							var prodId = table.row('.selected').data()[0];
-							imageUrl = "${pageContext.request.contextPath}/image/images/" + prodId + ".jpg";
+							imageUrl = "${pageContext.request.contextPath}/image/images/" + table.row('.selected').data()[5] + ".jpg";
 
 							$.ajax({
 								url: urlDb,
@@ -1185,6 +1220,7 @@
 							$(".edit_prodCode").addClass('textcolorBlack');
 						}
 					});
+					getNewProductsByDate();
 				});
 			});
 			$(document).on('click', '.adminButton', function () {
@@ -1544,14 +1580,16 @@
 				create_newProduct();
 			});
 			$(document).on('click', '#getProdGroupByDate', function () {
-				var startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
-				var endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				startDate = document.getElementById("startDate").value;
+				endDate = document.getElementById("endDate").value;
+				creator = document.getElementsByClassName("selectCreator")[0].value;
 				$.ajax({
 					url: urlDb,
 					data: {
 						getProdGroupByDate: "getProdGroupByDate",
 						startDate: startDate,
-						endDate: endDate
+						endDate: endDate,
+						creator: creator
 					},
 					type: 'POST',
 					success: function (data) {
@@ -1565,8 +1603,8 @@
 				})
 			});
 			$(document).on('click', '#getNewProductsByDate', function () {
-				var startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
-				var endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				startDate = $("#startDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
+				endDate = $("#endDate").datepicker({dateFormat: 'yy-mm-dd'}).val();
 				$.ajax({
 					url: urlDb,
 					data: {
@@ -1631,7 +1669,7 @@
 								dataType: 'text',
 								success: function (data) {
 									if (parseInt(data, 10) != -1) {
-										var productAsArray = JSON.parse("[" + data + "]");
+										var productAsArray = data.split(',');
 										dynamicUpload(productAsArray[1]);
 										table.row.add([
 											productAsArray[0],
@@ -1824,7 +1862,7 @@
 								dataType: 'text',
 								success: function (data) {
 									if (parseInt(data, 10) != -1) {
-										var productAsArray = JSON.parse("[" + data + "]");
+										var productAsArray = data.split(',');
 										dynamicUpload(productAsArray[1]);
 										cell.style.backgroundColor = '#E3A9B8'
 										$(".dialog_edit_product").dialog("close")
@@ -2376,7 +2414,7 @@
 			}
 
 			function dynamicUpload(_imageId) {
-				imageId = _imageId;
+				imageId = _imageId.trim();
 				var formElement = $("[name='attachfileform']")[0];
 				var fd = new FormData(formElement);
 				var fileInput = $("[name='attachfile']")[0];
@@ -2507,10 +2545,7 @@
 					success: function (data) {
 						var options = '';
 						$.each(data, function (index, element) {
-//							options += '<option value="' + element[0] + '"/>' + element[1] + '</option>'
 							options += '<option data-value="' + element[0] + '" value="' + element[1] + '"></option>'
-//							<option data-value="Safari" value="5"></option>
-
 							categories.push(element[1])
 						})
 						document.getElementById(elementId).innerHTML = options;
@@ -2519,6 +2554,79 @@
 						alert("Error: Could not back");
 					}
 				});
+			}
+
+			function fillCreators() {
+				if (creator != null) {
+					document.getElementsByClassName('selectCreator')[0].value = creator;
+				}
+				$.ajax({
+					url: urlDb,
+					data: {
+						getCreators: "getCreators",
+					},
+					type: 'POST',
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						var options = '';
+						$.each(data, function (index, element) {
+							options += '<option data-value="' + element[0] + '" value="' + element[1] + '"></option>'
+						})
+						document.getElementById("selectCreator").innerHTML = options;
+					},
+					error: function (request, status, error) {
+						alert("Error: Could not back");
+					}
+				});
+			}
+
+			function getProdGroupByDate() {
+				if (startDate != null && endDate != null) {
+					document.getElementById('startDate').value = startDate;
+					document.getElementById('endDate').value = endDate;
+					$.ajax({
+						url: urlDb,
+						data: {
+							getProdGroupByDate: "getProdGroupByDate",
+							startDate: startDate,
+							endDate: endDate
+						},
+						type: 'POST',
+						success: function (data) {
+							cat_info_table.clear().draw();
+							var obj = $.parseJSON(data);
+							var arr = $.map(obj, function (el) {
+								return el
+							});
+							cat_info_table.rows.add(arr).draw();
+						}
+					})
+				}
+			}
+
+			function getNewProductsByDate() {
+				if (startDate != null && endDate != null) {
+					document.getElementById('startDate').value = startDate;
+					document.getElementById('endDate').value = endDate;
+					$.ajax({
+						url: urlDb,
+						data: {
+							getNewProducts: "getNewProducts",
+							startDate: startDate,
+							endDate: endDate
+						},
+						type: 'POST',
+						success: function (data) {
+							newprod_table.clear().draw();
+							var obj = $.parseJSON(data);
+							var arr = $.map(obj, function (el) {
+								return el
+							});
+							newprod_table.rows.add(arr).draw();
+						}
+					})
+				}
 			}
 		});
 
