@@ -22,16 +22,16 @@ public class LoginServlet extends HttpServlet {
         DbHelper db = new DbHelper();
         ArrayList<String[]> usersArray = new ArrayList<String[]>();
         try {
-            usersArray = db.getUsers();
+            usersArray = db.getUsersForPermition();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < usersArray.size(); i++) {
-            String user_name = usersArray.get(i)[1];
-            String user_pass = usersArray.get(i)[2];
-            perm = usersArray.get(i)[3];
-            if(user.equals(user_name) && pass.equals(user_pass)) {
+        for (String[] anUsersArray : usersArray) {
+            String user_name = anUsersArray[1];
+            String user_pass = anUsersArray[2];
+            perm = anUsersArray[3];
+            if (user.equals(user_name) && pass.equals(user_pass)) {
                 isIn = true;
                 break;
             }

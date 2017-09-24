@@ -190,6 +190,7 @@
 			var cat_info_data;
 			var e_table;
 			var newprod_table;
+			var users_table;
 			var type_table;
 			var edit_type_table;
 			var dell_edit_type_table;
@@ -212,6 +213,7 @@
 			var catId;
 			var listBarcode = [];
 			var permission = '${permission}';
+			var username = '${username}';
 			var btn4;
 			var products_table_search;
 			if (permission == '1') {
@@ -383,7 +385,7 @@
 										})
 
 									},
-									CANSEL: function () {
+									CANCEL: function () {
 										$(this).dialog("close")
 									}
 								},
@@ -416,7 +418,7 @@
 											});
 										$(".placeholder_rename").val('')
 									},
-									CANSEL: function () {
+									CANCEL: function () {
 										$(this).dialog("close")
 									}
 								},
@@ -450,7 +452,7 @@
 											});
 										$(".placeholder_addCategory").val('')
 									},
-									CANSEL: function () {
+									CANCEL: function () {
 										$(this).dialog("close")
 									}
 								},
@@ -481,7 +483,7 @@
 											}
 										})
 									},
-									CANSEL: function () {
+									CANCEL: function () {
 										$(this).dialog("close")
 									}
 								},
@@ -514,13 +516,11 @@
 											});
 										$(".placeholder_renameCat").val('')
 									},
-									CANSEL: function () {
+									CANCEL: function () {
 										$(this).dialog("close")
-//                                                alert("Cansel")
 									}
 								},
 								width: 600
-
 							})
 						}
 						if (this.className === "goToProduct") {
@@ -1226,47 +1226,85 @@
 			$(document).on('click', '.adminButton', function () {
 				if (permission == '1') {
 					$('#menu').load("admin.jsp", function () {
-					})
+						users_table = $('#users_table').DataTable({
+							processing: true,
+							order: [1, 'asc'],
+							ajax: {
+								url: urlDb,
+								data: {getUsers: "getUsers"},
+								dataSrc: "users",
+								type: "POST"
+							},
+							"pageLength": 25,
+							"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+							"deferRender": true,
+							"columnDefs": [
+								{"targets": 0, "visible": false},
+								{"targets": 1, "wodht": "80%"},
+								{
+									"targets": 2,
+									"orderable": false,
+									"searchable": false,
+									"width": "1%",
+									"data": null,
+									"defaultContent": "<button id = 'button_edit_user' class='actionButton'>&#8601;</button>"
+								},
+								{
+									"targets": 3,
+									"orderable": false,
+									"searchable": false,
+									"width": "1%",
+									"data": null,
+									"defaultContent": "<button id = 'select' class='actionButton'>&#10003;</button>"
+								}
+							]
+
+						});
+//                  Поиск по колонкам
+						$('#users_table .searchable').each(function () {
+							var title = $(this).text();
+							$(this).html('<input type="text" placeholder="Search ' + title + '" />');
+						});
+						users_table.columns().every(function () {
+							var that = this;
+							$('input', this.footer()).on('keyup change', function () {
+								if (that.search() !== this.value) {
+									that
+										.search(this.value)
+										.draw();
+								}
+							});
+						});
+//                  удаляем выделенные елементы 100 штук
+						$('#button').click(function () {
+							var i = 0;
+							while (i < 100) {
+								i++;
+								var userId = users_table.row('.selected').data()[0];
+								$.ajax({
+									url: urlDb,
+									data: {
+										removeUser: "removeUser",
+										userId: userId
+									},
+									type: 'POST',
+									dataType: 'text',
+									success: function (output) {
+									},
+									error: function (request, status, error) {
+										alert("Error: Could not back");
+									}
+								});
+								users_table.row('.selected').remove().draw(false);
+							}
+						});
+//                  нажатие кнопки выделить row
+						$('#users_table tbody').on('click', '#select', function () {
+							$($(this).parents('tr')).toggleClass('selected');
+						});
+					});
 				}
 			});
-			$(document).on('click', '.saveAdmin', function () {
-				$.ajax({
-					url: urlDb,
-					data: {
-						changeUserPass: "changeUserPass",
-						userID: "1",
-						username: $(".adminname").val(),
-						userPass: $(".adminpassword").val(),
-					},
-					type: 'POST',
-					dataType: 'text',
-					success: function (data) {
-						alert("Данные изменены")
-					},
-					error: function (request, status, error) {
-						alert("Error: Could not back");
-					}
-				});
-			})
-			$(document).on('click', '.saveOper', function () {
-				$.ajax({
-					url: urlDb,
-					data: {
-						changeUserPass: "changeUserPass",
-						userID: "2",
-						username: $(".opername").val(),
-						userPass: $(".operpassword").val(),
-					},
-					type: 'POST',
-					dataType: 'text',
-					success: function (data) {
-						alert("Данные изменены")
-					},
-					error: function (request, status, error) {
-						alert("Error: Could not back");
-					}
-				});
-			})
 			$(document).on('click', "#button_create_product", function () {
 				create_product();
 			});
@@ -1352,7 +1390,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$('.addExclude').dialog("close")
 						}
 					},
@@ -1402,7 +1440,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$('.dialog_create_type').dialog("close")
 						}
 					},
@@ -1486,7 +1524,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$('.dialog_edit_type').dialog("close")
 						}
 					},
@@ -1562,7 +1600,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$('.renameExclude').dialog("close")
 						}
 					},
@@ -1623,7 +1661,103 @@
 					}
 				})
 			});
-
+			$(document).on('click', '#button_create_user', function () {
+				$(".dialog_create_user").dialog({
+					autoOpen: true,
+					modal: true,
+					buttons: {
+						OK: function () {
+							if ($(".userName").val().trim() == "" || $(".userPassword").val().trim().trim() == "") {
+								alert("Поля не могут быть пустыми")
+								return;
+							}
+							$.ajax({
+								url: urlDb,
+								data: {
+									createUser: "createUser",
+									userName: $(".userName").val(),
+									userPassword: $(".userPassword").val(),
+								},
+								type: 'POST',
+								dataType: 'text',
+								success: function (data) {
+									if (parseInt(data, 10) != 0) {
+										users_table.row.add([
+											parseInt(data, 10),
+											$(".userName").val(),
+										]).draw(false);
+										$(".dialog_create_user").dialog("close")
+									} else {
+										alert("Пользователь с таким именем уже существует");
+									}
+								},
+								error: function (request, status, error) {
+									alert("Error: Could not back");
+								}
+							});
+						},
+						CANCEL: function () {
+							$('.dialog_create_user').dialog("close")
+						}
+					},
+					beforeClose: function (event, ui) {
+						$(".userName").val('');
+						$(".userPassword").val('');
+						$(".dialog_create_user").dialog("destroy")
+					},
+					width: 600
+				})
+			});
+			$(document).on('click', '#button_edit_user', function () {
+				var userRow = users_table.row($(this).parents('tr'));
+				$(".dialog_edit_user").dialog({
+					autoOpen: true,
+					modal: true,
+					buttons: {
+						OK: function () {
+							if ($(".edit_userName").val().trim() == "" || $(".edit_userPassword").val().trim().trim() == "") {
+								alert("Поля не могут быть пустыми")
+								return;
+							}
+							$.ajax({
+								url: urlDb,
+								data: {
+									changeUser: "changeUser",
+									userID: userRow.data()[0],
+									username: $(".edit_userName").val(),
+									userPass: $(".edit_userPassword").val(),
+								},
+								type: 'POST',
+								dataType: 'text',
+								success: function (data) {
+									if (parseInt(data, 10) != 0) {
+										users_table.row.add([
+											userRow.data()[0],
+											$(".edit_userName").val(),
+										]).draw(false);
+										users_table.row(userRow).remove().draw(false);
+										$(".dialog_edit_user").dialog("close")
+									} else {
+										alert("Пользователь с таким именем уже существует");
+									}
+								},
+								error: function (request, status, error) {
+									alert("Error: Could not back");
+								}
+							});
+						},
+						CANCEL: function () {
+							$('.dialog_edit_user').dialog("close")
+						}
+					},
+					beforeClose: function (event, ui) {
+						$(".edit_userName").val('')
+						$(".edit_userPassword").val('')
+						$(".dialog_edit_user").dialog("destroy")
+					},
+					width: 600
+				})
+			});
 
 			var create_product = function () {
 				isEdit = false;
@@ -1663,7 +1797,8 @@
 									prodCode: $(".prodCode").val(),
 									prodCategory: catId,
 									componets_array_ID: componets_array_ID.toString(),
-									varButton: jsonString.toString()
+									varButton: jsonString.toString(),
+									username: username
 								},
 								type: 'POST',
 								dataType: 'text',
@@ -1690,7 +1825,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$(".dialog_create_product").dialog("close")
 						}
 					},
@@ -1745,7 +1880,8 @@
 									prodCode: $(".edit_prodCode").val(),
 									prodCategory: catId,
 									componets_array_ID: componets_array_ID.toString(),
-									varButton: jsonString.toString()
+									varButton: jsonString.toString(),
+									username: username
 								},
 								type: 'POST',
 								dataType: 'text',
@@ -1771,7 +1907,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$(".dialog_edit_product").dialog("close")
 						}
 					},
@@ -1856,7 +1992,8 @@
 									prodCode: $(".edit_prodCode").val(),
 									prodCategory: catId,
 									componets_array_ID: componets_array_ID.toString(),
-									varButton: jsonString.toString()
+									varButton: jsonString.toString(),
+									username: username
 								},
 								type: 'POST',
 								dataType: 'text',
@@ -1875,7 +2012,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$(".dialog_edit_product").dialog("close")
 						}
 					},
@@ -2021,7 +2158,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$(".dialog_create_additive").dialog("close")
 						}
 					},
@@ -2099,7 +2236,7 @@
 								}
 							});
 						},
-						CANSEL: function () {
+						CANCEL: function () {
 							$(".dialog_create_additive").dialog("close")
 						}
 					},
@@ -2585,12 +2722,14 @@
 				if (startDate != null && endDate != null) {
 					document.getElementById('startDate').value = startDate;
 					document.getElementById('endDate').value = endDate;
+					document.getElementsByClassName("selectCreator")[0].value = creator;
 					$.ajax({
 						url: urlDb,
 						data: {
 							getProdGroupByDate: "getProdGroupByDate",
 							startDate: startDate,
-							endDate: endDate
+							endDate: endDate,
+							creator: creator
 						},
 						type: 'POST',
 						success: function (data) {

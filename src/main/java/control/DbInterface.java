@@ -17,7 +17,6 @@ public class DbInterface extends HttpServlet {
 		resp.setContentType("text;charset=UTF-8");
 		PrintWriter out = resp.getWriter();
 		DbHelper db = new DbHelper();
-
 		try {
 			if (null != req.getParameter("getBarcodes")) {
 				db.getBarcodes(out);
@@ -61,7 +60,8 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("componets_array_ID"),
 						req.getParameter("varButton"),
 						out,
-						req.getParameter("prodType")
+						req.getParameter("prodType"),
+						req.getParameter("username")
 				);
 				return;
 			}
@@ -96,7 +96,6 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("additiveNotes"),
 						req.getParameter("additiveType"),
 						req.getParameter("additiveNameUa"
-
 						));
 				return;
 			}
@@ -113,16 +112,38 @@ public class DbInterface extends HttpServlet {
 						req.getParameter("componets_array_ID"),
 						req.getParameter("varButton"),
 						out,
-						req.getParameter("prodType"));
+						req.getParameter("prodType"),
+						req.getParameter("username"));
 				return;
 			}
 			if (null != req.getParameter("addSection")) {
 				db.createSection(req.getParameter("sectionName"));
 			}
-			if (null != req.getParameter("changeUserPass")) {
-				db.changeUserPass(req.getParameter("userID"),
+			if (null != req.getParameter("changeUser")) {
+				db.changeUser(req.getParameter("userID"),
 						req.getParameter("username"),
-						req.getParameter("userPass"));
+						req.getParameter("userPass"),
+						out);
+				return;
+			}
+			if (null != req.getParameter("createUser")) {
+				db.createUser(req.getParameter("userName"),
+						req.getParameter("userPassword"),
+						out);
+				return;
+			}
+			if (null != req.getParameter("removeUser")) {
+				db.removeUser(req.getParameter("userId"),
+						out);
+				return;
+			}
+			if (null != req.getParameter("getUsers")) {
+				db.getUsers(out);
+				return;
+			}
+			if (null != req.getParameter("removeUser")) {
+				db.removeUser(req.getParameter("userId"),
+						out);
 				return;
 			}
 			if (null != req.getParameter("getAdditiveByID")) {

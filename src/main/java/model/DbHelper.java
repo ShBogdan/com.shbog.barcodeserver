@@ -1,6 +1,7 @@
 package model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import com.mysql.jdbc.StringUtils;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +85,9 @@ public class DbHelper {
 
 	}
 
-	public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType) {
+	// FIXME: 24.09.2017 add
+	//ALTER TABLE product ADD creator VARCHAR(255) AFTER prod_type;
+	public PrintWriter createProduct(String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType, String creator) {
 		LOGGER.info("About to create product");
 		Calendar calendar = Calendar.getInstance();
 		Timestamp currentTimestamp = new Timestamp(calendar.getTime().getTime());
@@ -142,7 +145,7 @@ public class DbHelper {
 				prodTypeId = resultSet.getString("id");
 			}
 			//создаем продукт до обновления input_components_ID
-			String statement = "INSERT INTO product(cat_id_frk, prod_maker, prod_name, prod_code, prod_date, prod_type) VALUE (?,?,?,?,?,?);";
+			String statement = "INSERT INTO product(creator, cat_id_frk, prod_maker, prod_name, prod_code, prod_date, prod_type) SELECT user_id, ?, ? ,?, ? ,?, ?  FROM users WHERE user_name = ?";
 			prepSat = connection.prepareStatement(statement);
 			prepSat.setString(1, prodCategory_id);
 			prepSat.setString(2, prodProvider);
@@ -150,7 +153,9 @@ public class DbHelper {
 			prepSat.setString(4, prodCode);
 			prepSat.setTimestamp(5, currentTimestamp);
 			prepSat.setString(6, prodTypeId);
+			prepSat.setString(7, creator);
 			prepSat.execute();
+			System.out.println("insert end");
 
 			String prodId;
 			String query = "SELECT LAST_INSERT_ID() AS last_id FROM product;";
@@ -392,7 +397,7 @@ public class DbHelper {
 			connection.close();
 	}
 
-	public PrintWriter changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType) {
+	public PrintWriter changeProduct(String prod_id, String prodCategory_id, String prodProvider, String prodName, String prodCode, String componets_array_ID, String varButton, PrintWriter out, String prodType, String creator) {
 		LOGGER.info("About to change product");
 		PreparedStatement prepSat;
 		ResultSet resultSet;
@@ -449,14 +454,15 @@ public class DbHelper {
 				prodTypeId = resultSet.getString("id");
 			}
 			//создаем продукт до обновления input_components_ID
-			String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, prod_type = ? WHERE prod_id = ?";
+			String statement = "UPDATE product SET cat_id_frk = ?, prod_maker = ?, prod_name = ?, prod_code = ?, prod_type = ?, creator = (SELECT user_id FROM users WHERE user_name = ?) WHERE prod_id = ?";
 			prepSat = connection.prepareStatement(statement);
 			prepSat.setString(1, prodCategory_id);
 			prepSat.setString(2, prodProvider);
 			prepSat.setString(3, prodName);
 			prepSat.setString(4, prodCode);
 			prepSat.setString(5, prodTypeId);
-			prepSat.setString(6, prod_id);
+			prepSat.setString(6, creator);
+			prepSat.setString(7, prod_id);
 			prepSat.execute();
 
 			statement = "DELETE FROM frkgroup WHERE prod = ?";
@@ -666,33 +672,6 @@ public class DbHelper {
 		}
 		try {
 			result.put("category", array);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		out.println(array);
-		out.flush();
-		if (connection != null)
-			connection.close();
-		return out;
-	}
-
-	public PrintWriter getCreators(PrintWriter out) throws SQLException {
-		LOGGER.info("About to get creators");
-		String query = "SELECT user_id, user_name FROM users ORDER BY user_name";
-		Statement stmt = connection.createStatement();
-		ResultSet resultSet = stmt.executeQuery(query);
-		JSONObject result = new JSONObject();
-		JSONArray array = new JSONArray();
-		while (resultSet.next()) {
-			JSONArray ja = new JSONArray();
-			String id = String.valueOf(resultSet.getInt("user_id"));
-			String cat_name = resultSet.getString("user_name");
-			ja.put(id);
-			ja.put(cat_name);
-			array.put(ja);
-		}
-		try {
-			result.put("creators", array);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1280,8 +1259,10 @@ public class DbHelper {
 	 */
 	public PrintWriter getProdGroupByDate(PrintWriter out, String startDate, String endDate, String creator) throws SQLException {
 		LOGGER.info("About to get product group by id");
+		creator = StringUtils.isNullOrEmpty(creator) ?
+				"" : "creator = (SELECT user_id FROM users WHERE user_name = '" + creator + "') AND";
 		endDate = endDate + " 23:59:59";
-		String query = "SELECT cat_id, cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";
+		String query = "SELECT cat_id, cat_name, prod_date, COUNT(*) as count FROM product INNER JOIN categories ON cat_id_frk=cat_id WHERE " + creator + " prod_date BETWEEN '" + startDate + "' AND '" + endDate + "' GROUP BY cat_id_frk;";
 		Statement stmt = connection.createStatement();
 		ResultSet resultSet = stmt.executeQuery(query);
 
@@ -1310,7 +1291,7 @@ public class DbHelper {
 		return out;
 	}
 
-	public ArrayList getUsers() throws SQLException {
+	public ArrayList getUsersForPermition() throws SQLException {
 		LOGGER.info("About to get user");
 		String query = "SELECT user_id, user_name, user_permit, user_pass FROM users";
 		Statement stmt = connection.createStatement();
@@ -1329,16 +1310,121 @@ public class DbHelper {
 		return userArray;
 	}
 
-	public void changeUserPass(String id, String user_name, String user_pass) throws SQLException {
-		LOGGER.info("About to change user password");
+	public PrintWriter getCreators(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get creators");
+		String query = "SELECT user_id, user_name FROM users ORDER BY user_name";
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		while (resultSet.next()) {
+			JSONArray ja = new JSONArray();
+			String id = String.valueOf(resultSet.getInt("user_id"));
+			String user_name = resultSet.getString("user_name");
+			ja.put(id);
+			ja.put(user_name);
+			array.put(ja);
+		}
+		try {
+			result.put("creators", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		out.println(array);
+		out.flush();
+		if (connection != null)
+			connection.close();
+		return out;
+	}
+
+	public PrintWriter getUsers(PrintWriter out) throws SQLException {
+		LOGGER.info("About to get users");
+		String query = "SELECT user_id, user_name FROM users ORDER BY user_id";
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		while (resultSet.next()) {
+			JSONArray ja = new JSONArray();
+			String user_id = String.valueOf(resultSet.getInt("user_id"));
+			String userName = resultSet.getString("user_name");
+			ja.put(user_id);
+			ja.put(userName);
+			array.put(ja);
+		}
+		try {
+			result.put("users", array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		out.println(result);
+		out.flush();
+		if (connection != null)
+			connection.close();
+		return out;
+	}
+
+	public PrintWriter removeUser(String id, PrintWriter out) throws SQLException {
+		LOGGER.info("About to remove user");
+		String statement = "DELETE FROM users WHERE user_id = ? AND user_permit != '1'";
+		PreparedStatement preparedStatement = connection.prepareStatement(statement);
+		preparedStatement.setString(1, id);
+		preparedStatement.execute();
+		if (connection != null)
+			connection.close();
+		return out;
+	}
+
+	// FIXME: 24.09.2017  add
+	//	ALTER TABLE users MODIFY user_name VARCHAR(25) NOT NULL UNIQUE;
+	//	ALTER TABLE users MODIFY user_permit VARCHAR(1) DEFAULT '0';
+	public PrintWriter createUser(String userName, String userPassword, PrintWriter out) throws SQLException {
+		LOGGER.info("About to create user");
+		String statement;
+		PreparedStatement prepSat;
+		ResultSet resultSet;
+		String queryLastId;
+		statement = "INSERT INTO users (user_name, user_pass) VALUE (?,?)";
+		prepSat = connection.prepareStatement(statement);
+		prepSat.setString(1, userName);
+		prepSat.setString(2, userPassword);
+		try {
+			prepSat.execute();
+			String query = "SELECT LAST_INSERT_ID() AS last_id FROM users;";
+			Statement stmt = connection.createStatement();
+			resultSet = stmt.executeQuery(query);
+			resultSet.next();
+			out.println(resultSet.getString("last_id"));
+			out.flush();
+		} catch (MySQLIntegrityConstraintViolationException e) {
+			out.println("0");
+		} finally {
+			if (connection != null)
+				connection.close();
+			return out;
+		}
+	}
+
+	public PrintWriter changeUser(String id, String user_name, String user_pass, PrintWriter out) throws SQLException {
+		LOGGER.info("About to change user");
 		String query = "UPDATE users SET user_name=?, user_pass=? WHERE user_id=?";
 		PreparedStatement preparedStatement = connection.prepareStatement(query);
 		preparedStatement.setString(1, user_name);
 		preparedStatement.setString(2, user_pass);
 		preparedStatement.setString(3, id);
-		preparedStatement.execute();
-		if (connection != null)
-			connection.close();
+		try {
+			preparedStatement.execute();
+		} catch (
+				MySQLIntegrityConstraintViolationException e) {
+			out.println("0");
+		} finally
+
+		{
+			if (connection != null)
+				connection.close();
+			return out;
+		}
+
 	}
 
 	public void createProdPhone(String cat, String code) throws SQLException {
